@@ -28,6 +28,8 @@ private:
 	//Actual player color, shows what will appear on screen
 	int colorAttribute;
 	static int otherPlayerColor;
+	void SetPlayerTextColor(int color);
+	char ChangeErrorTextColor(int color);
 public:
 	ScreenColors();
 	int GetColorAttribute() { return colorAttribute; }

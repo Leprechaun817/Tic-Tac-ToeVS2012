@@ -1,22 +1,21 @@
 #include "ScreenColors.h"
 
 const int ScreenColors::black = 0;
-const int ScreenColors::dark_blue = 1 * 16;
-const int ScreenColors::dark_green = 2 * 16;
-const int ScreenColors::dark_cyan = 3 * 16;
-const int ScreenColors::dark_red = 4 * 16;
-const int ScreenColors::dark_purple = 5 * 16;
-const int ScreenColors::dark_yellow = 6 * 16;
-const int ScreenColors::dark_white = 7 * 16;
-const int ScreenColors::gray = 8 * 16;
-const int ScreenColors::blue = 9 * 16;
-const int ScreenColors::green = 10 * 16;
-const int ScreenColors::cyan = 11 * 16;
-const int ScreenColors::red = 12 * 16;
-const int ScreenColors::purple = 13 * 16;
-const int ScreenColors::yellow = 14 * 16;
-const int ScreenColors::white = 15 * 16;
-//New to VS2012, static variables also must be declared in the same way constants must be declared inside a class
+const int ScreenColors::dark_blue = 1 % 16;
+const int ScreenColors::dark_green = 2 % 16;
+const int ScreenColors::dark_cyan = 3 % 16;
+const int ScreenColors::dark_red = 4 % 16;
+const int ScreenColors::dark_purple = 5 % 16;
+const int ScreenColors::dark_yellow = 6 % 16;
+const int ScreenColors::dark_white = 7 % 16;
+const int ScreenColors::gray = 8 % 16;
+const int ScreenColors::blue = 9 % 16;
+const int ScreenColors::green = 10 % 16;
+const int ScreenColors::cyan = 11 % 16;
+const int ScreenColors::red = 12 % 16;
+const int ScreenColors::purple = 13 % 16;
+const int ScreenColors::yellow = 14 % 16;
+const int ScreenColors::white = 15 % 16;
 int ScreenColors::otherPlayerColor = 0;
 
 ScreenColors::ScreenColors()
@@ -66,92 +65,77 @@ ScreenColors::ScreenColors()
 			{
 			case 'a':
 			case 'A':
-				colorAttribute = dark_blue;
-				otherPlayerColor = dark_blue;
+				SetPlayerTextColor(dark_blue);
 				check = true;
 				break;
 			case 'b':
 			case 'B':
-				colorAttribute = dark_green;
-				otherPlayerColor = dark_green;
+				SetPlayerTextColor(dark_green);
 				check = true;
 				break;
 			case 'c':
 			case 'C':
-				colorAttribute = dark_cyan;
-				otherPlayerColor = dark_cyan;
+				SetPlayerTextColor(dark_cyan);
 				check = true;
 				break;
 			case 'd':
 			case 'D':
-				colorAttribute = dark_red;
-				otherPlayerColor = dark_red;
+				SetPlayerTextColor(dark_red);
 				check = true;
 				break;
 			case 'e':
 			case 'E':
-				colorAttribute = dark_purple;
-				otherPlayerColor = dark_purple;
+				SetPlayerTextColor(dark_purple);
 				check = true;
 				break;
 			case 'f':
 			case 'F':
-				colorAttribute = dark_yellow;
-				otherPlayerColor = dark_yellow;
+				SetPlayerTextColor(dark_yellow);
 				check = true;
 				break;
 			case 'g':
 			case 'G':
-				colorAttribute = dark_white;
-				otherPlayerColor = dark_white;
+				SetPlayerTextColor(dark_white);
 				check = true;
 				break;
 			case 'h':
 			case 'H':
-				colorAttribute = gray;
-				otherPlayerColor = gray;
+				SetPlayerTextColor(gray);
 				check = true;
 				break;
 			case 'i':
 			case 'I':
-				colorAttribute = blue;
-				otherPlayerColor = blue;
+				SetPlayerTextColor(blue);
 				check = true;
 				break;
 			case 'j':
 			case 'J':
-				colorAttribute = green;
-				otherPlayerColor = green;
+				SetPlayerTextColor(green);
 				check = true;
 				break;
 			case 'k':
 			case 'K':
-				colorAttribute = cyan;
-				otherPlayerColor = cyan;
+				SetPlayerTextColor(cyan);
 				check = true;
 				break;
 			case 'l':
 			case 'L':
-				colorAttribute = red;
-				otherPlayerColor = red;
+				SetPlayerTextColor(red);
 				check = true;
 				break;
 			case 'm':
 			case 'M':
-				colorAttribute = purple;
-				otherPlayerColor = purple;
+				SetPlayerTextColor(purple);
 				check = true;
 				break;
 			case 'n':
 			case 'N':
-				colorAttribute = yellow;
-				otherPlayerColor = yellow;
+				SetPlayerTextColor(yellow);
 				check = true;
 				break;
 			case 'o':
 			case 'O':
-				colorAttribute = white;
-				otherPlayerColor = white;
+				SetPlayerTextColor(white);
 				check = true;
 				break;
 			default:
@@ -168,12 +152,7 @@ ScreenColors::ScreenColors()
 			case 'A':
 				if(otherPlayerColor == dark_blue)
 				{
-					SetConsoleTextAttribute(hConsole, dark_blue);
-					cout<<"Dark blue";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by the other player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(dark_blue);
 				}
 				else
 				{
@@ -185,12 +164,7 @@ ScreenColors::ScreenColors()
 			case 'B':
 				if(otherPlayerColor == dark_green)
 				{
-					SetConsoleTextAttribute(hConsole, dark_green);
-					cout<<"Dark green";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by the other player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(dark_green);
 				}
 				else
 				{
@@ -202,12 +176,7 @@ ScreenColors::ScreenColors()
 			case 'C':
 				if(otherPlayerColor == dark_cyan)
 				{
-					SetConsoleTextAttribute(hConsole, dark_cyan);
-					cout<<"Dark cyan";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by the other player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(dark_cyan);
 				}
 				else
 				{
@@ -219,12 +188,7 @@ ScreenColors::ScreenColors()
 			case 'D':
 				if(otherPlayerColor == dark_red)
 				{
-					SetConsoleTextAttribute(hConsole, dark_red);
-					cout<<"Dark red";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(dark_red);
 				}
 				else
 				{
@@ -236,12 +200,7 @@ ScreenColors::ScreenColors()
 			case 'E':
 				if(otherPlayerColor == dark_purple)
 				{
-					SetConsoleTextAttribute(hConsole, dark_purple);
-					cout<<"Dark purple";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(dark_purple);
 				}
 				else
 				{
@@ -253,12 +212,7 @@ ScreenColors::ScreenColors()
 			case 'F':
 				if(otherPlayerColor == dark_yellow)
 				{
-					SetConsoleTextAttribute(hConsole, dark_yellow);
-					cout<<"Dark yellow";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(dark_yellow);
 				}
 				else
 				{
@@ -270,12 +224,7 @@ ScreenColors::ScreenColors()
 			case 'G':
 				if(otherPlayerColor == dark_white)
 				{
-					SetConsoleTextAttribute(hConsole, dark_white);
-					cout<<"Dark white";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(dark_white);
 				}
 				else
 				{
@@ -287,12 +236,7 @@ ScreenColors::ScreenColors()
 			case 'H':
 				if(otherPlayerColor == gray)
 				{
-					SetConsoleTextAttribute(hConsole, gray);
-					cout<<"Gray";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(gray);
 				}
 				else
 				{
@@ -304,12 +248,7 @@ ScreenColors::ScreenColors()
 			case 'I':
 				if(otherPlayerColor == blue)
 				{
-					SetConsoleTextAttribute(hConsole, blue);
-					cout<<"Blue";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(blue);
 				}
 				else
 				{
@@ -321,12 +260,7 @@ ScreenColors::ScreenColors()
 			case 'J':
 				if(otherPlayerColor == green)
 				{
-					SetConsoleTextAttribute(hConsole, green);
-					cout<<"Green";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(green);
 				}
 				else
 				{
@@ -338,12 +272,7 @@ ScreenColors::ScreenColors()
 			case 'K':
 				if(otherPlayerColor == cyan)
 				{
-					SetConsoleTextAttribute(hConsole, cyan);
-					cout<<"Cyan";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(cyan);
 				}
 				else
 				{
@@ -355,12 +284,7 @@ ScreenColors::ScreenColors()
 			case 'L':
 				if(otherPlayerColor == red)
 				{
-					SetConsoleTextAttribute(hConsole, red);
-					cout<<"Red";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(red);
 				}
 				else
 				{
@@ -372,12 +296,7 @@ ScreenColors::ScreenColors()
 			case 'M':
 				if(otherPlayerColor == purple)
 				{
-					SetConsoleTextAttribute(hConsole, purple);
-					cout<<"Purple";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(purple);
 				}
 				else
 				{
@@ -389,12 +308,7 @@ ScreenColors::ScreenColors()
 			case 'N':
 				if(otherPlayerColor == yellow)
 				{
-					SetConsoleTextAttribute(hConsole, yellow);
-					cout<<"Yellow";
-					SetConsoleTextAttribute(hConsole, white);
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(yellow);
 				}
 				else
 				{
@@ -424,4 +338,72 @@ ScreenColors::ScreenColors()
 			}
 		}
 	}
+}
+
+void ScreenColors::SetPlayerTextColor(int color)
+{
+	colorAttribute = color;
+	otherPlayerColor = color;
+}
+
+char ScreenColors::ChangeErrorTextColor(int color)
+{
+	char returnSelection;
+	SetConsoleTextAttribute(hConsole, color);
+	
+	switch(color)
+	{
+	case dark_blue:
+		cout<<"Dark blue";
+		break;
+	case dark_green:
+		cout<<"Dark green";
+		break;
+	case dark_cyan:
+		cout<<"Dark cyan";
+		break;
+	case dark_red:
+		cout<<"Dark red";
+		break;
+	case dark_purple:
+		cout<<"Dark purple";
+		break;
+	case dark_yellow:
+		cout<<"Dark yellow";
+		break;
+	case dark_white:
+		cout<<"Dark white";
+		break;
+	case gray:
+		cout<<"Gray";
+		break;
+	case blue:
+		cout<<"Blue";
+		break;
+	case green:
+		cout<<"Green";
+		break;
+	case cyan:
+		cout<<"Cyan";
+		break;
+	case red:
+		cout<<"Red";
+		break;
+	case purple:
+		cout<<"Purple";
+		break;
+	case yellow:
+		cout<<"Yellow";
+		break;
+	case white:
+		cout<<"White";
+		break;
+	}
+	
+	SetConsoleTextAttribute(hConsole, white);
+	cout<<" has already been chosen by the other player.\n";
+	cout<<"Please make another choice.\n";
+	cin>>returnSelection;
+
+	return returnSelection;
 }

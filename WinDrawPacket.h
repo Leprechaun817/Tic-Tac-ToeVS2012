@@ -51,10 +51,6 @@ private:
 
 	static const char delimiter;	//Used when processing prepacket string
 
-	
-
-	
-
 	//Regular variables
 	int winDraw;
 	int playerPiece;
