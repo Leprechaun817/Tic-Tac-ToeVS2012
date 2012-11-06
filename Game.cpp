@@ -113,7 +113,7 @@ void Game::StartGame()
 	system("cls");
 
 	//Display the empty starting board
-	board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerTwo->GetName(), playerTwo->GetScore());
+	board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
 	//Get the first round of player moves
 	//Call GameLoop at this point
 }
@@ -209,7 +209,7 @@ bool Game::GetPlayerMoves()
 		if(continuePlay == true)
 		{
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerTwo->GetName(), playerTwo->GetScore());
+			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
 		}
 		else
 		{
@@ -222,7 +222,7 @@ bool Game::GetPlayerMoves()
 			//Now that both players have made their moves increment the turnCounter by 1
 			turnCounter++;
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerTwo->GetName(), playerTwo->GetScore());
+			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
 		}
 		else
 		{
@@ -235,7 +235,7 @@ bool Game::GetPlayerMoves()
 		if(continuePlay == true)
 		{
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerTwo->GetName(), playerTwo->GetScore());
+			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
 		}
 		else
 		{
@@ -248,7 +248,7 @@ bool Game::GetPlayerMoves()
 			//Same thing, both players have made their moves. Increment the turnCounter by 1
 			turnCounter++;
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerTwo->GetName(), playerTwo->GetScore());
+			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
 		}
 		else
 		{
@@ -284,7 +284,7 @@ bool Game::PlayerOneMove()
 			//If this doesn't work, uncomment the first line as an insurance policy to make sure that madeMove is
 			//made false. Otherwise the move check might get messed up.
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerTwo->GetName(), playerTwo->GetScore());
+			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
 			cout<<endl;
 			cout<<"Please re-enter your move."<<endl;
 			_getche();
@@ -325,7 +325,7 @@ bool Game::PlayerTwoMove()
 			//playerTwo->SetMadeMove(false);
 			//SetMadeMove will be called in CheckAndUpdateBoard in the event that the move is no good
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerTwo->GetName(), playerTwo->GetScore());
+			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
 			cout<<endl;
 			cout<<"Please re-enter your move."<<endl;
 			_getche();

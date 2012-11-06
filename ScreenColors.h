@@ -33,4 +33,5 @@ private:
 public:
 	ScreenColors();
 	int GetColorAttribute() { return colorAttribute; }
+	void ResetConsoleColor();
 };

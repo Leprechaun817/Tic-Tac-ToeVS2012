@@ -112,8 +112,33 @@ void Board::InitiateBoard()
 	}
 }
 
-void Board::DisplayPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing)
+void Board::DisplayPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int pieceColor)
 {
+	char pTemp;
+	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
+	SetConsoleTextAttribute(hConsoleWindow, pieceColor);
+	cout<<pTemp;
+	ResetConsoleColor();
+	*temp2 += pieceSpacing;
+	*squareCount++;
+}
+
+void Board::DisplayWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int playerColor)
+{
+	char pTemp;
+	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
+	SetConsoleTextAttribute(hConsoleWindow, playerColor);
+	cout<<pTemp;
+	ResetConsoleColor();
+	*temp2 += pieceSpacing;
+	*squareCount++;
+}
+
+void Board::DisplayNonWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing)
+{
+	//Reset the text color just to be sure
+	ResetConsoleColor();
+	
 	char pTemp;
 	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
 	cout<<pTemp;
@@ -121,33 +146,67 @@ void Board::DisplayPiece(const vector<int> *piecePlacement, int *squareCount, in
 	*squareCount++;
 }
 
-void Board::DisplayWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int playerNum)
-{
-	char pTemp;
-	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
-	//change color here
-	
-}
-
 //TODO:
 //Handle the winning player conditions, which will change the color of the piece
 //Handle the text color change ahead of time so that all that will be necessary is a simple function call
-void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, int diagonalLocation, int acrossDownLocation)
+//Must handle different board sizes as well
+void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, int diagonalLocation, int acrossDownLocation, int playerOneColor, int playerTwoColor, int playerOnePiece, int playerTwoPiece)
 {
 	//Constants
 	const int sizeOfBoardAcross = (5 * multiplier) + 1;
 	const int sizeOfBoardDown = (5 * multiplier) + 1;
+	
+	const int boardStart = 0;
+
+	const int endOfRowOneA = 2;
+	const int endOfRowOneB = 3;
+	const int endOfRowOneC = 4;
+	
+	const int startOfRowTwoA = 3;
+	const int startOfRowTwoB = 4;
+	const int startOfRowTwoC = 5;
+	const int endOfRowTwoA = 5;
+	const int endOfRowTwoB = 7;
+	const int endOfRowTwoC = 9;
+	
+	const int startOfRowThreeA = 6;
+	const int startOfRowThreeB = 8;
+	const int startOfRowThreeC = 10;
+	const int endOfRowThreeA = 8;
+	const int endOfRowThreeB = 11;
+	const int endOfRowThreeC = 14;
+	
+	const int startOfRowFourB = 12;
+	const int startOfRowFourC = 15;
+	const int endOfRowFourB = 15;
+	const int endOfRowFourC = 19;
+	
+	const int startOfRowFiveC = 20;
+	const int endOfRowFiveC = 24;	
+ 
+	const int startOfColumnTwo = 1;
+	const int startOfColumnThree = 2;
+	const int startOfColumnFour = 3;
+	const int startOfColumnFive = 4;
+	
 	//Bool values to decide what pieces get highlighted on the board
 	bool across = false;
 	bool down = false;
 	bool diagonal = false;
 	bool diagonalLeft = false;
 	bool diagonalRight = false;
+	
 	//Temp values
 	int temp1 = 1;	//Used for vertical line spacing
 	int temp2 = 3;	//Used for piece spacing
-	char pTemp;
 	int squareCount = 0;
+	
+	//Winning players color
+	int winningPieceColor;
+	char winningPlayerPiece;
+	
+	//Winning player string
+	string winningPlayer;
 	//Vector to hold piece places
 	vector<int> piecePlacement;
 	piecePlacement.resize(numOfSpaces);
@@ -193,15 +252,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 	}
 	else if(playerOneWin == true && playerTwoWin == false)
 	{
-		//The winning line will be displayed as player 1's
-		//The color of the winning line will be changed to a predetermined color chosen when after the player is asked for his/her's name
+		const int lineSize = 46;
+		system("cls");
+		winningPieceColor = playerOneColor;
+		winningPlayerPiece = XorO(playerOnePiece, true);
+		SetConsoleTextAttribute(hConsoleWindow, winningPieceColor);
+		cout<<"^o^ ---- Player 1 has won the game!!! ---- ^o^"<<endl;
+		cout<<"-----------    Congratulations    ------------"<<endl;
+		for(int i = 1; i <= 46; i++)
+		{
+			cout<<winningPlayerPiece;
+			Sleep(50);
+		}
+		cout<<endl;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		ResetConsoleColor();
+		winningPlayer = "Player 1";
 	}
 	else if(playerOneWin == false && playerTwoWin == true)
 	{
-		//The winning line will be displayed as player 2's
-		//The color of the winning line will be changed to a predetermined color chosen when after the player is asked for his/her's name
+		const int lineSize = 46;
+		system("cls");
+		winningPieceColor = playerTwoColor;
+		winningPlayerPiece = XorO(playerTwoPiece, true);
+		SetConsoleTextAttribute(hConsoleWindow, winningPieceColor);
+		cout<<"^o^ ---- Player 2 has won the game!!! ---- ^o^"<<endl;
+		cout<<"-----------    Congratulations    ------------"<<endl;
+		for(int i = 1; i <= 46; i++)
+		{
+			cout<<winningPlayerPiece;
+			Sleep(50);
+		}
+		cout<<endl;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		ResetConsoleColor();
+		winningPlayer = "Player 2";
 	}
-	//----!!!!DEBUGGING CODE ONLY!!!!----//
+	//----!!!!END OF DEBUGGING CODE!!!!----//
 
 	//Figure out where the pieces on the board should be highlighted
 	if(type == gameConstants->GetConstAcross())
@@ -268,38 +357,673 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal == true && diagonalLeft == true)
+				else if(j == temp2 && diagonal == true && diagonalLeft == true && squareCount == boardStart)
 				{
-					pTemp = XorO(piecePlacement[squareCount], true);
-					//change color of piece to the correct player color HINT: use seperate function here
-					cout<<pTemp;
-					//change color back to normal NOTE: use seperate function here as well
-					temp2 += pieceSpacing;
-					squareCount++;
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
-				else if(j == temp2 && 
-					   (across == true || down == true) && 
-					   (acrossDownLocation == gameConstants->GetConstRowOne() || acrossDownLocation == gameConstants->GetConstColumnOne()))
+				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
-					pTemp = XorO(piecePlacement[squareCount], true);
-					cout<<pTemp;
-					temp2 += pieceSpacing;
-					squareCount++;
+					if((numOfSpaces == A && squareCount == endOfRowOneA) ||
+					   (numOfSpaces == B && squareCount == endOfRowOneB) ||
+					   (numOfSpaces == C && squareCount == endOfRowOneC))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+				}		 
+				else if(j == temp2 && down == true && across == false && diagonal == false)
+				{
+					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					{
+						if(squareCount == boardStart)
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					{
+						if(squareCount == startOfColumnTwo)
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					{
+						if(squareCount == startOfColumnThree)
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					{
+						if(squareCount == startOfColumnFour)
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					{
+						if(squareCount == startOfColumnFive)
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+				}
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowOne())
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else if(j == temp2 && diagonal == false && across == false && down == false)
+				{
+					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
 				}
 				else
 				{
 					cout<<space;
 				}
 				break;
+			case 4:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 5:
+				if(j == 1 || j == sizeOfBoardAcross)
+				{
+					cout<<space;
+				}
+				else
+				{
+					cout<<horizontalLine2;
+				}
+				break;
+			case 6:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 7:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else if(j == temp2 && diagonal == true && diagonalLeft == true)
+				{
+					if(numOfSpaces == A && squareCount == (startOfRowTwoA + 1))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == B && squareCount == (startOfRowTwoB + 1))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == C && squareCount == (startOfRowTwoC + 1))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+				}
+				else if(j == temp2 && diagonal == true && diagonalRight == true)
+				{
+					if(numOfSpaces == A && squareCount == (endOfRowTwoA - 1))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == B && squareCount == (endOfRowTwoB - 1))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == C && squareCount == (endOfRowTwoC - 1))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+				}
+				else if(j == temp2 && down == true && across == false && diagonal == false)
+				{
+					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					{
+						if(squareCount == (boardStart + multiplier))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					{
+						if(squareCount == (startOfColumnTwo + multiplier))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					{
+						if(squareCount == (startOfColumnThree + multiplier))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					{
+						if(squareCount == (startOfColumnFour + multiplier))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					{
+						if(squareCount == (startOfColumnFive + multiplier))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+				}
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowTwo())
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else if(j == temp2 && diagonal == false && across == false && down == false)
+				{
+					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 8:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 9:
+				if(j == 1 || j == sizeOfBoardAcross)
+				{
+					cout<<space;
+				}
+				else
+				{
+					cout<<horizontalLine2;
+				}
+				break;
+			case 10:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 11:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else if(j == temp2 && diagonal == true && diagonalLeft == true)
+				{
+					if(numOfSpaces == A && squareCount == endOfRowThreeA)
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == B && squareCount == (startOfRowThreeB + 2))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == C && squareCount == (startOfRowThreeC + 2))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+				}
+				else if(j == temp2 && diagonal == true && diagonalRight == true)
+				{
+					if(numOfSpaces == A && squareCount == startOfRowThreeA)
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == B && squareCount == (endOfRowThreeB - 2))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == C && squareCount == (endOfRowThreeC - 2))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+				}
+				else if(j == temp2 && down == true && across == false && diagonal == false)
+				{
+					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					{
+						if(squareCount == (boardStart + (multiplier * 2)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					{
+						if(squareCount == (startOfColumnTwo + (multiplier * 2)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					{
+						if(squareCount == (startOfColumnThree + (multiplier * 2)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					{
+						if(squareCount == (startOfColumnFour + (multiplier * 2)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					{
+						if(squareCount == (startOfColumnFive + (multiplier * 2)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+				}
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowThree())
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else if(j == temp2 && diagonal == false && across == false && down == false)
+				{
+					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 12:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 13:
+				if(j == 1 || j == sizeOfBoardAcross)
+				{
+					cout<<space;
+				}
+				else
+				{
+					cout<<horizontalLine2;
+				}
+				break;
+			case 14:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 15:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else if(j == temp2 && diagonal == true && diagonalLeft == true)
+				{
+					if(numOfSpaces == B && squareCount == endOfRowFourB)
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == C && squareCount == (startOfRowFourC + 3))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+				}
+				else if(j == temp2 && diagonal == true && diagonalRight == true)
+				{
+					if(numOfSpaces == B && squareCount == startOfRowFourB)
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+					else if(numOfSpaces == C && squareCount == (endOfRowFourC - 3))
+					{
+						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					}
+				}
+				else if(j == temp2 && down == true && across == false && diagonal == false)
+				{
+					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					{
+						if(squareCount == (boardStart + (multiplier * 3)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					{
+						if(squareCount == (startOfColumnTwo + (multiplier * 3)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					{
+						if(squareCount == (startOfColumnThree + (multiplier * 3)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					{
+						if(squareCount == (startOfColumnFour + (multiplier * 3)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					{
+						if(squareCount == (startOfColumnFour + (multiplier * 3)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+				}
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowFour())
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else if(j == temp2 && diagonal == false && across == false && down == false)
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 16:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 17:
+				if(j == 1 || j == sizeOfBoardAcross)
+				{
+					cout<<space;
+				}
+				else
+				{
+					cout<<horizontalLine2;
+				}
+				break;
+			case 18:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 19:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else if(j == temp2 && diagonal == true && diagonalLeft == true && squareCount == endOfRowFiveC)
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else if(j == temp2 && diagonal == true && diagonalRight == true && squareCount == startOfRowFiveC)
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else if(j == temp2 && down == true && across == false && diagonal == false)
+				{
+					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					{
+						if(squareCount == (boardStart + (multiplier * 4)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					{
+						if(squareCount == (startOfColumnTwo + (multiplier * 4)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					{
+						if(squareCount == (startOfColumnThree + (multiplier * 4)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFour())
+					{
+						if(squareCount == (startOfColumnFour + (multiplier * 4)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+					else if(acrossDownLocation == gameConstants->GetConstColumnFive())
+					{
+						if(squareCount == (startOfColumnFive + (multiplier * 4)))
+						{
+							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						}
+					}
+				}
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowFive())
+				{
+					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+				}
+				else if(j == temp2 && diagonal == false && across == false && down == false)
+				{
+					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 20:
+				if(j == 1)
+				{
+					cout<<verticalLine;
+				}
+				else if(j == temp1)
+				{
+					cout<<verticalLine;
+					temp1 += sizeOfSquareAcross;
+				}
+				else
+				{
+					cout<<space;
+				}
+				break;
+			case 21:
+				if(j == 1 || j == sizeOfBoardAcross)
+				{
+					cout<<space;
+				}
+				else
+				{
+					cout<<horizontalLine2;
+				}
+				break;
 			}
 		}
+		//Move to next line
+		cout<<endl;
+		//Reset temporary values
+		//temp1 will reset to 1
+		//temp2 will reset to 3
+		temp1 = 1;
+		temp2 = 3;
 	}
+	//Skip a line, for spacing
+	cout<<endl;
+
+	//Change color of text to that of winning players
+	SetConsoleTextAttribute(hConsoleWindow, winningPieceColor);
+
+	//Tell how the player won
+	if(diagonal == true && across == false && down == false)
+	{
+		if(diagonalLeft == true)
+		{
+			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from left to right"<<endl;
+		}
+		if(diagonalRight == true)
+		{
+			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from right to left"<<endl;
+		}
+	}
+	else if(across == true && down == false && diagonal == false)
+	{
+		if(acrossDownLocation == gameConstants->GetConstRowOne())
+		{
+			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 1"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstRowTwo())
+		{
+			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 2"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstRowThree())
+		{
+			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 3"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstRowFour())
+		{
+			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 4"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstRowFive())
+		{
+			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 5"<<endl;
+		}
+	}
+	else if(down == true && across == false && diagonal == false)
+	{
+		if(acrossDownLocation == gameConstants->GetConstColumnOne())
+		{
+			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going down on column 1"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+		{
+			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 2"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+		{
+			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 3"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstColumnFour())
+		{
+			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 4"<<endl;
+		}
+		else if(acrossDownLocation == gameConstants->GetConstColumnFive())
+		{
+			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 5"<<endl;
+		}
+	}
+	ResetConsoleColor();
+	cout<<endl<<"Press any key to continue..."<<endl;
+	_getche();
+	system("cls");
 }
 
 //Board display function, displays the board and extra information line by line and character by character
 //TODO:
 //Add code to process win information from the WinDrawPacket generated by FindWinDraw function
-void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score, string p2Name, int p2Score)
+void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score, int p1Piece, int p1PieceColor, string p2Name, int p2Score, int p2Piece, int p2PieceColor)
 {
 	//Constants
 	const int sizeOfBoardAcross = (5 * multiplier) + 1;
@@ -398,7 +1122,18 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				else if(j == temp2)
 				{
 					//This is a test. Don't delete the old lines yet until this has been tested
-					DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					if(piecePlacement[squareCount] == p1Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+					}
+					else if(piecePlacement[squareCount] == p2Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+					}
+					else
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					}
 					//pTemp = XorO(piecePlacement[squareCount], true);
 					//cout<<pTemp;
 					//temp2 += pieceSpacing;
@@ -473,7 +1208,18 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				}
 				else if(j == temp2)
 				{
-					DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					if(piecePlacement[squareCount] == p1Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+					}
+					else if(piecePlacement[squareCount] == p2Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+					}
+					else
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					}
 					//pTemp = XorO(piecePlacement[squareCount], true);
 					//cout<<pTemp;
 					//temp2 += pieceSpacing;
@@ -545,7 +1291,18 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				}
 				else if(j == temp2)
 				{
-					DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					if(piecePlacement[squareCount] == p1Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+					}
+					else if(piecePlacement[squareCount] == p2Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+					}
+					else
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					}
 					//pTemp = XorO(piecePlacement[squareCount], true);
 					//cout<<pTemp;
 					//temp2 += pieceSpacing;
@@ -609,7 +1366,18 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				}
 				else if(j == temp2)
 				{
-					DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					if(piecePlacement[squareCount] == p1Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+					}
+					else if(piecePlacement[squareCount] == p2Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+					}
+					else
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					}
 					//pTemp = XorO(piecePlacement[squareCount], true);
 					//cout<<pTemp;
 					//temp2 += pieceSpacing;
@@ -673,7 +1441,18 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				}
 				else if(j == temp2)
 				{
-					DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					if(piecePlacement[squareCount] == p1Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+					}
+					else if(piecePlacement[squareCount] == p2Piece)
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+					}
+					else
+					{
+						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					}
 					//pTemp = XorO(piecePlacement[squareCount], true);
 					//cout<<pTemp;
 					//temp2 += pieceSpacing;
@@ -1091,4 +1870,10 @@ WinDrawPacket& Board::FindWinDraw()
 	packet = new WinDrawPacket();
 	packet->CreatePacket(prePacket);
 	return *packet;
+}
+
+void Board::ResetConsoleColor()
+{
+	int dark_white = 7 % 16;
+	SetConsoleTextAttribute(hConsoleWindow, dark_white);
 }

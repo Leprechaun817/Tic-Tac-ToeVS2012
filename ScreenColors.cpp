@@ -53,6 +53,8 @@ ScreenColors::ScreenColors()
 	cout<<"		n - yellow\n";
 	SetConsoleTextAttribute(hConsole, white);
 	cout<<"		o - white\n";
+	
+	ResetConsoleColor();
 	cout<<"Please enter the letter which represents your choice.\n";
 	cout<<"Ex. a\n";
 	cin>>selection;
@@ -139,6 +141,7 @@ ScreenColors::ScreenColors()
 				check = true;
 				break;
 			default:
+				ResetConsoleColor();
 				cout<<"That wasn't one of the choices.\n";
 				cout<<"Please reenter your choice.\n";
 				cin>>selection;
@@ -320,10 +323,7 @@ ScreenColors::ScreenColors()
 			case 'O':
 				if(otherPlayerColor == white)
 				{
-					cout<<"White";
-					cout<<" has already been chosen by another player.\n";
-					cout<<"Please make another choice.\n";
-					cin>>selection;
+					selection = ChangeErrorTextColor(white);
 				}
 				else
 				{
@@ -332,6 +332,7 @@ ScreenColors::ScreenColors()
 				}
 				break;
 			default:
+				ResetConsoleColor();
 				cout<<"That wasn't one of the choices.\n";
 				cout<<"Please reenter your choice.\n";
 				cin>>selection;
@@ -400,10 +401,15 @@ char ScreenColors::ChangeErrorTextColor(int color)
 		break;
 	}
 	
-	SetConsoleTextAttribute(hConsole, white);
+	ResetConsoleColor();
 	cout<<" has already been chosen by the other player.\n";
 	cout<<"Please make another choice.\n";
 	cin>>returnSelection;
 
 	return returnSelection;
+}
+
+void ScreenColors::ResetConsoleColor()
+{
+	SetConsoleTextAttribute(hConsole, dark_white);
 }
