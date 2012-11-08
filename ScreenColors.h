@@ -33,6 +33,6 @@ private:
 public:
 	ScreenColors();
 	void DecidePlayerScreenColor();
-	int GetColorAttribute() const;
+	const int GetColorAttribute() const;
 	void ResetConsoleColor();
 };

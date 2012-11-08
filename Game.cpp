@@ -176,6 +176,10 @@ void Game::ResetGame()
 	playerTwo.SetBoundsLimit(boundsLimit);
 }
 
+//TODO:
+//How player moves are handled needs to be redesigned...
+//Player related functions as well as the checks for the player moves need to be enclosed within the player object
+//not within the game object
 bool Game::GetPlayerMoves()
 {
 	bool continuePlay = true;

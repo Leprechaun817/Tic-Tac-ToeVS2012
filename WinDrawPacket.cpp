@@ -291,7 +291,7 @@ void WinDrawPacket::CreatePacket(string prePacket)
 
 //Get functions with readable check
 //Only work when readable is set to true
-int WinDrawPacket::GetWinDraw() const
+const int WinDrawPacket::GetWinDraw() const
 {
 	if(readable == true)
 	{
@@ -303,7 +303,7 @@ int WinDrawPacket::GetWinDraw() const
 	}
 }
 
-int WinDrawPacket::GetPlayerPiece() const
+const int WinDrawPacket::GetPlayerPiece() const
 {
 	if(readable == true)
 	{
@@ -315,7 +315,7 @@ int WinDrawPacket::GetPlayerPiece() const
 	}
 }
 
-int WinDrawPacket::GetWinType() const
+const int WinDrawPacket::GetWinType() const
 {
 	if(readable == true)
 	{
@@ -327,7 +327,7 @@ int WinDrawPacket::GetWinType() const
 	}
 }
 
-int WinDrawPacket::GetDiagType() const
+const int WinDrawPacket::GetDiagType() const
 {
 	if(readable == true)
 	{
@@ -339,7 +339,7 @@ int WinDrawPacket::GetDiagType() const
 	}
 }
 
-int WinDrawPacket::GetRow() const
+const int WinDrawPacket::GetRow() const
 {
 	if(readable == true)
 	{
@@ -351,7 +351,7 @@ int WinDrawPacket::GetRow() const
 	}
 }
 
-int WinDrawPacket::GetColumn() const
+const int WinDrawPacket::GetColumn() const
 {
 	if(readable == true)
 	{
@@ -365,7 +365,7 @@ int WinDrawPacket::GetColumn() const
 
 //Get functions for constants with readable check
 //Only work when readable is set to false
-int WinDrawPacket::GetConstNoWinDraw() const
+const int WinDrawPacket::GetConstNoWinDraw() const
 {
 	if(readable == false)
 	{
@@ -377,7 +377,7 @@ int WinDrawPacket::GetConstNoWinDraw() const
 	}
 }
 
-int WinDrawPacket::GetConstWin() const
+const int WinDrawPacket::GetConstWin() const
 {
 	if(readable == false)
 	{
@@ -389,7 +389,7 @@ int WinDrawPacket::GetConstWin() const
 	}
 }
 
-int WinDrawPacket::GetConstDraw() const
+const int WinDrawPacket::GetConstDraw() const
 {
 	if(readable == false)
 	{
@@ -401,7 +401,7 @@ int WinDrawPacket::GetConstDraw() const
 	}
 }
 
-int WinDrawPacket::GetConstAcross() const
+const int WinDrawPacket::GetConstAcross() const
 {
 	if(readable == false)
 	{
@@ -413,7 +413,7 @@ int WinDrawPacket::GetConstAcross() const
 	}
 }
 
-int WinDrawPacket::GetConstDown() const
+const int WinDrawPacket::GetConstDown() const
 {
 	if(readable == false)
 	{
@@ -425,7 +425,7 @@ int WinDrawPacket::GetConstDown() const
 	}
 }
 
-int WinDrawPacket::GetConstDiagonal() const
+const int WinDrawPacket::GetConstDiagonal() const
 {
 	if(readable == false)
 	{
@@ -437,7 +437,7 @@ int WinDrawPacket::GetConstDiagonal() const
 	}
 }
 
-int WinDrawPacket::GetConstDiagonalLeft() const
+const int WinDrawPacket::GetConstDiagonalLeft() const
 {
 	if(readable == false)
 	{
@@ -449,7 +449,7 @@ int WinDrawPacket::GetConstDiagonalLeft() const
 	}
 }
 
-int WinDrawPacket::GetConstDiagonalRight() const
+const int WinDrawPacket::GetConstDiagonalRight() const
 {
 	if(readable == false)
 	{
@@ -461,7 +461,7 @@ int WinDrawPacket::GetConstDiagonalRight() const
 	}
 }
 
-int WinDrawPacket::GetConstColumnOne() const
+const int WinDrawPacket::GetConstColumnOne() const
 {
 	if(readable == false)
 	{
@@ -473,7 +473,7 @@ int WinDrawPacket::GetConstColumnOne() const
 	}
 }
 
-int WinDrawPacket::GetConstColumnTwo() const
+const int WinDrawPacket::GetConstColumnTwo() const
 {
 	if(readable == false)
 	{
@@ -485,7 +485,7 @@ int WinDrawPacket::GetConstColumnTwo() const
 	}
 }
 
-int WinDrawPacket::GetConstColumnThree() const
+const int WinDrawPacket::GetConstColumnThree() const
 {
 	if(readable == false)
 	{
@@ -497,7 +497,7 @@ int WinDrawPacket::GetConstColumnThree() const
 	}
 }
 
-int WinDrawPacket::GetConstColumnFour() const
+const int WinDrawPacket::GetConstColumnFour() const
 {
 	if(readable == false)
 	{
@@ -509,7 +509,7 @@ int WinDrawPacket::GetConstColumnFour() const
 	}
 }
 
-int WinDrawPacket::GetConstColumnFive() const
+const int WinDrawPacket::GetConstColumnFive() const
 {
 	if(readable == false)
 	{
@@ -521,7 +521,7 @@ int WinDrawPacket::GetConstColumnFive() const
 	}
 }
 
-int WinDrawPacket::GetConstRowOne() const
+const int WinDrawPacket::GetConstRowOne() const
 {
 	if(readable == false)
 	{
@@ -533,7 +533,7 @@ int WinDrawPacket::GetConstRowOne() const
 	}
 }
 
-int WinDrawPacket::GetConstRowTwo() const
+const int WinDrawPacket::GetConstRowTwo() const
 {
 	if(readable == false)
 	{
@@ -545,7 +545,7 @@ int WinDrawPacket::GetConstRowTwo() const
 	}
 }
 
-int WinDrawPacket::GetConstRowThree() const
+const int WinDrawPacket::GetConstRowThree() const
 {
 	if(readable == false)
 	{
@@ -557,7 +557,7 @@ int WinDrawPacket::GetConstRowThree() const
 	}
 }
 
-int WinDrawPacket::GetConstRowFour() const
+const int WinDrawPacket::GetConstRowFour() const
 {
 	if(readable == false)
 	{
@@ -569,7 +569,7 @@ int WinDrawPacket::GetConstRowFour() const
 	}
 }
 
-int WinDrawPacket::GetConstRowFive() const
+const int WinDrawPacket::GetConstRowFive() const
 {
 	if(readable == false)
 	{
@@ -581,7 +581,7 @@ int WinDrawPacket::GetConstRowFive() const
 	}
 }
 
-int WinDrawPacket::GetConstNullConstant() const
+const int WinDrawPacket::GetConstNullConstant() const
 {
 	if(readable == false)
 	{
@@ -593,7 +593,7 @@ int WinDrawPacket::GetConstNullConstant() const
 	}
 }
 
-int WinDrawPacket::GetConstFatalError() const
+const int WinDrawPacket::GetConstFatalError() const
 {
 	int tempFatalError;
 	if(readable == false)
@@ -608,7 +608,7 @@ int WinDrawPacket::GetConstFatalError() const
 	return tempFatalError;
 }
 
-char WinDrawPacket::GetConstCharFatalError() const
+const char WinDrawPacket::GetConstCharFatalError() const
 {
 	char tempFatalError;
 	if(readable == false)
@@ -623,7 +623,7 @@ char WinDrawPacket::GetConstCharFatalError() const
 	return tempFatalError;
 }
 	
-char WinDrawPacket::GetConstDelimiter() const
+const char WinDrawPacket::GetConstDelimiter() const
 {
 	if(readable == false)
 	{

@@ -18,9 +18,10 @@ private:
 	string name;
 	int score;
 	int playerPiece;
-	string move;	//Stores the move of the player temporarly
+	int move;	//Stores the move of the player temporarly
 	bool madeMove;
 	int boundsLimit;
+	WinDrawPacket gameConstants;
 	static int numOfPlayers;
 	static int otherPlayerPiece;	//Becomes a 1 or 2 depending on the first player, when instaniating the second player the construstor
 									//only has to look at this varaible to know what the other player is and then assigns the other piece accordingly
@@ -51,8 +52,8 @@ public:
 	void SetBoundsLimit(int b) { boundsLimit = b; }
 	
 	//Get/Set functions for move
-	string GetMove() { return move; }
-	void SetMove(string m) { move = m; }
+	int GetMove() { return move; }
+	void ResetMove();
 	
 	//Check/Set functions for madeMove
 	bool CheckMadeMove() { return madeMove; }

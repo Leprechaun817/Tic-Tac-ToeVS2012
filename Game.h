@@ -11,6 +11,9 @@ using namespace std;
 
 typedef auto_ptr<WinDrawPacket> WDPacketPtr;
 
+//TODO:
+//Create list of constants that can be used throughout the game.
+//It'll just get sent to where it is needed
 class Game
 {
 private:

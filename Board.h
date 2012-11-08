@@ -11,7 +11,16 @@
 using namespace std;
 
 typedef auto_ptr<WinDrawPacket> WDPacketPtr;
+typedef auto_ptr<vector<int>> IntVectorPtr;
+typedef vector<int> IntList;
+typedef vector<int>::iterator IntIter;
 
+
+//TODO:
+//-Use typedefs for spacelist and piecePlacement
+//-Take the building of the piecePlacement out of the board display functions and put it into its own function thats called
+// when the board is updated.
+// 
 class Board
 {
 private:
@@ -39,20 +48,29 @@ private:
 	static const int B;
 	static const int C;
 
+	//Board related error codes
+	static const int noError;
+	static const int error0;
+	static const int error1;
+	static const int error2;
+
 	HANDLE hConsoleWindow;	//This will be used when changing the text colors
 	int multiplier; //total number of spaces in one line going across or down. Also acts as the height and width for the board, as well as the winning number
 	int numOfSpaces; //calculated during the making of the board, this number is used when creating the vector that will
 					 //keep track of which spaces are filled
-	vector<int> spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
+	IntList spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
+	IntList piecePlacement;  //Keeps track of just the piece types, their location on the board is figured out by their location within the vector
 	WinDrawPacket gameConstants;	//Used when making the prePacket. Setup only for that express purpose!
 	void SetupBoard();		//Asks user for number of spaces on board, figures out the multiplier
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
 	char XorO(int num, bool special);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
 	//Creates the string that will be sent to the packet object for processing
 	string CreatePrePacket(int gameOutcome, int piece, int winLocation, int diagonalLocation, int rowLocation, int columnLocation);
-	void DisplayPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int pieceColor = 0);
-	void DisplayWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int playerColor);
-	void DisplayNonWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing);
+	void DisplayPiece(int *squareCount, int *temp2, int pieceSpacing, int pieceColor = 0);
+	void DisplayWinningPiece(int *squareCount, int *temp2, int pieceSpacing, int playerColor);
+	void DisplayNonWinningPiece(int *squareCount, int *temp2, int pieceSpacing);
+	int ProcessSpaceList(int location, int playerPiece);
+	void ProcessPiecePlacementList();
 	void ResetConsoleColor();
 
 public:

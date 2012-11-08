@@ -20,6 +20,11 @@ const int Board::X = 2;
 const int Board::A = 9;
 const int Board::B = 16;
 const int Board::C = 25;
+//Error value constants
+const int Board::noError = 4;
+const int Board::error0 = 0;
+const int Board::error1 = 1;
+const int Board::error2 = 2;
 
 Board::Board()
 	: gameConstants()
@@ -97,7 +102,7 @@ void Board::InitiateBoard()
 	//And the hundreds spot represent what row its in
 	//So, 120 would mean that there is no piece there, its in row 1 and column 2
 	//This makes errors less likely to happen later on
-	vector<int>::iterator spaceListIter;
+	IntIter spaceListIter;
 	spaceListIter = spaceList.begin();
 	for(int i = 100; i <= ROW_CONST; i += 100)
 	{
@@ -108,12 +113,15 @@ void Board::InitiateBoard()
 			spaceListIter++;				//increments the vector							
 		}
 	}
+
+	//Initalize piecePlacement with the proper number of spaces as well
+	piecePlacement.resize(numOfSpaces);
 }
 
-void Board::DisplayPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int pieceColor)
+void Board::DisplayPiece(int *squareCount, int *temp2, int pieceSpacing, int pieceColor)
 {
 	char pTemp;
-	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
+	pTemp = XorO(piecePlacement[(*squareCount)], true);
 	SetConsoleTextAttribute(hConsoleWindow, pieceColor);
 	cout<<pTemp;
 	ResetConsoleColor();
@@ -121,10 +129,10 @@ void Board::DisplayPiece(const vector<int> *piecePlacement, int *squareCount, in
 	(*squareCount)++;
 }
 
-void Board::DisplayWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int playerColor)
+void Board::DisplayWinningPiece(int *squareCount, int *temp2, int pieceSpacing, int playerColor)
 {
 	char pTemp;
-	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
+	pTemp = XorO(piecePlacement[(*squareCount)], true);
 	SetConsoleTextAttribute(hConsoleWindow, playerColor);
 	cout<<pTemp;
 	ResetConsoleColor();
@@ -132,22 +140,77 @@ void Board::DisplayWinningPiece(const vector<int> *piecePlacement, int *squareCo
 	(*squareCount)++;
 }
 
-void Board::DisplayNonWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing)
+void Board::DisplayNonWinningPiece(int *squareCount, int *temp2, int pieceSpacing)
 {
 	//Reset the text color just to be sure
 	ResetConsoleColor();
 	
 	char pTemp;
-	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
+	pTemp = XorO(piecePlacement[(*squareCount)], true);
 	cout<<pTemp;
 	(*temp2) += pieceSpacing;
 	(*squareCount)++;
 }
 
-//TODO:
-//Handle the winning player conditions, which will change the color of the piece
-//Handle the text color change ahead of time so that all that will be necessary is a simple function call
-//Must handle different board sizes as well
+int Board::ProcessSpaceList(int location, int playerPiece)
+{
+	int errorValue = noError;
+	
+	//Process spaceList adding the new values
+	IntIter spaceListIter;
+	for(spaceListIter = spaceList.begin(); spaceListIter != spaceList.end(); spaceListIter++)
+	{
+		if(location == *spaceListIter)
+		{
+			//location matched location on grid exactly. No piece already exists here. Add in piece, return noError
+			*spaceListIter += playerPiece;
+			errorValue = noError;
+			//If location gets matched, the loop ends. No reason to stay in the loop at this point
+			break;
+		}
+		else if((location + 1) == *spaceListIter || (location + 2) == *spaceListIter)
+		{
+			//location given already has a piece added into it, return error1
+			errorValue = error1;
+			//Error found, loop ending
+			break;
+		}
+	}
+
+	return errorValue;
+}
+
+void Board::ProcessPiecePlacementList()
+{
+	IntIter piecePlaceIter;
+	//Iterator for spaceList
+	IntIter spaceListIter;
+	spaceListIter = spaceList.begin();
+
+	//TODO:
+	//Need to find a way to use an array of piece values instead of a vector which is computationally expensive.
+	//It won't matter much right now, but later if graphics are added on things like this will make all the difference
+	//in the refresh rate of the graphics
+	string sTemp;
+	stringstream ssTemp;
+	for(piecePlaceIter = piecePlacement.begin(); piecePlaceIter != piecePlacement.end(); piecePlaceIter++)
+	{	
+		//Convert number from spaceList to a string
+		sTemp.clear();
+		ssTemp.clear();
+		ssTemp<<*spaceListIter;
+		ssTemp>>sTemp;
+		
+		//Take last character of string and convert it into a integer and dump into piecePlacement
+		ssTemp.clear();
+		ssTemp<<sTemp[2];
+		ssTemp>>*piecePlaceIter;
+		
+		//Increment spaceListIter
+		spaceListIter++;
+	}
+}
+
 void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, int diagonalLocation, int acrossDownLocation, int playerOneColor, int playerTwoColor, int playerOnePiece, int playerTwoPiece)
 {
 	//Constants
@@ -205,31 +268,6 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 	
 	//Winning player string
 	string winningPlayer;
-	//Vector to hold piece places
-	vector<int> piecePlacement;
-	piecePlacement.resize(numOfSpaces);
-
-	//Iterators
-	vector<int>::iterator piecePlaceIter;
-	vector<int>::iterator spaceListIter;
-	spaceListIter = spaceList.begin();
-
-	string sTemp;
-	stringstream ssTemp;
-	for(piecePlaceIter = piecePlacement.begin(); piecePlaceIter != piecePlacement.end(); piecePlaceIter++)
-	{
-		sTemp.clear();
-		ssTemp.clear();
-		ssTemp<<*spaceListIter;
-		ssTemp>>sTemp;
-
-		ssTemp.clear();
-		ssTemp<<sTemp[2];
-		ssTemp>>*piecePlaceIter;
-
-		spaceListIter++;
-	}
-
 	//----DEBUGGING CODE ONLY----//
 	//Used to make sure that playerOneWin and playerTwoWin don't equal true at the same time or false at the same time
 	//Produces an error message if any of the above conditions are true
@@ -248,6 +286,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 		_getche();
 		return;
 	}
+	//----!!!!END OF DEBUGGING CODE!!!!----//
 	else if(playerOneWin == true && playerTwoWin == false)
 	{
 		const int lineSize = 46;
@@ -288,7 +327,6 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 		ResetConsoleColor();
 		winningPlayer = "Player 2";
 	}
-	//----!!!!END OF DEBUGGING CODE!!!!----//
 
 	//Figure out where the pieces on the board should be highlighted
 	if(type == gameConstants.GetConstAcross())
@@ -357,7 +395,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}
 				else if(j == temp2 && diagonal == true && diagonalLeft == true && squareCount == boardStart)
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
@@ -365,7 +403,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					   (numOfSpaces == B && squareCount == endOfRowOneB) ||
 					   (numOfSpaces == C && squareCount == endOfRowOneC))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 					}
 				}		 
 				else if(j == temp2 && down == true && across == false && diagonal == false)
@@ -374,45 +412,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					{
 						if(squareCount == boardStart)
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == startOfColumnTwo)
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == startOfColumnThree)
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == startOfColumnFour)
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == startOfColumnFive)
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 				}
 				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowOne())
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == false && across == false && down == false)
 				{
-					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					DisplayNonWinningPiece(&squareCount, &temp2, pieceSpacing);
 				}
 				else
 				{
@@ -473,30 +511,30 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				{
 					if(numOfSpaces == A && squareCount == (startOfRowTwoA + 1))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == B && squareCount == (startOfRowTwoB + 1))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (startOfRowTwoC + 1))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
 					if(numOfSpaces == A && squareCount == (endOfRowTwoA - 1))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == B && squareCount == (endOfRowTwoB - 1))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (endOfRowTwoC - 1))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
@@ -505,45 +543,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					{
 						if(squareCount == (boardStart + multiplier))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + multiplier))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + multiplier))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == (startOfColumnFour + multiplier))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == (startOfColumnFive + multiplier))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 				}
 				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowTwo())
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == false && across == false && down == false)
 				{
-					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					DisplayNonWinningPiece(&squareCount, &temp2, pieceSpacing);
 				}
 				else
 				{
@@ -1030,40 +1068,7 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 	int temp1 = 1;	//Used for vertical line spacing
 	int temp2 = 3;	//Used for piece spacing
 	int squareCount = 0;
-	//Vector to hold piece places
-	vector<int> piecePlacement;
-	piecePlacement.resize(numOfSpaces);
 	
-	//Iterator for vector piecePlacement
-	vector<int>::iterator piecePlaceIter;
-	//Iterator for spaceList
-	vector<int>::iterator spaceListIter;
-	spaceListIter = spaceList.begin();
-
-	//TODO:
-	//Need to find a way to use an array of piece values instead of a vector which is computationally expensive.
-	//It won't matter much right now, but later if graphics are added on things like this will make all the difference
-	//in the refresh rate of the graphics
-	string sTemp;
-	stringstream ssTemp;
-	for(piecePlaceIter = piecePlacement.begin(); piecePlaceIter != piecePlacement.end(); piecePlaceIter++)
-	{	
-		//Convert number from spaceList to a string
-		sTemp.clear();
-		ssTemp.clear();
-		ssTemp<<*spaceListIter;
-		ssTemp>>sTemp;
-		
-		//Take last character of string and convert it into a integer and dump into piecePlacement
-		ssTemp.clear();
-		ssTemp<<sTemp[2];
-		ssTemp>>*piecePlaceIter;
-		
-		//Increment spaceListIter
-		spaceListIter++;
-	}
-		
-
 	//Going down then across
 	for(int i = 1; i <= sizeOfBoardDown; i++) //Starting by going down 1
 	{
@@ -1480,35 +1485,21 @@ void Board::ResetBoard()
 
 int Board::BoardRefresh(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus)
 {
-	const int noError = 4;
-	const int error0 = 0;
-	const int error1 = 1;
-	const int error2 = 2;
+	
 	int valueGood = -1;
-	vector<int>::iterator spaceListIter;
-	for(spaceListIter = spaceList.begin(); spaceListIter != spaceList.end(); spaceListIter++)
-	{
-		if(location == *spaceListIter)
-		{
-			//location matched location on grid exactly. No piece already exists here. Add in piece, return noError
-			*spaceListIter += playerPiece;
-			valueGood = noError;
-			//If location gets matched, the loop ends. No reason to stay in the loop at this point
-			break;
-		}
-		else if((location + 1) == *spaceListIter || (location + 2) == *spaceListIter)
-		{
-			//location given already has a piece added into it, return error1
-			valueGood = error1;
-			//Error found, loop ending
-			break;
-		}
-	}
+	
 
+	//Process spaceList
+	valueGood = ProcessSpaceList(location, playerPiece);
+
+	//Test returned value to make sure it's ok and then double check player's move statuses and adjust error code accordingly
 	if((valueGood != error1 && valueGood != noError) && (playerOneMoveStatus == false && playerTwoMoveStatus == false))
 	{
 		valueGood = 0;
 	}
+
+	//Process piecePlacement after spaceList has been processed
+	ProcessPiecePlacementList();
 
 	return valueGood;
 }

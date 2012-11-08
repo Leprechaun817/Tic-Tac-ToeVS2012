@@ -415,7 +415,7 @@ char ScreenColors::ChangeErrorTextColor(int color)
 	return returnSelection;
 }
 
-int ScreenColors::GetColorAttribute() const
+const int ScreenColors::GetColorAttribute() const
 {
 	return colorAttribute;
 }
