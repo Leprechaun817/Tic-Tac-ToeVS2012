@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <conio.h>
 #include <ctime>
 #include <conio.h>
@@ -6,12 +7,13 @@
 
 using namespace std;
 
+typedef auto_ptr<Game> GamePtr;
+
 int main()
 {
 	srand((unsigned)time(0));
-	Game *game;		//Declare the game object
-	game = new Game();	//Instantiate the game object
-	
+	GamePtr game(new Game());
+
 	//Start the game
 	game->StartGame();
 	

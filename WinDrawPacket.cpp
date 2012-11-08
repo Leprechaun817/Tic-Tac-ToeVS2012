@@ -79,15 +79,16 @@ WinDrawPacket& WinDrawPacket::operator=(const WinDrawPacket& packet)
 	return *this;
 }
 
-WinDrawPacket::~WinDrawPacket()
-{}
-
 void WinDrawPacket::CreatePacket(string prePacket)
 {
-	stringstream ssConverter;
-	int tempNum;
-	int poundCount = 0;
+	const char Xs = 'X';
+	const char Os = 'O';
+	const char negative = '-';
 
+	stringstream ssConverter;
+	int poundCount = 0;
+	int tempNum;
+	char tempChar;
 	//Prepare stringstream for processing
 	ssConverter.clear();
 
@@ -96,8 +97,28 @@ void WinDrawPacket::CreatePacket(string prePacket)
 
 	for(unsigned int i = 0; i < prePacket.size(); i++)
 	{
+		tempNum = NULL;
+		tempChar = NULL;
 		ssConverter<<prePacket[i];
-		ssConverter>>tempNum;
+		
+		if(ssConverter.peek() == delimiter || ssConverter.peek() == Xs || ssConverter.peek() == Os)
+		{
+			ssConverter>>tempChar;
+			tempNum = (int)tempChar;
+		}
+		else if(ssConverter.peek() == negative)
+		{
+			ssConverter.clear();
+			ssConverter<<prePacket[(i + 1)];
+			ssConverter>>tempNum;
+			tempNum *= -1;
+			i++;
+		}
+		else
+		{
+			ssConverter>>tempNum;
+		}
+		
 		ssConverter.clear();
 		if((tempNum == noWinDraw || tempNum == draw) && poundCount == 0)
 		{
@@ -120,7 +141,7 @@ void WinDrawPacket::CreatePacket(string prePacket)
 		{
 			winDraw = win;
 		}
-		else if(tempNum == (int)delimiter)
+		else if(tempNum == delimiter)
 		{
 			poundCount++;
 		}
@@ -132,7 +153,7 @@ void WinDrawPacket::CreatePacket(string prePacket)
 		}
 		else
 		{
-			if(i > 2)
+			if((poundCount == 1 || poundCount == 2) && tempNum != delimiter)
 			{
 				switch(poundCount)
 				{
@@ -141,11 +162,11 @@ void WinDrawPacket::CreatePacket(string prePacket)
 					{
 						playerPiece = nullConstant;
 					}
-					else if(tempNum == O)
+					else if(tempNum == Os)
 					{
 						playerPiece = O;
 					}
-					else if(tempNum == X)
+					else if(tempNum == Xs)
 					{
 						playerPiece = X;
 					}
@@ -175,86 +196,94 @@ void WinDrawPacket::CreatePacket(string prePacket)
 					{
 						playerPiece = fatalError;
 					}
+				}
+			}
+			else if(winType == diagonal && poundCount == 3)
+			{
+				if(tempNum != delimiter)
+				{
+					if(tempNum == diagonalLeft)
+					{
+						diagonalType = diagonalLeft;
+					}
+					else if(tempNum == diagonalRight)
+					{
+						diagonalType = diagonalRight;
+					}
+					else
+					{
+						diagonalType = fatalError;
+					}
+
+					//Since it's diagonal fill in the rest of the packet and break out of the loop
+					rowAcross = nullConstant;
+					columnDown = nullConstant;
 					break;
 				}
 			}
-			else if(winType == diagonal && poundCount == 3 && i > 5)
+			else if(winType == across && poundCount == 4)
 			{
-				if(tempNum == diagonalLeft)
+				if(tempNum != delimiter)
 				{
-					diagonalType = diagonalLeft;
-				}
-				else if(tempNum == diagonalRight)
-				{
-					diagonalType = diagonalRight;
-				}
-				else
-				{
-					diagonalType = fatalError;
-				}
+					tempNum *= 100;
+					switch(tempNum)
+					{
+					case rowOne:
+						rowAcross = rowOne;
+						break;
+					case rowTwo:
+						rowAcross = rowTwo;
+						break;
+					case rowThree:
+						rowAcross = rowThree;
+						break;
+					case rowFour:
+						rowAcross = rowFour;
+						break;
+					case rowFive:
+						rowAcross = rowFive;
+						break;
+					default:
+						rowAcross = fatalError;
+					}
 
-				//Since it's diagonal fill in the rest of the packet and break out of the loop
-				rowAcross = nullConstant;
-				columnDown = nullConstant;
-				break;
+					//Fill in the rest of the packet and break out of loop
+					diagonalType = nullConstant;
+					columnDown = nullConstant;
+					break;
+				}
 			}
-			else if(winType == across && poundCount == 4 && i > 7)
+			else if(winType == down && poundCount == 5)
 			{
-				tempNum *= 100;
-				switch(tempNum)
+				if(tempNum != delimiter)
 				{
-				case rowOne:
-					rowAcross = rowOne;
-					break;
-				case rowTwo:
-					rowAcross = rowTwo;
-					break;
-				case rowThree:
-					rowAcross = rowThree;
-					break;
-				case rowFour:
-					rowAcross = rowFour;
-					break;
-				case rowFive:
-					rowAcross = rowFive;
-					break;
-				default:
-					rowAcross = fatalError;
-				}
+					tempNum *= 10;
+					switch(tempNum)
+					{
+					case colmOne:
+						columnDown = colmOne;
+						break;
+					case colmTwo:
+						columnDown = colmTwo;
+						break;
+					case colmThree:
+						columnDown = colmThree;
+						break;
+					case colmFour:
+						columnDown = colmFour;
+						break;
+					case colmFive:
+						columnDown = colmFive;
+						break;
+					default:
+						columnDown = fatalError;
+					}
 
-				//Fill in the rest of the packet and break out of loop
-				diagonalType = nullConstant;
-				columnDown = nullConstant;
-				break;
-			}
-			else if(winType == down && poundCount == 5 && i > 9)
-			{
-				tempNum *= 10;
-				switch(tempNum)
-				{
-				case colmOne:
-					columnDown = colmOne;
+					//Fill in the rest of the packet and break out of loop
+					diagonalType = nullConstant;
+					rowAcross = nullConstant;
 					break;
-				case colmTwo:
-					columnDown = colmTwo;
-					break;
-				case colmThree:
-					columnDown = colmThree;
-					break;
-				case colmFour:
-					columnDown = colmFour;
-					break;
-				case colmFive:
-					columnDown = colmFive;
-					break;
-				default:
-					columnDown = fatalError;
 				}
-
-				//Fill in the rest of the packet and break out of loop
-				diagonalType = nullConstant;
-				rowAcross = nullConstant;
-				break;
 			}
 		}
 	}
@@ -262,7 +291,7 @@ void WinDrawPacket::CreatePacket(string prePacket)
 
 //Get functions with readable check
 //Only work when readable is set to true
-int WinDrawPacket::GetWinDraw()
+int WinDrawPacket::GetWinDraw() const
 {
 	if(readable == true)
 	{
@@ -274,7 +303,7 @@ int WinDrawPacket::GetWinDraw()
 	}
 }
 
-int WinDrawPacket::GetPlayerPiece()
+int WinDrawPacket::GetPlayerPiece() const
 {
 	if(readable == true)
 	{
@@ -286,7 +315,7 @@ int WinDrawPacket::GetPlayerPiece()
 	}
 }
 
-int WinDrawPacket::GetWinType()
+int WinDrawPacket::GetWinType() const
 {
 	if(readable == true)
 	{
@@ -298,7 +327,7 @@ int WinDrawPacket::GetWinType()
 	}
 }
 
-int WinDrawPacket::GetDiagType()
+int WinDrawPacket::GetDiagType() const
 {
 	if(readable == true)
 	{
@@ -310,7 +339,7 @@ int WinDrawPacket::GetDiagType()
 	}
 }
 
-int WinDrawPacket::GetRow()
+int WinDrawPacket::GetRow() const
 {
 	if(readable == true)
 	{
@@ -322,7 +351,7 @@ int WinDrawPacket::GetRow()
 	}
 }
 
-int WinDrawPacket::GetColumn()
+int WinDrawPacket::GetColumn() const
 {
 	if(readable == true)
 	{
@@ -336,7 +365,7 @@ int WinDrawPacket::GetColumn()
 
 //Get functions for constants with readable check
 //Only work when readable is set to false
-int WinDrawPacket::GetConstNoWinDraw()
+int WinDrawPacket::GetConstNoWinDraw() const
 {
 	if(readable == false)
 	{
@@ -348,7 +377,7 @@ int WinDrawPacket::GetConstNoWinDraw()
 	}
 }
 
-int WinDrawPacket::GetConstWin()
+int WinDrawPacket::GetConstWin() const
 {
 	if(readable == false)
 	{
@@ -360,7 +389,7 @@ int WinDrawPacket::GetConstWin()
 	}
 }
 
-int WinDrawPacket::GetConstDraw()
+int WinDrawPacket::GetConstDraw() const
 {
 	if(readable == false)
 	{
@@ -372,7 +401,7 @@ int WinDrawPacket::GetConstDraw()
 	}
 }
 
-int WinDrawPacket::GetConstAcross()
+int WinDrawPacket::GetConstAcross() const
 {
 	if(readable == false)
 	{
@@ -384,7 +413,7 @@ int WinDrawPacket::GetConstAcross()
 	}
 }
 
-int WinDrawPacket::GetConstDown()
+int WinDrawPacket::GetConstDown() const
 {
 	if(readable == false)
 	{
@@ -396,7 +425,7 @@ int WinDrawPacket::GetConstDown()
 	}
 }
 
-int WinDrawPacket::GetConstDiagonal()
+int WinDrawPacket::GetConstDiagonal() const
 {
 	if(readable == false)
 	{
@@ -408,7 +437,7 @@ int WinDrawPacket::GetConstDiagonal()
 	}
 }
 
-int WinDrawPacket::GetConstDiagonalLeft()
+int WinDrawPacket::GetConstDiagonalLeft() const
 {
 	if(readable == false)
 	{
@@ -420,7 +449,7 @@ int WinDrawPacket::GetConstDiagonalLeft()
 	}
 }
 
-int WinDrawPacket::GetConstDiagonalRight()
+int WinDrawPacket::GetConstDiagonalRight() const
 {
 	if(readable == false)
 	{
@@ -432,7 +461,7 @@ int WinDrawPacket::GetConstDiagonalRight()
 	}
 }
 
-int WinDrawPacket::GetConstColumnOne()
+int WinDrawPacket::GetConstColumnOne() const
 {
 	if(readable == false)
 	{
@@ -444,7 +473,7 @@ int WinDrawPacket::GetConstColumnOne()
 	}
 }
 
-int WinDrawPacket::GetConstColumnTwo()
+int WinDrawPacket::GetConstColumnTwo() const
 {
 	if(readable == false)
 	{
@@ -456,7 +485,7 @@ int WinDrawPacket::GetConstColumnTwo()
 	}
 }
 
-int WinDrawPacket::GetConstColumnThree()
+int WinDrawPacket::GetConstColumnThree() const
 {
 	if(readable == false)
 	{
@@ -468,7 +497,7 @@ int WinDrawPacket::GetConstColumnThree()
 	}
 }
 
-int WinDrawPacket::GetConstColumnFour()
+int WinDrawPacket::GetConstColumnFour() const
 {
 	if(readable == false)
 	{
@@ -480,7 +509,7 @@ int WinDrawPacket::GetConstColumnFour()
 	}
 }
 
-int WinDrawPacket::GetConstColumnFive()
+int WinDrawPacket::GetConstColumnFive() const
 {
 	if(readable == false)
 	{
@@ -492,7 +521,7 @@ int WinDrawPacket::GetConstColumnFive()
 	}
 }
 
-int WinDrawPacket::GetConstRowOne()
+int WinDrawPacket::GetConstRowOne() const
 {
 	if(readable == false)
 	{
@@ -504,7 +533,7 @@ int WinDrawPacket::GetConstRowOne()
 	}
 }
 
-int WinDrawPacket::GetConstRowTwo()
+int WinDrawPacket::GetConstRowTwo() const
 {
 	if(readable == false)
 	{
@@ -516,7 +545,7 @@ int WinDrawPacket::GetConstRowTwo()
 	}
 }
 
-int WinDrawPacket::GetConstRowThree()
+int WinDrawPacket::GetConstRowThree() const
 {
 	if(readable == false)
 	{
@@ -528,7 +557,7 @@ int WinDrawPacket::GetConstRowThree()
 	}
 }
 
-int WinDrawPacket::GetConstRowFour()
+int WinDrawPacket::GetConstRowFour() const
 {
 	if(readable == false)
 	{
@@ -540,7 +569,7 @@ int WinDrawPacket::GetConstRowFour()
 	}
 }
 
-int WinDrawPacket::GetConstRowFive()
+int WinDrawPacket::GetConstRowFive() const
 {
 	if(readable == false)
 	{
@@ -552,7 +581,7 @@ int WinDrawPacket::GetConstRowFive()
 	}
 }
 
-int WinDrawPacket::GetConstNullConstant()
+int WinDrawPacket::GetConstNullConstant() const
 {
 	if(readable == false)
 	{
@@ -564,7 +593,7 @@ int WinDrawPacket::GetConstNullConstant()
 	}
 }
 
-int WinDrawPacket::GetConstFatalError()
+int WinDrawPacket::GetConstFatalError() const
 {
 	int tempFatalError;
 	if(readable == false)
@@ -579,7 +608,7 @@ int WinDrawPacket::GetConstFatalError()
 	return tempFatalError;
 }
 
-char WinDrawPacket::GetConstCharFatalError()
+char WinDrawPacket::GetConstCharFatalError() const
 {
 	char tempFatalError;
 	if(readable == false)
@@ -594,7 +623,7 @@ char WinDrawPacket::GetConstCharFatalError()
 	return tempFatalError;
 }
 	
-char WinDrawPacket::GetConstDelimiter()
+char WinDrawPacket::GetConstDelimiter() const
 {
 	if(readable == false)
 	{

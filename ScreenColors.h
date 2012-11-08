@@ -32,6 +32,7 @@ private:
 	char ChangeErrorTextColor(int color);
 public:
 	ScreenColors();
-	int GetColorAttribute() { return colorAttribute; }
+	void DecidePlayerScreenColor();
+	int GetColorAttribute() const;
 	void ResetConsoleColor();
 };

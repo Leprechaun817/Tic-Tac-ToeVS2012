@@ -22,9 +22,9 @@ const int Board::B = 16;
 const int Board::C = 25;
 
 Board::Board()
+	: gameConstants()
 {
 	hConsoleWindow = GetStdHandle(STD_OUTPUT_HANDLE);
-	gameConstants = new WinDrawPacket();
 	SetupBoard();
 	system("cls");
 	InitiateBoard();
@@ -34,8 +34,6 @@ Board::~Board()
 {
 	//Clean up
 	spaceList.clear();
-	gameConstants->~WinDrawPacket();
-	delete gameConstants;
 }
 
 void Board::SetupBoard()
@@ -119,8 +117,8 @@ void Board::DisplayPiece(const vector<int> *piecePlacement, int *squareCount, in
 	SetConsoleTextAttribute(hConsoleWindow, pieceColor);
 	cout<<pTemp;
 	ResetConsoleColor();
-	*temp2 += pieceSpacing;
-	*squareCount++;
+	(*temp2) += pieceSpacing;
+	(*squareCount)++;
 }
 
 void Board::DisplayWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing, int playerColor)
@@ -130,8 +128,8 @@ void Board::DisplayWinningPiece(const vector<int> *piecePlacement, int *squareCo
 	SetConsoleTextAttribute(hConsoleWindow, playerColor);
 	cout<<pTemp;
 	ResetConsoleColor();
-	*temp2 += pieceSpacing;
-	*squareCount++;
+	(*temp2) += pieceSpacing;
+	(*squareCount)++;
 }
 
 void Board::DisplayNonWinningPiece(const vector<int> *piecePlacement, int *squareCount, int *temp2, int pieceSpacing)
@@ -142,8 +140,8 @@ void Board::DisplayNonWinningPiece(const vector<int> *piecePlacement, int *squar
 	char pTemp;
 	pTemp = XorO((*piecePlacement)[(*squareCount)], true);
 	cout<<pTemp;
-	*temp2 += pieceSpacing;
-	*squareCount++;
+	(*temp2) += pieceSpacing;
+	(*squareCount)++;
 }
 
 //TODO:
@@ -293,18 +291,18 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 	//----!!!!END OF DEBUGGING CODE!!!!----//
 
 	//Figure out where the pieces on the board should be highlighted
-	if(type == gameConstants->GetConstAcross())
+	if(type == gameConstants.GetConstAcross())
 	{
 		across = true;
 	}
-	else if(type == gameConstants->GetConstDown())
+	else if(type == gameConstants.GetConstDown())
 	{
 		down = true;
 	}
-	else if(type == gameConstants->GetConstDiagonal())
+	else if(type == gameConstants.GetConstDiagonal())
 	{
 		diagonal = true;
-		if(diagonalLocation == gameConstants->GetConstDiagonalLeft())
+		if(diagonalLocation == gameConstants.GetConstDiagonalLeft())
 		{
 			diagonalLeft = true;
 		}
@@ -372,35 +370,35 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}		 
 				else if(j == temp2 && down == true && across == false && diagonal == false)
 				{
-					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					if(acrossDownLocation == gameConstants.GetConstColumnOne())
 					{
 						if(squareCount == boardStart)
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == startOfColumnTwo)
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == startOfColumnThree)
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == startOfColumnFour)
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == startOfColumnFive)
 						{
@@ -408,7 +406,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 						}
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowOne())
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowOne())
 				{
 					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
@@ -503,35 +501,35 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
 				{
-					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					if(acrossDownLocation == gameConstants.GetConstColumnOne())
 					{
 						if(squareCount == (boardStart + multiplier))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + multiplier))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + multiplier))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == (startOfColumnFour + multiplier))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == (startOfColumnFive + multiplier))
 						{
@@ -539,7 +537,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 						}
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowTwo())
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowTwo())
 				{
 					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
@@ -634,35 +632,35 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
 				{
-					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					if(acrossDownLocation == gameConstants.GetConstColumnOne())
 					{
 						if(squareCount == (boardStart + (multiplier * 2)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + (multiplier * 2)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + (multiplier * 2)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 2)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == (startOfColumnFive + (multiplier * 2)))
 						{
@@ -670,7 +668,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 						}
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowThree())
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowThree())
 				{
 					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
@@ -757,35 +755,35 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
 				{
-					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					if(acrossDownLocation == gameConstants.GetConstColumnOne())
 					{
 						if(squareCount == (boardStart + (multiplier * 3)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + (multiplier * 3)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + (multiplier * 3)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 3)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFive() && numOfSpaces == C)
+					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 3)))
 						{
@@ -793,7 +791,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 						}
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowFour())
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowFour())
 				{
 					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
@@ -866,35 +864,35 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
 				{
-					if(acrossDownLocation == gameConstants->GetConstColumnOne())
+					if(acrossDownLocation == gameConstants.GetConstColumnOne())
 					{
 						if(squareCount == (boardStart + (multiplier * 4)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + (multiplier * 4)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + (multiplier * 4)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFour())
+					else if(acrossDownLocation == gameConstants.GetConstColumnFour())
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 4)))
 						{
 							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 						}
 					}
-					else if(acrossDownLocation == gameConstants->GetConstColumnFive())
+					else if(acrossDownLocation == gameConstants.GetConstColumnFive())
 					{
 						if(squareCount == (startOfColumnFive + (multiplier * 4)))
 						{
@@ -902,7 +900,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 						}
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants->GetConstRowFive())
+				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowFive())
 				{
 					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
 				}
@@ -970,46 +968,46 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 	}
 	else if(across == true && down == false && diagonal == false)
 	{
-		if(acrossDownLocation == gameConstants->GetConstRowOne())
+		if(acrossDownLocation == gameConstants.GetConstRowOne())
 		{
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 1"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstRowTwo())
+		else if(acrossDownLocation == gameConstants.GetConstRowTwo())
 		{
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 2"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstRowThree())
+		else if(acrossDownLocation == gameConstants.GetConstRowThree())
 		{
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 3"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstRowFour())
+		else if(acrossDownLocation == gameConstants.GetConstRowFour())
 		{
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 4"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstRowFive())
+		else if(acrossDownLocation == gameConstants.GetConstRowFive())
 		{
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 5"<<endl;
 		}
 	}
 	else if(down == true && across == false && diagonal == false)
 	{
-		if(acrossDownLocation == gameConstants->GetConstColumnOne())
+		if(acrossDownLocation == gameConstants.GetConstColumnOne())
 		{
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going down on column 1"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstColumnTwo())
+		else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 		{
 			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 2"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstColumnThree())
+		else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 		{
 			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 3"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstColumnFour())
+		else if(acrossDownLocation == gameConstants.GetConstColumnFour())
 		{
 			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 4"<<endl;
 		}
-		else if(acrossDownLocation == gameConstants->GetConstColumnFive())
+		else if(acrossDownLocation == gameConstants.GetConstColumnFive())
 		{
 			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 5"<<endl;
 		}
@@ -1031,7 +1029,6 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 	//Temporary variables
 	int temp1 = 1;	//Used for vertical line spacing
 	int temp2 = 3;	//Used for piece spacing
-	char pTemp;
 	int squareCount = 0;
 	//Vector to hold piece places
 	vector<int> piecePlacement;
@@ -1121,7 +1118,6 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				}
 				else if(j == temp2)
 				{
-					//This is a test. Don't delete the old lines yet until this has been tested
 					if(piecePlacement[squareCount] == p1Piece)
 					{
 						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
@@ -1134,19 +1130,11 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 					{
 						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
 					}
-					//pTemp = XorO(piecePlacement[squareCount], true);
-					//cout<<pTemp;
-					//temp2 += pieceSpacing;
-					//squareCount++;
 				}
 				else
 				{
 					cout<<space;
 				}
-				//Reset pTemp here because it will get used again before this for loop cycles again
-				//Just to be on the safe side, this way if there is an error. You don't get a board full
-				//of Xs or Os
-				pTemp = ' ';
 				break;
 			case 4:
 				if(j == 1)
@@ -1220,16 +1208,11 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 					{
 						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
 					}
-					//pTemp = XorO(piecePlacement[squareCount], true);
-					//cout<<pTemp;
-					//temp2 += pieceSpacing;
-					//squareCount++;
 				}
 				else
 				{
 					cout<<space;
 				}
-				pTemp = ' ';
 				break;
 			case 8:
 				if(j == 1)
@@ -1303,16 +1286,11 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 					{
 						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
 					}
-					//pTemp = XorO(piecePlacement[squareCount], true);
-					//cout<<pTemp;
-					//temp2 += pieceSpacing;
-					//squareCount++;
 				}
 				else
 				{
 					cout<<space;
 				}
-				pTemp = ' ';
 				break;
 			case 12:
 				if(j == 1)
@@ -1378,16 +1356,11 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 					{
 						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
 					}
-					//pTemp = XorO(piecePlacement[squareCount], true);
-					//cout<<pTemp;
-					//temp2 += pieceSpacing;
-					//squareCount++;
 				}
 				else
 				{
 					cout<<space;
 				}
-				pTemp = ' ';
 				break;
 			case 16:
 				if(j == 1)
@@ -1453,16 +1426,11 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 					{
 						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
 					}
-					//pTemp = XorO(piecePlacement[squareCount], true);
-					//cout<<pTemp;
-					//temp2 += pieceSpacing;
-					//squareCount++;
 				}
 				else
 				{
 					cout<<space;
 				}
-				pTemp = ' ';
 				break;
 			case 20:
 				if(j == 1)
@@ -1498,8 +1466,6 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 		//temp2 will reset to 3
 		temp1 = 1;
 		temp2 = 3;
-		//Reset pTemp, just to be sure
-		pTemp = ' ';
 	}
 }
 
@@ -1621,10 +1587,10 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 	stringstream ss;
 	
 	//If there is no win or draw just fill the stream with nullConstants as there is no win data anyways
-	if(gameOutcome == gameConstants->GetConstNoWinDraw() || gameOutcome == gameConstants->GetConstDraw())
+	if(gameOutcome == gameConstants.GetConstNoWinDraw() || gameOutcome == gameConstants.GetConstDraw())
 	{
-		char tempDelimiter = gameConstants->GetConstDelimiter();
-		int tempNullConstant = gameConstants->GetConstNullConstant();
+		char tempDelimiter = gameConstants.GetConstDelimiter();
+		int tempNullConstant = gameConstants.GetConstNullConstant();
 		
 		ss.clear();
 		ss<<gameOutcome;
@@ -1632,7 +1598,7 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 		ss.clear();
 
 		prePacketStream[1] = tempDelimiter;
-		if(gameOutcome == gameConstants->GetConstDraw())
+		if(gameOutcome == gameConstants.GetConstDraw())
 		{
 			ss<<piece;
 			ss>>prePacketStream[2];
@@ -1652,7 +1618,7 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 		prePacketStream[10] = tempNullConstant;
 	}
 	//If there is a win go through and build a complete prePacket
-	else if(gameOutcome == gameConstants->GetConstWin())
+	else if(gameOutcome == gameConstants.GetConstWin())
 	{
 		ss.clear();
 		int entryCount = 1;
@@ -1660,7 +1626,7 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 		{
 			if((i % 2) != 0)
 			{
-				prePacketStream[i] = gameConstants->GetConstDelimiter();
+				prePacketStream[i] = gameConstants.GetConstDelimiter();
 			}
 			else
 			{
@@ -1683,26 +1649,26 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 					}
 					else
 					{
-						ss<<gameConstants->GetConstFatalError();
+						ss<<gameConstants.GetConstFatalError();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
 					entryCount++;
 					break;
 				case 3:
-					if(winLocation == gameConstants->GetConstAcross() || winLocation == gameConstants->GetConstDown())
+					if(winLocation == gameConstants.GetConstAcross() || winLocation == gameConstants.GetConstDown())
 					{
 						ss<<winLocation;
 						ss>>prePacketStream[i];
 						ss.clear();
 						entryCount++;
 					}
-					else if(winLocation == gameConstants->GetConstDiagonal())
+					else if(winLocation == gameConstants.GetConstDiagonal())
 					{
 						ss<<winLocation;
 						ss>>prePacketStream[i];
 						ss.clear();
-						if(diagonalLocation == gameConstants->GetConstDiagonalLeft() || diagonalLocation == gameConstants->GetConstDiagonalRight())
+						if(diagonalLocation == gameConstants.GetConstDiagonalLeft() || diagonalLocation == gameConstants.GetConstDiagonalRight())
 						{
 							ss<<diagonalLocation;
 							ss>>prePacketStream[(i + 2)];
@@ -1710,17 +1676,15 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 						}
 						else
 						{
-							ss<<gameConstants->GetConstFatalError();
+							ss<<gameConstants.GetConstFatalError();
 							ss>>prePacketStream[(i + 2)];
 							ss.clear();
 						}
 						entryCount++;
-						entryCount++;
-
 					}
 					else
 					{
-						ss<<gameConstants->GetConstFatalError();
+						ss<<gameConstants.GetConstFatalError();
 						ss>>prePacketStream[i];
 						ss.clear();
 						entryCount++;
@@ -1732,15 +1696,9 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 					ss>>tempNum1;
 					ss.clear();
 					
-					if(tempNum1 == gameConstants->GetConstFatalError())
+					if(tempNum1 == gameConstants.GetConstFatalError())
 					{
-						ss<<gameConstants->GetConstFatalError();
-						ss>>prePacketStream[i];
-						ss.clear();
-					}
-					else
-					{
-						ss<<gameConstants->GetConstNullConstant();
+						ss<<gameConstants.GetConstFatalError();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
@@ -1752,19 +1710,19 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 					ss>>tempNum2;
 					ss.clear();
 
-					if(tempNum2 == gameConstants->GetConstFatalError())
+					if(tempNum2 == gameConstants.GetConstFatalError())
 					{
-						ss<<gameConstants->GetConstFatalError();
+						ss<<gameConstants.GetConstFatalError();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
-					else if(winLocation == gameConstants->GetConstAcross())
+					else if(winLocation == gameConstants.GetConstAcross())
 					{
-						if(rowLocation == gameConstants->GetConstRowOne() ||
-						   rowLocation == gameConstants->GetConstRowTwo() ||
-						   rowLocation == gameConstants->GetConstRowThree() ||
-						   rowLocation == gameConstants->GetConstRowFour() ||
-						   rowLocation == gameConstants->GetConstRowFive())
+						if(rowLocation == gameConstants.GetConstRowOne() ||
+						   rowLocation == gameConstants.GetConstRowTwo() ||
+						   rowLocation == gameConstants.GetConstRowThree() ||
+						   rowLocation == gameConstants.GetConstRowFour() ||
+						   rowLocation == gameConstants.GetConstRowFive())
 						{
 							ss<<rowLocation;
 							ss>>prePacketStream[i];
@@ -1772,20 +1730,21 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 						}
 						else
 						{
-							ss<<gameConstants->GetConstFatalError();
+							ss<<gameConstants.GetConstFatalError();
 							ss>>prePacketStream[i];
 							ss.clear();
 						}
 					}
-					else if(winLocation == gameConstants->GetConstDown())
+					else if(winLocation == gameConstants.GetConstDown())
 					{
-						ss<<gameConstants->GetConstNullConstant();
+						ss.clear();
+						ss<<gameConstants.GetConstNullConstant();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
 					else
 					{
-						ss<<gameConstants->GetConstFatalError();
+						ss<<gameConstants.GetConstFatalError();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
@@ -1797,19 +1756,19 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 					ss>>temp3;
 					ss.clear();
 
-					if(temp3 == gameConstants->GetConstFatalError())
+					if(temp3 == gameConstants.GetConstFatalError())
 					{
-						ss<<gameConstants->GetConstFatalError();
+						ss<<gameConstants.GetConstFatalError();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
-					else if(winLocation == gameConstants->GetConstDown())
+					else if(winLocation == gameConstants.GetConstDown())
 					{
-						if(columnLocation == gameConstants->GetConstColumnOne() ||
-						   columnLocation == gameConstants->GetConstColumnTwo() ||
-						   columnLocation == gameConstants->GetConstColumnThree() ||
-						   columnLocation == gameConstants->GetConstColumnFour() ||
-						   columnLocation == gameConstants->GetConstColumnFive())
+						if(columnLocation == gameConstants.GetConstColumnOne() ||
+						   columnLocation == gameConstants.GetConstColumnTwo() ||
+						   columnLocation == gameConstants.GetConstColumnThree() ||
+						   columnLocation == gameConstants.GetConstColumnFour() ||
+						   columnLocation == gameConstants.GetConstColumnFive())
 						{
 							ss<<columnLocation;
 							ss>>prePacketStream[i];
@@ -1817,20 +1776,20 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 						}
 						else
 						{
-							ss<<gameConstants->GetConstFatalError();
+							ss<<gameConstants.GetConstFatalError();
 							ss>>prePacketStream[i];
 							ss.clear();
 						}
 					}
-					else if(winLocation == gameConstants->GetConstAcross())
+					else if(winLocation == gameConstants.GetConstAcross() || winLocation == gameConstants.GetConstDiagonal())
 					{
-						ss<<gameConstants->GetConstNullConstant();
+						ss<<gameConstants.GetConstNullConstant();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
 					else
 					{
-						ss<<gameConstants->GetConstFatalError();
+						ss<<gameConstants.GetConstFatalError();
 						ss>>prePacketStream[i];
 						ss.clear();
 					}
@@ -1849,31 +1808,35 @@ string Board::CreatePrePacket(int gameOutcome, int piece, int winLocation, int d
 	return prePacket;
 }
 
-WinDrawPacket& Board::FindWinDraw()
+WDPacketPtr Board::FindWinDraw()
 {
 	//Put these constants here because they only have to do with this function
 	//Basically these are the same constants foung in the WinDrawPacket class
 	//Ensures that there aren't any mistakes with the different codes
 
 	//----TEMPORARY VALUES FOR TESTING ONLY----
-	int tempGameOutcome = gameConstants->GetConstWin();
+	int tempGameOutcome = gameConstants.GetConstWin();
 	int tempPiece = X;
-	int tempWinLocation = gameConstants->GetConstDiagonal();
-	int tempDiagonalLocation = gameConstants->GetConstDiagonalRight();
-	int tempRowLocation = gameConstants->GetConstNullConstant();
-	int tempColumnLocation = gameConstants->GetConstNullConstant();
+	int tempWinLocation = gameConstants.GetConstDiagonal();
+	int tempDiagonalLocation = gameConstants.GetConstDiagonalRight();
+	int tempRowLocation = gameConstants.GetConstNullConstant();
+	int tempColumnLocation = gameConstants.GetConstNullConstant();
 	//----ABOVE VALUES ARE TEMPORARY----
 	//----FOR TESTING PURPOSES ONLY----
 
-	WinDrawPacket *packet;
+	WDPacketPtr packet(new WinDrawPacket());
 	string prePacket = CreatePrePacket(tempGameOutcome, tempPiece, tempWinLocation, tempDiagonalLocation, tempRowLocation, tempColumnLocation);
-	packet = new WinDrawPacket();
 	packet->CreatePacket(prePacket);
-	return *packet;
+	return packet;
 }
 
 void Board::ResetConsoleColor()
 {
 	int dark_white = 7 % 16;
 	SetConsoleTextAttribute(hConsoleWindow, dark_white);
+}
+
+int Board::GetMultiplier() const
+{
+	return multiplier;
 }

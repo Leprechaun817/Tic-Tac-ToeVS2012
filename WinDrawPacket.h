@@ -65,46 +65,45 @@ private:
 public:
 	WinDrawPacket();
 	WinDrawPacket(const WinDrawPacket& packet);
-	~WinDrawPacket();
-
+	
 	WinDrawPacket& operator=(const WinDrawPacket& packet);
 
 	//This used to create the packet that will get sent from the board object to the game object
 	void CreatePacket(string prePacket);
 
 	//Get variables
-	int GetWinDraw();
-	int GetPlayerPiece();
-	int GetWinType();
-	int GetDiagType();
-	int GetRow();
-	int GetColumn();
+	int GetWinDraw() const;
+	int GetPlayerPiece() const;
+	int GetWinType() const;
+	int GetDiagType() const;
+	int GetRow() const;
+	int GetColumn() const;
 
 	//Get functions for the constants
 	//Will be used in board object mostly
 	//Will only output the proper values if readable is set to false.
 	//I did it this way to insure that the gameConstants object in the Board object only gets used
 	//to output the necessary constants to build the prePacket.
-	int GetConstNoWinDraw();
-	int GetConstWin();
-	int GetConstDraw();
-	int GetConstAcross();
-	int GetConstDown();
-	int GetConstDiagonal();
-	int GetConstDiagonalLeft();
-	int GetConstDiagonalRight();
-	int GetConstColumnOne();
-	int GetConstColumnTwo();
-	int GetConstColumnThree();
-	int GetConstColumnFour();
-	int GetConstColumnFive();
-	int GetConstRowOne();
-	int GetConstRowTwo();
-	int GetConstRowThree();
-	int GetConstRowFour();
-	int GetConstRowFive();
-	int GetConstNullConstant();
-	int GetConstFatalError();
-	char GetConstCharFatalError();
-	char GetConstDelimiter();
+	int GetConstNoWinDraw() const;
+	int GetConstWin() const;
+	int GetConstDraw() const;
+	int GetConstAcross() const;
+	int GetConstDown() const;
+	int GetConstDiagonal() const;
+	int GetConstDiagonalLeft() const;
+	int GetConstDiagonalRight() const;
+	int GetConstColumnOne() const;
+	int GetConstColumnTwo() const;
+	int GetConstColumnThree() const;
+	int GetConstColumnFour() const;
+	int GetConstColumnFive() const;
+	int GetConstRowOne() const;
+	int GetConstRowTwo() const;
+	int GetConstRowThree() const;
+	int GetConstRowFour() const;
+	int GetConstRowFive() const;
+	int GetConstNullConstant() const;
+	int GetConstFatalError() const;
+	char GetConstCharFatalError() const;
+	char GetConstDelimiter() const;
 };

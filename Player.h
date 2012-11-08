@@ -7,10 +7,13 @@
 
 using namespace std;
 
+//TODO:
+//Make all get functions const correct
+//Needs to be done as soon as possible
 class Player
 {
 private:
-	ScreenColors *textColor;
+	ScreenColors textColor;
 	int id;
 	string name;
 	int score;
@@ -56,5 +59,5 @@ public:
 	void SetMadeMove(bool mm) { madeMove = mm; }
 
 	//Get function for text color
-	int GetTextColor() { return textColor->GetColorAttribute(); }
+	int GetTextColor() const;
 };

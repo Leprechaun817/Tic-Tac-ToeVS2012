@@ -19,14 +19,8 @@ const string Game::minorErrorMessage = "A minor error has occurred.\nThe game wi
 const string Game::anyKey = "Press any key to continue...\n";
 
 Game::Game()
+	: playerOne(), playerTwo(), board(), gameConstants()
 {
-	//Instantiate the players first, ask them their names
-	playerOne = new Player();
-	playerTwo = new Player();
-	
-	//Setup the board, ask players how big they want the board
-	board = new Board();
-
 	//Zero gamesPlayed
 	roundsPlayed = 0;
 	//Zero draws as no games have been played yet...
@@ -37,16 +31,16 @@ Game::Game()
 	//set bounds limit, basically players shouldn't be able to enter in values past this number
 	//It's also the number used to determine if somebody won the game
 	//The value is pulled from the board object
-	boundsLimit = board->GetMultiplier();
+	boundsLimit = board.GetMultiplier();
 	//Setting bounds limits for each player
-	playerOne->SetBoundsLimit(boundsLimit);
-	playerTwo->SetBoundsLimit(boundsLimit);
+	playerOne.SetBoundsLimit(boundsLimit);
+	playerTwo.SetBoundsLimit(boundsLimit);
 
 	//First time game is starting so firstPlay is true
 	firstPlay = true;
 
 	//Figure out play order
-	if(playerOne->GetPieceNum() == 2)
+	if(playerOne.GetPieceNum() == 2)
 	{
 		playOrder = 1;
 	}
@@ -54,23 +48,6 @@ Game::Game()
 	{
 		playOrder = 2;
 	}
-
-	//Initiate gameConstants
-	gameConstants = new WinDrawPacket();
-}
-
-Game::~Game()
-{
-	//Cleaning up after game has been finished
-	board->~Board();
-	playerOne->~Player();
-	playerTwo->~Player();
-	gameConstants->~WinDrawPacket();
-
-	delete board;
-	delete playerOne;
-	delete playerTwo;
-	delete gameConstants;
 }
 
 void Game::StartGame()
@@ -113,7 +90,7 @@ void Game::StartGame()
 	system("cls");
 
 	//Display the empty starting board
-	board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
+	board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
 	//Get the first round of player moves
 	//Call GameLoop at this point
 }
@@ -128,7 +105,7 @@ bool Game::GameLoop()
 	//Check for win or draw, only after the amounts of total turns taken equals the multiplier
 	if(turnCounter >= boundsLimit)
 	{
-		continueGame = ProcessPacket(&(board->FindWinDraw()));
+		continueGame = ProcessPacket(board.FindWinDraw());
 	}
 
 	return continueGame;
@@ -178,25 +155,25 @@ void Game::ResetGame()
 	firstPlay = false;
 	
 	//Reset the board first
-	board->ResetBoard();
+	board.ResetBoard();
 	
 	//Then get multiplier from the board
 	//This keeps problems with bounds issues popping up
-	boundsLimit = board->GetMultiplier();
+	boundsLimit = board.GetMultiplier();
 
 	//Reset the player piece using one of the players
 	//This works because otherPlayerPiece in the Player class is static
 	//and doesn't change when a new player is instaniated. Unless you go in
 	//and chnage it through a call or manually
-	playerOne->ResetPlayerPiece();
+	playerOne.ResetPlayerPiece();
 
 	//Reset both players
-	playerOne->ResetPlayer();
-	playerTwo->ResetPlayer();
+	playerOne.ResetPlayer();
+	playerTwo.ResetPlayer();
 
 	//Reset BoundsLimits for both players
-	playerOne->SetBoundsLimit(boundsLimit);
-	playerTwo->SetBoundsLimit(boundsLimit);
+	playerOne.SetBoundsLimit(boundsLimit);
+	playerTwo.SetBoundsLimit(boundsLimit);
 }
 
 bool Game::GetPlayerMoves()
@@ -209,7 +186,7 @@ bool Game::GetPlayerMoves()
 		if(continuePlay == true)
 		{
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
 		}
 		else
 		{
@@ -222,7 +199,7 @@ bool Game::GetPlayerMoves()
 			//Now that both players have made their moves increment the turnCounter by 1
 			turnCounter++;
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
 		}
 		else
 		{
@@ -235,7 +212,7 @@ bool Game::GetPlayerMoves()
 		if(continuePlay == true)
 		{
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
 		}
 		else
 		{
@@ -248,7 +225,7 @@ bool Game::GetPlayerMoves()
 			//Same thing, both players have made their moves. Increment the turnCounter by 1
 			turnCounter++;
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
 		}
 		else
 		{
@@ -265,26 +242,26 @@ bool Game::PlayerOneMove()
 	bool continuePlay = true;
 	while(moveIsGood == false)
 	{
-		continuePlay = playerOne->MakeMove();
+		continuePlay = playerOne.MakeMove();
 		if(continuePlay == false)
 		{
 			//Break out of loop and continue quit propogation
 			break;
 		}
 
-		playerOne->SetMadeMove(true);
+		playerOne.SetMadeMove(true);
 		cout<<endl;
-		moveIsGood = CheckAndUpdateBoard(FormatMove(playerOne->GetMove()));
+		moveIsGood = CheckAndUpdateBoard(FormatMove(playerOne.GetMove()));
 		//If move is no good, move through loop until player enters a good move
 		if(moveIsGood == false)
 		{
-			playerOne->SetMove(" ");
+			playerOne.SetMove(" ");
 			//playerOne->SetMadeMove(false);
 			//SetMadeMove will be called in CheckAndUpdateBoard in the event that the move is no good
 			//If this doesn't work, uncomment the first line as an insurance policy to make sure that madeMove is
 			//made false. Otherwise the move check might get messed up.
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
 			cout<<endl;
 			cout<<"Please re-enter your move."<<endl;
 			_getche();
@@ -293,8 +270,8 @@ bool Game::PlayerOneMove()
 		{
 			//If move checked out ok and was entered into the vector in preperation for the board refresh
 			//Reset players move and set players madeMove variable to false in preperation for next turn
-			playerOne->SetMove(" ");
-			playerOne->SetMadeMove(false);
+			playerOne.SetMove(" ");
+			playerOne.SetMadeMove(false);
 		}
 	}
 
@@ -307,25 +284,25 @@ bool Game::PlayerTwoMove()
 	bool continuePlay = true;
 	while(moveIsGood == false)
 	{
-		continuePlay = playerTwo->MakeMove();
+		continuePlay = playerTwo.MakeMove();
 		if(continuePlay == false)
 		{
 			//Break out of loop and continue quit propogation
 			break;
 		}
 
-		playerTwo->SetMadeMove(true);
+		playerTwo.SetMadeMove(true);
 		cout<<endl;
-		moveIsGood = CheckAndUpdateBoard(FormatMove(playerTwo->GetMove()));
+		moveIsGood = CheckAndUpdateBoard(FormatMove(playerTwo.GetMove()));
 		//If move is no good, move through if,then statement and reset everything.
 		//Then player will be told to re-enter the move
 		if(moveIsGood == false)
 		{
-			playerTwo->SetMove(" ");
+			playerTwo.SetMove(" ");
 			//playerTwo->SetMadeMove(false);
 			//SetMadeMove will be called in CheckAndUpdateBoard in the event that the move is no good
 			system("cls");
-			board->DisplayBoard(roundsPlayed, gameDraws, playerOne->GetName(), playerOne->GetScore(), playerOne->GetPieceNum(), playerOne->GetTextColor(), playerTwo->GetName(), playerTwo->GetScore(), playerTwo->GetPieceNum(), playerTwo->GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
 			cout<<endl;
 			cout<<"Please re-enter your move."<<endl;
 			_getche();
@@ -334,8 +311,8 @@ bool Game::PlayerTwoMove()
 		{
 			//If move checked out ok and was entered into the vector in preperation for the board refresh
 			//Reset players move and set players madeMove variable to false in preperation for next turn
-			playerTwo->SetMove(" ");
-			playerTwo->SetMadeMove(false);
+			playerTwo.SetMove(" ");
+			playerTwo.SetMadeMove(false);
 		}
 	}
 
@@ -376,17 +353,17 @@ bool Game::CheckAndUpdateBoard(int move)
 								//Less code this way, moveCheck is only made true if no errors are found, so the moveCheck needs to be changed
 								//exactly once
 	
-	if(playerOne->CheckMadeMove() == false && playerTwo->CheckMadeMove() == false)
+	if(playerOne.CheckMadeMove() == false && playerTwo.CheckMadeMove() == false)
 	{
 		moveError = 0;
 	}
-	else if(playerOne->CheckMadeMove() == true)
+	else if(playerOne.CheckMadeMove() == true)
 	{
-		moveError = board->BoardRefresh(playerOne->GetPieceNum(), move, playerOne->CheckMadeMove(), playerTwo->CheckMadeMove());
+		moveError = board.BoardRefresh(playerOne.GetPieceNum(), move, playerOne.CheckMadeMove(), playerTwo.CheckMadeMove());
 	}
-	else if(playerTwo->CheckMadeMove() == true)
+	else if(playerTwo.CheckMadeMove() == true)
 	{
-		moveError = board->BoardRefresh(playerTwo->GetPieceNum(), move, playerOne->CheckMadeMove(), playerTwo->CheckMadeMove());
+		moveError = board.BoardRefresh(playerTwo.GetPieceNum(), move, playerOne.CheckMadeMove(), playerTwo.CheckMadeMove());
 	}
 	else	//This is else is purely for debug purposes. Under normal circumstances this should never get called!!!
 	{
@@ -420,15 +397,15 @@ bool Game::CheckAndUpdateBoard(int move)
 	return moveCheck;
 }
 
-bool Game::ProcessPacket(WinDrawPacket *packet)
+bool Game::ProcessPacket(WDPacketPtr packet)
 {
 	bool continueGame = true;
 	int tempType;
 	int tempDiagonalLocation;
 	int tempAcrossDownLocation;
-	if(packet->GetWinDraw() == gameConstants->GetConstNoWinDraw() || packet->GetWinDraw() == gameConstants->GetConstDraw())
+	if(packet->GetWinDraw() == gameConstants.GetConstNoWinDraw() || packet->GetWinDraw() == gameConstants.GetConstDraw())
 	{
-		if(packet->GetWinDraw() == gameConstants->GetConstDraw())
+		if(packet->GetWinDraw() == gameConstants.GetConstDraw())
 		{
 			gameDraws++;
 			//put message indicating that a draw has occurred and a new game is starting
@@ -436,36 +413,31 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 			cout<<anyKey;
 			_getche();
 			continueGame = false;
-			//Destroy packet and return to GameLoop
-			packet->~WinDrawPacket();
-			delete packet;	//This might cause an exception, be on lookout. Remove if necessary
 			return continueGame;
 		}
 		else
 		{
-			packet->~WinDrawPacket();
-			delete packet;
 			return continueGame;
 		}
 	}
-	else if(packet->GetWinDraw() == gameConstants->GetConstWin())
+	else if(packet->GetWinDraw() == gameConstants.GetConstWin())
 	{
 		//Get player piece and compare, update their winCounter
-		if(packet->GetPlayerPiece() == playerOne->GetPieceNum())
+		if(packet->GetPlayerPiece() == playerOne.GetPieceNum())
 		{
-			playerOne->UpdateScore();
+			playerOne.UpdateScore();
 			//Message telling that player 1 has won the game
 			cout<<playerOneWinMessage;
-			playerOne->DisplayScore();
+			playerOne.DisplayScore();
 			cout<<anyKey;
 			_getche();
 		}
-		else if(packet->GetPlayerPiece() == playerTwo->GetPieceNum())
+		else if(packet->GetPlayerPiece() == playerTwo.GetPieceNum())
 		{
-			playerTwo->UpdateScore();
+			playerTwo.UpdateScore();
 			//Message telling that player 2 has won the game
 			cout<<playerTwoWinMessage;
-			playerTwo->DisplayScore();
+			playerTwo.DisplayScore();
 			cout<<anyKey;
 			_getche();
 		}
@@ -477,26 +449,24 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 			cout<<anyKey;
 			_getche();
 			continueGame = false;
-			packet->~WinDrawPacket();
-			delete packet;
 			return continueGame;
 		}
 
 		//Find out where player won, store values in temp variables and send to DisplayBoard function
-		if(packet->GetWinType() == gameConstants->GetConstDiagonal())
+		if(packet->GetWinType() == gameConstants.GetConstDiagonal())
 		{
-			tempType = gameConstants->GetConstDiagonal();
-			if(packet->GetDiagType() == gameConstants->GetConstDiagonalLeft())
+			tempType = gameConstants.GetConstDiagonal();
+			if(packet->GetDiagType() == gameConstants.GetConstDiagonalLeft())
 			{
-				tempDiagonalLocation = gameConstants->GetConstDiagonalLeft();
+				tempDiagonalLocation = gameConstants.GetConstDiagonalLeft();
 			}
-			else if(packet->GetDiagType() == gameConstants->GetConstDiagonalRight())
+			else if(packet->GetDiagType() == gameConstants.GetConstDiagonalRight())
 			{
-				tempDiagonalLocation = gameConstants->GetConstDiagonalRight();
+				tempDiagonalLocation = gameConstants.GetConstDiagonalRight();
 			}
 			else //diagType didn't equal 1 or 2 even though the winning move was a diagonal, this is an error
 			{
-				if(packet->GetDiagType() == gameConstants->GetConstNullConstant())
+				if(packet->GetDiagType() == gameConstants.GetConstNullConstant())
 				{
 					//Message stating a minor error has occurred and the code should be checked out
 					cout<<minorErrorMessage;
@@ -519,38 +489,36 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 
 				//Both errors will result in the game closing
 				continueGame = false;
-				packet->~WinDrawPacket();
-				delete packet;
 				return continueGame;
 			}
 		}
-		else if(packet->GetWinType() == gameConstants->GetConstAcross())
+		else if(packet->GetWinType() == gameConstants.GetConstAcross())
 		{
-			tempType = gameConstants->GetConstAcross();
-			tempDiagonalLocation = gameConstants->GetConstNullConstant();
-			if(packet->GetRow() == gameConstants->GetConstRowOne())
+			tempType = gameConstants.GetConstAcross();
+			tempDiagonalLocation = gameConstants.GetConstNullConstant();
+			if(packet->GetRow() == gameConstants.GetConstRowOne())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstRowOne();
+				tempAcrossDownLocation = gameConstants.GetConstRowOne();
 			}
-			else if(packet->GetRow() == gameConstants->GetConstRowTwo())
+			else if(packet->GetRow() == gameConstants.GetConstRowTwo())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstRowTwo();
+				tempAcrossDownLocation = gameConstants.GetConstRowTwo();
 			}
-			else if(packet->GetRow() == gameConstants->GetConstRowThree())
+			else if(packet->GetRow() == gameConstants.GetConstRowThree())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstRowThree();
+				tempAcrossDownLocation = gameConstants.GetConstRowThree();
 			}
-			else if(packet->GetRow() == gameConstants->GetConstRowFour())
+			else if(packet->GetRow() == gameConstants.GetConstRowFour())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstRowFour();
+				tempAcrossDownLocation = gameConstants.GetConstRowFour();
 			}
-			else if(packet->GetRow() == gameConstants->GetConstRowFive())
+			else if(packet->GetRow() == gameConstants.GetConstRowFive())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstRowFive();
+				tempAcrossDownLocation = gameConstants.GetConstRowFive();
 			}
 			else //the row didn't match any of the row locations, an error has occurred
 			{
-				if(packet->GetRow() == gameConstants->GetConstNullConstant())
+				if(packet->GetRow() == gameConstants.GetConstNullConstant())
 				{
 					//Message stating minor error has occurred
 					cout<<minorErrorMessage;
@@ -572,38 +540,36 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 
 				//End the game
 				continueGame = false;
-				packet->~WinDrawPacket();
-				delete packet;
 				return continueGame;
 			}
 		}
-		else if(packet->GetWinType() == gameConstants->GetConstDown())
+		else if(packet->GetWinType() == gameConstants.GetConstDown())
 		{
-			tempType = gameConstants->GetConstDown();
-			tempDiagonalLocation = gameConstants->GetConstNullConstant();
-			if(packet->GetColumn() == gameConstants->GetConstColumnOne())
+			tempType = gameConstants.GetConstDown();
+			tempDiagonalLocation = gameConstants.GetConstNullConstant();
+			if(packet->GetColumn() == gameConstants.GetConstColumnOne())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstColumnOne();
+				tempAcrossDownLocation = gameConstants.GetConstColumnOne();
 			}
-			else if(packet->GetColumn() == gameConstants->GetConstColumnTwo())
+			else if(packet->GetColumn() == gameConstants.GetConstColumnTwo())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstColumnTwo();
+				tempAcrossDownLocation = gameConstants.GetConstColumnTwo();
 			}
-			else if(packet->GetColumn() == gameConstants->GetConstColumnThree())
+			else if(packet->GetColumn() == gameConstants.GetConstColumnThree())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstColumnThree();
+				tempAcrossDownLocation = gameConstants.GetConstColumnThree();
 			}
-			else if(packet->GetColumn() == gameConstants->GetConstColumnFour())
+			else if(packet->GetColumn() == gameConstants.GetConstColumnFour())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstColumnFour();
+				tempAcrossDownLocation = gameConstants.GetConstColumnFour();
 			}
-			else if(packet->GetColumn() == gameConstants->GetConstColumnFive())
+			else if(packet->GetColumn() == gameConstants.GetConstColumnFive())
 			{
-				tempAcrossDownLocation = gameConstants->GetConstColumnFive();
+				tempAcrossDownLocation = gameConstants.GetConstColumnFive();
 			}
 			else   //column didn't match any column locations, an error has occured
 			{
-				if(packet->GetColumn() == gameConstants->GetConstNullConstant())
+				if(packet->GetColumn() == gameConstants.GetConstNullConstant())
 				{
 					//Message stating minor error has occurred
 					cout<<minorErrorMessage;
@@ -625,14 +591,12 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 
 				//End the game
 				continueGame = false;
-				packet->~WinDrawPacket();
-				delete packet;
 				return continueGame;
 			}
 		}
 		else //win type didn't equal 1, 2, or 3, an error has occured
 		{
-			if(packet->GetWinType() == gameConstants->GetConstNullConstant())
+			if(packet->GetWinType() == gameConstants.GetConstNullConstant())
 			{
 				//Message stating that minor error has occurred
 				//Can't have a win and a winType with a nullConstant
@@ -656,8 +620,6 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 
 			//End the game
 			continueGame = false;
-			packet->~WinDrawPacket();
-			delete packet;
 			return continueGame;
 		}
 	}
@@ -671,8 +633,6 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 
 		//End the game
 		continueGame = false;
-		packet->~WinDrawPacket();
-		delete packet;
 		return continueGame;
 	}
 
@@ -681,8 +641,5 @@ bool Game::ProcessPacket(WinDrawPacket *packet)
 	//May need special board draw function for this, as this is a special case
 	//Putting code in to process these values may make the original display function unnecessarily complicated
 	
-	//Destroy packet and return to GameLoop
-	packet->~WinDrawPacket();
-	delete packet;
 	return continueGame;
 }

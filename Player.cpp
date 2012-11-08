@@ -5,6 +5,7 @@ int Player::otherPlayerPiece = 0;
 const int Player::answerSize = 3;
 
 Player::Player()
+	: textColor()
 {
 	string n;
 
@@ -35,7 +36,7 @@ Player::Player()
 	AssignPlayerPiece();	
 
 	madeMove = false;
-	textColor = new ScreenColors();
+	textColor.DecidePlayerScreenColor();
 }
 
 Player::~Player()
@@ -213,4 +214,9 @@ bool Player::CheckPlayerMove()
 	}
 
 	return true;
+}
+
+int Player::GetTextColor() const
+{
+	return textColor.GetColorAttribute();
 }

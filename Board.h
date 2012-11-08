@@ -10,6 +10,8 @@
 
 using namespace std;
 
+typedef auto_ptr<WinDrawPacket> WDPacketPtr;
+
 class Board
 {
 private:
@@ -42,7 +44,7 @@ private:
 	int numOfSpaces; //calculated during the making of the board, this number is used when creating the vector that will
 					 //keep track of which spaces are filled
 	vector<int> spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
-	WinDrawPacket *gameConstants;	//Used when making the prePacket. Setup only for that express purpose!
+	WinDrawPacket gameConstants;	//Used when making the prePacket. Setup only for that express purpose!
 	void SetupBoard();		//Asks user for number of spaces on board, figures out the multiplier
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
 	char XorO(int num, bool special);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
@@ -64,8 +66,8 @@ public:
 	void DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, int diagonalLocation, int acrossDownLocation, int playerOneColor, int playerTwoColor, int playerOnePiece, int playerTwoPiece);
 	void ResetBoard();  //Resets board and sets it up for another play-through
 	int BoardRefresh(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus);
-	WinDrawPacket& FindWinDraw();
+	WDPacketPtr FindWinDraw();
 
 	//Get functions
-	int GetMultiplier() { return multiplier; }
+	int GetMultiplier() const;
 };

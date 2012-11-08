@@ -21,6 +21,12 @@ int ScreenColors::otherPlayerColor = 0;
 ScreenColors::ScreenColors()
 {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	otherPlayerColor = -1;
+	colorAttribute = 0;
+}
+
+void ScreenColors::DecidePlayerScreenColor()
+{
 	char selection;
 	cout<<"What color do you want your piece to be?"<<endl;
 	SetConsoleTextAttribute(hConsole, dark_blue);
@@ -407,6 +413,11 @@ char ScreenColors::ChangeErrorTextColor(int color)
 	cin>>returnSelection;
 
 	return returnSelection;
+}
+
+int ScreenColors::GetColorAttribute() const
+{
+	return colorAttribute;
 }
 
 void ScreenColors::ResetConsoleColor()
