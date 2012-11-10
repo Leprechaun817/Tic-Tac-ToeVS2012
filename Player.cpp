@@ -4,11 +4,13 @@ int Player::numOfPlayers = 0;
 int Player::otherPlayerPiece = 0;
 const int Player::answerSize = 3;
 
-Player::Player()
+const string Player::noPlayerPiece = "noPlayerPiece";
+const string Player::oPlayerPiece = "oPlayerPiece";
+const string Player::xPlayerPiece = "xPlayerPiece";
+
+Player::Player(const ConstList &cList)
 	: textColor()
 {
-	string n;
-
 	//if...else... here is used becuase of the fact that numOfPlayers is a static variable so if this class has been
 	//instantiated once this variable will already have a value. So the constructor has to check for that and account for it.
 	if(numOfPlayers == 0)	//if numOfPlayers hasn't been used before
@@ -24,23 +26,39 @@ Player::Player()
 	//Might as well code for expansion anyways though
 	id = numOfPlayers;
 	score = 0;
+	AssignPlayerPiece();	
+
+	madeMove = false;
+	playerInitialized = false;
+
+	(*this).constantsList = cList;
+
+	resetPlayerFunctionCalled = false;
+}
+
+Player::~Player()
+{}
+
+void Player::InitializePlayer(int boundsLimit)
+{
+	(*this).boundsLimit = boundsLimit;
 
 	//Ask player for name
 	//Had to put it here because I need the ID for the prompt...
+	string n;
 	cout<<"Player "<<id<<": What is your name?"<<endl;
 	cin>>n;
 
 	//Assigning string value n to name
 	name = n;
 
-	AssignPlayerPiece();	
-
-	madeMove = false;
 	textColor.DecidePlayerScreenColor();
-}
 
-Player::~Player()
-{}
+	//Player has now been initialized
+	playerInitialized = true;
+	
+	//Decide player turn order (Who goes first and second)
+}
 
 void Player::AssignPlayerPiece()
 {
@@ -63,21 +81,45 @@ void Player::AssignPlayerPiece()
 		{
 			playerPiece = 1;
 		}
+
+		resetPlayerFunctionCalled = false;
 	}
 }
 
+void Player::DecidePlayerTurnOrder()
+{
+	//Order of play decided by who has which pieces
+	//X's go first
+	//O's go second
+	if(playerPiece == 1)
+		;
+}
+
 //Make sure to call this after AssignPlayerPiece is called. This is very important!!!
-void Player::ResetPlayer()
+void Player::ResetPlayer(int boundsLimit)
 {
 	madeMove = false;
 	playerPiece = 0;
+	//Set boundsLimit
+	(*this).boundsLimit = boundsLimit;
 	AssignPlayerPiece();
 }
 
 //This must be called before ResetPlayer has been called in order for this to work correctly
 void Player::ResetPlayerPiece()
 {
-	otherPlayerPiece = 0;
+	if(resetPlayerFunctionCalled == false)
+	{
+		otherPlayerPiece = 0;
+		resetPlayerFunctionCalled = true;
+	}
+	else
+	{
+		cout<<"This function has already been called,\n";
+		cout<<"You can't call this again...\n";
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+	}
 }
 
 int Player::PieceGen()
@@ -121,10 +163,11 @@ bool Player::MakeMove()
 	bool answer = false;
 	bool continuePlay = true;
 	DisplayName();
+	string choice;
 	cout<<endl;
 	cout<<"Enter in your choice below..."<<endl;
 	cout<<"Ex. 1,1 or q to quit the game"<<endl;
-	cin>>move;
+	cin>>choice;
 	while(answer == false)
 	{
 		//Used unsigned int here because move.size is also an unsigned integer.
@@ -163,7 +206,7 @@ bool Player::MakeMove()
 	return continuePlay;
 }
 
-bool Player::CheckPlayerMove()
+bool Player::CheckPlayerMove(string choice)
 {
 	//stringstream for converstion
 	stringstream s;

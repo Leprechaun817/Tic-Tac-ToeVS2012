@@ -2,7 +2,10 @@
 #include <iostream>
 #include <conio.h>
 #include <string>
+#include <memory>
+#include <map>
 #include <sstream>
+#include <array>
 #include "Board.h"
 #include "Player.h"
 #include "WinDrawPacket.h"
@@ -10,6 +13,8 @@
 using namespace std;
 
 typedef auto_ptr<WinDrawPacket> WDPacketPtr;
+typedef map<const string, int> ConstList;
+typedef map<const string, int>::const_iterator ConstListIters_C;
 
 //TODO:
 //Create list of constants that can be used throughout the game.
@@ -35,6 +40,30 @@ private:
 	//Other Messages
 	static const string anyKey;
 
+	//----Constants Strings----
+	//These are used while creating the constantsList
+	static const string noWinDrawState;
+	static const string winState;
+	static const string drawState;
+	static const string acrossWinType;
+	static const string downWinType;
+	static const string diagonalWinType;
+	static const string diagonalLeftSubType;
+	static const string diagonalRightSubType;
+	static const string noPlayerPiece;
+	static const string oPlayerPiece;
+	static const string xPlayerPiece;
+	static const string columnOne;
+	static const string columnTwo;
+	static const string columnThree;
+	static const string columnFour;
+	static const string columnFive;
+	static const string rowOne;
+	static const string rowTwo;
+	static const string rowThree;
+	static const string rowFour;
+	static const string rowFive;
+
 	//Normal Variables
 	Player playerOne;
 	Player playerTwo;
@@ -46,6 +75,7 @@ private:
 	int playOrder;	//Dictates which player goes first
 	int turnCounter; //This gets incremented by 1 everytime both players have taken their turns. Resets after each new game... 
 	WinDrawPacket gameConstants;
+	ConstList constantsList;
 	bool GetPlayerMoves();
 	int FormatMove(string move);
 	bool PlayerOneMove();

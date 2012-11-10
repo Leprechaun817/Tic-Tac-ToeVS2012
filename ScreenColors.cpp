@@ -415,9 +415,9 @@ char ScreenColors::ChangeErrorTextColor(int color)
 	return returnSelection;
 }
 
-const int ScreenColors::GetColorAttribute() const
+void ScreenColors::SetTextToPlayerColor() const
 {
-	return colorAttribute;
+	SetConsoleTextAttribute(hConsole, colorAttribute);
 }
 
 void ScreenColors::ResetConsoleColor()

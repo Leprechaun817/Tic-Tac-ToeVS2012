@@ -1,21 +1,38 @@
 #include "Board.h"
 
+//----String Constants----//
+//Used with the constants list
+const string Board::noWinDrawState = "noWinDrawState";
+const string Board::winState = "winState";
+const string Board::drawState = "drawState";
+const string Board::acrossWinType = "acrossWinType";
+const string Board::downWinType = "downWinType";
+const string Board::diagonalWinType = "diagonalWinType";
+const string Board::diagonalLeftSubType = "diagonalLeftSubType";
+const string Board::diagonalRightSubType = "diagonalRightSubType";
+const string Board::noPlayerPiece = "noPlayerPiece";
+const string Board::oPlayerPiece = "oPlayerPiece";
+const string Board::xPlayerPiece = "xPlayerPiece";
+const string Board::columnOne = "columnOne";
+const string Board::columnTwo = "columnTwo";
+const string Board::columnThree = "columnThree";
+const string Board::columnFour = "columnFour";
+const string Board::columnFive = "columnFive";
+const string Board::rowOne = "rowOne";
+const string Board::rowTwo = "rowTwo";
+const string Board::rowThree = "rowThree";
+const string Board::rowFour = "rowFour";
+const string Board::rowFive = "rowFive";
+
 //These constants are the characters/strings that make up the board
 const string Board::horizontalLine1 = "-----";
 const char Board::horizontalLine2 = '-';
 const char Board::verticalLine = '|';
-const char Board::space = ' ';
-const char Board::oPiece = 'O';
-const char Board::xPiece = 'X';
 
 //Constants for character measurements of board
 const int Board::sizeOfSquareAcross = 5;
 const int Board::sizeOfSquareDown = 4;
 const int Board::pieceSpacing = 5;
-//The next 3 constants are the pieces that can be placed on the board. They are represented by their respective numbers 0,1, and 2
-const int Board::noPiece = 0;
-const int Board::O = 1;
-const int Board::X = 2;
 //These next 3 are the total number of squares that can make up a board at once
 const int Board::A = 9;
 const int Board::B = 16;
@@ -26,13 +43,14 @@ const int Board::error0 = 0;
 const int Board::error1 = 1;
 const int Board::error2 = 2;
 
-Board::Board()
+Board::Board(const ConstList &cList)
 	: gameConstants()
 {
 	hConsoleWindow = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetupBoard();
 	system("cls");
 	InitiateBoard();
+	(*this).constantsList = cList;
 }	
 
 Board::~Board()
@@ -118,38 +136,38 @@ void Board::InitiateBoard()
 	piecePlacement.resize(numOfSpaces);
 }
 
-void Board::DisplayPiece(int *squareCount, int *temp2, int pieceSpacing, int pieceColor)
+void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, int pieceColor)
 {
 	char pTemp;
-	pTemp = XorO(piecePlacement[(*squareCount)], true);
+	pTemp = XorO(piecePlacement[squareCount], true);
 	SetConsoleTextAttribute(hConsoleWindow, pieceColor);
 	cout<<pTemp;
 	ResetConsoleColor();
-	(*temp2) += pieceSpacing;
-	(*squareCount)++;
+	temp2 += pieceSpacing;
+	squareCount++;
 }
 
-void Board::DisplayWinningPiece(int *squareCount, int *temp2, int pieceSpacing, int playerColor)
+void Board::DisplayWinningPiece(int &squareCount, int &temp2, int pieceSpacing, int playerColor)
 {
 	char pTemp;
-	pTemp = XorO(piecePlacement[(*squareCount)], true);
+	pTemp = XorO(piecePlacement[squareCount], true);
 	SetConsoleTextAttribute(hConsoleWindow, playerColor);
 	cout<<pTemp;
 	ResetConsoleColor();
-	(*temp2) += pieceSpacing;
-	(*squareCount)++;
+	temp2 += pieceSpacing;
+	squareCount++;
 }
 
-void Board::DisplayNonWinningPiece(int *squareCount, int *temp2, int pieceSpacing)
+void Board::DisplayNonWinningPiece(int &squareCount, int &temp2, int pieceSpacing)
 {
 	//Reset the text color just to be sure
 	ResetConsoleColor();
 	
 	char pTemp;
-	pTemp = XorO(piecePlacement[(*squareCount)], true);
+	pTemp = XorO(piecePlacement[squareCount], true);
 	cout<<pTemp;
-	(*temp2) += pieceSpacing;
-	(*squareCount)++;
+	temp2 += pieceSpacing;
+	squareCount++;
 }
 
 int Board::ProcessSpaceList(int location, int playerPiece)
@@ -395,7 +413,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}
 				else if(j == temp2 && diagonal == true && diagonalLeft == true && squareCount == boardStart)
 				{
-					DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
@@ -403,7 +421,7 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					   (numOfSpaces == B && squareCount == endOfRowOneB) ||
 					   (numOfSpaces == C && squareCount == endOfRowOneC))
 					{
-						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 				}		 
 				else if(j == temp2 && down == true && across == false && diagonal == false)
@@ -412,45 +430,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					{
 						if(squareCount == boardStart)
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == startOfColumnTwo)
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == startOfColumnThree)
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == startOfColumnFour)
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == startOfColumnFive)
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 				}
 				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowOne())
 				{
-					DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == false && across == false && down == false)
 				{
-					DisplayNonWinningPiece(&squareCount, &temp2, pieceSpacing);
+					DisplayNonWinningPiece(squareCount, temp2, pieceSpacing);
 				}
 				else
 				{
@@ -511,30 +529,30 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				{
 					if(numOfSpaces == A && squareCount == (startOfRowTwoA + 1))
 					{
-						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == B && squareCount == (startOfRowTwoB + 1))
 					{
-						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (startOfRowTwoC + 1))
 					{
-						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
 					if(numOfSpaces == A && squareCount == (endOfRowTwoA - 1))
 					{
-						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == B && squareCount == (endOfRowTwoB - 1))
 					{
-						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (endOfRowTwoC - 1))
 					{
-						DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
@@ -543,45 +561,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					{
 						if(squareCount == (boardStart + multiplier))
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + multiplier))
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + multiplier))
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == (startOfColumnFour + multiplier))
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == (startOfColumnFive + multiplier))
 						{
-							DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 				}
 				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowTwo())
 				{
-					DisplayWinningPiece(&squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == false && across == false && down == false)
 				{
-					DisplayNonWinningPiece(&squareCount, &temp2, pieceSpacing);
+					DisplayNonWinningPiece(squareCount, temp2, pieceSpacing);
 				}
 				else
 				{
@@ -642,30 +660,30 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				{
 					if(numOfSpaces == A && squareCount == endOfRowThreeA)
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == B && squareCount == (startOfRowThreeB + 2))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (startOfRowThreeC + 2))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
 					if(numOfSpaces == A && squareCount == startOfRowThreeA)
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == B && squareCount == (endOfRowThreeB - 2))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (endOfRowThreeC - 2))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
@@ -674,45 +692,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					{
 						if(squareCount == (boardStart + (multiplier * 2)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + (multiplier * 2)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + (multiplier * 2)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 2)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == (startOfColumnFive + (multiplier * 2)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 				}
 				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowThree())
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == false && across == false && down == false)
 				{
-					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					DisplayNonWinningPiece(squareCount, temp2, pieceSpacing);
 				}
 				else
 				{
@@ -773,22 +791,22 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				{
 					if(numOfSpaces == B && squareCount == endOfRowFourB)
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (startOfRowFourC + 3))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
 					if(numOfSpaces == B && squareCount == startOfRowFourB)
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 					else if(numOfSpaces == C && squareCount == (endOfRowFourC - 3))
 					{
-						DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+						DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 					}
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
@@ -797,45 +815,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					{
 						if(squareCount == (boardStart + (multiplier * 3)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + (multiplier * 3)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + (multiplier * 3)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFour() && (numOfSpaces == B || numOfSpaces == C))
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 3)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFive() && numOfSpaces == C)
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 3)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 				}
 				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowFour())
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == false && across == false && down == false)
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else
 				{
@@ -894,11 +912,11 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 				}
 				else if(j == temp2 && diagonal == true && diagonalLeft == true && squareCount == endOfRowFiveC)
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true && squareCount == startOfRowFiveC)
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && down == true && across == false && diagonal == false)
 				{
@@ -906,45 +924,45 @@ void Board::DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, 
 					{
 						if(squareCount == (boardStart + (multiplier * 4)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnTwo())
 					{
 						if(squareCount == (startOfColumnTwo + (multiplier * 4)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnThree())
 					{
 						if(squareCount == (startOfColumnThree + (multiplier * 4)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFour())
 					{
 						if(squareCount == (startOfColumnFour + (multiplier * 4)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 					else if(acrossDownLocation == gameConstants.GetConstColumnFive())
 					{
 						if(squareCount == (startOfColumnFive + (multiplier * 4)))
 						{
-							DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+							DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 						}
 					}
 				}
 				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == gameConstants.GetConstRowFive())
 				{
-					DisplayWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, winningPieceColor);
+					DisplayWinningPiece(squareCount, temp2, pieceSpacing, winningPieceColor);
 				}
 				else if(j == temp2 && diagonal == false && across == false && down == false)
 				{
-					DisplayNonWinningPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+					DisplayNonWinningPiece(squareCount, temp2, pieceSpacing);
 				}
 				else
 				{
@@ -1125,15 +1143,15 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				{
 					if(piecePlacement[squareCount] == p1Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p1PieceColor);
 					}
 					else if(piecePlacement[squareCount] == p2Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p2PieceColor);
 					}
 					else
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else
@@ -1203,15 +1221,15 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				{
 					if(piecePlacement[squareCount] == p1Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p1PieceColor);
 					}
 					else if(piecePlacement[squareCount] == p2Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p2PieceColor);
 					}
 					else
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else
@@ -1281,15 +1299,15 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				{
 					if(piecePlacement[squareCount] == p1Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p1PieceColor);
 					}
 					else if(piecePlacement[squareCount] == p2Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p2PieceColor);
 					}
 					else
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else
@@ -1351,15 +1369,15 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				{
 					if(piecePlacement[squareCount] == p1Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p1PieceColor);
 					}
 					else if(piecePlacement[squareCount] == p2Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p2PieceColor);
 					}
 					else
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else
@@ -1421,15 +1439,15 @@ void Board::DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score,
 				{
 					if(piecePlacement[squareCount] == p1Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p1PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p1PieceColor);
 					}
 					else if(piecePlacement[squareCount] == p2Piece)
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing, p2PieceColor);
+						DisplayPiece(squareCount, temp2, pieceSpacing, p2PieceColor);
 					}
 					else
 					{
-						DisplayPiece(&piecePlacement, &squareCount, &temp2, pieceSpacing);
+						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else

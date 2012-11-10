@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
+#include <memory>
 #include <string>
 #include <sstream>
+#include <map>
 #include <vector>
 #include <conio.h>
 #include <Windows.h>
@@ -14,7 +16,10 @@ typedef auto_ptr<WinDrawPacket> WDPacketPtr;
 typedef auto_ptr<vector<int>> IntVectorPtr;
 typedef vector<int> IntList;
 typedef vector<int>::iterator IntIter;
-
+typedef map<const string, int> ConstList;
+typedef map<const string, int>::const_iterator ConstListIters_C;
+typedef map<const int, char> PieceList;
+typedef map<const int, char>::const_iterator PieceListIters_C;
 
 //TODO:
 //-Use typedefs for spacelist and piecePlacement
@@ -24,6 +29,30 @@ typedef vector<int>::iterator IntIter;
 class Board
 {
 private:
+	//----String constants----//
+	//For use with the constantsList
+	static const string noWinDrawState;
+	static const string winState;
+	static const string drawState;
+	static const string acrossWinType;
+	static const string downWinType;
+	static const string diagonalWinType;
+	static const string diagonalLeftSubType;
+	static const string diagonalRightSubType;
+	static const string noPlayerPiece;
+	static const string oPlayerPiece;
+	static const string xPlayerPiece;
+	static const string columnOne;
+	static const string columnTwo;
+	static const string columnThree;
+	static const string columnFour;
+	static const string columnFive;
+	static const string rowOne;
+	static const string rowTwo;
+	static const string rowThree;
+	static const string rowFour;
+	static const string rowFive;
+	
 	//The characters that make up the board
 	static const string horizontalLine1;
 	static const char horizontalLine2;
@@ -61,20 +90,22 @@ private:
 	IntList spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
 	IntList piecePlacement;  //Keeps track of just the piece types, their location on the board is figured out by their location within the vector
 	WinDrawPacket gameConstants;	//Used when making the prePacket. Setup only for that express purpose!
+	ConstList constantsList;
+	PieceList numToCharConversionList;
 	void SetupBoard();		//Asks user for number of spaces on board, figures out the multiplier
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
 	char XorO(int num, bool special);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
 	//Creates the string that will be sent to the packet object for processing
 	string CreatePrePacket(int gameOutcome, int piece, int winLocation, int diagonalLocation, int rowLocation, int columnLocation);
-	void DisplayPiece(int *squareCount, int *temp2, int pieceSpacing, int pieceColor = 0);
-	void DisplayWinningPiece(int *squareCount, int *temp2, int pieceSpacing, int playerColor);
-	void DisplayNonWinningPiece(int *squareCount, int *temp2, int pieceSpacing);
+	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, int pieceColor = 0);
+	void DisplayWinningPiece(int &squareCount, int &temp2, int pieceSpacing, int playerColor);
+	void DisplayNonWinningPiece(int &squareCount, int &temp2, int pieceSpacing);
 	int ProcessSpaceList(int location, int playerPiece);
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();
 
 public:
-	Board();	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
+	Board(const ConstList &cList);	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
 	~Board();
 	//DisplayBoard - Takes the spaceList vector and using that makes a new display of the board accordingly. Kind of like the Blit function in a graphical sense.
 	//All graphical or informative data to be displayed on screen is processed by this function.

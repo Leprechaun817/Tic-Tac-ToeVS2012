@@ -18,9 +18,38 @@ const string Game::minorErrorMessage = "A minor error has occurred.\nThe game wi
 //Other Messages
 const string Game::anyKey = "Press any key to continue...\n";
 
+//----Constants Strings----
+const string Game::noWinDrawState = "noWinDrawState";
+const string Game::winState = "winState";
+const string Game::drawState = "drawState";
+const string Game::acrossWinType = "acrossWinType";
+const string Game::downWinType = "downWinType";
+const string Game::diagonalWinType = "diagonalWinType";
+const string Game::diagonalLeftSubType = "diagonalLeftSubType";
+const string Game::diagonalRightSubType = "diagonalRightSubType";
+const string Game::noPlayerPiece = "noPlayerPiece";
+const string Game::oPlayerPiece = "oPlayerPiece";
+const string Game::xPlayerPiece = "xPlayerPiece";
+const string Game::columnOne = "columnOne";
+const string Game::columnTwo = "columnTwo";
+const string Game::columnThree = "columnThree";
+const string Game::columnFour = "columnFour";
+const string Game::columnFive = "columnFive";
+const string Game::rowOne = "rowOne";
+const string Game::rowTwo = "rowTwo";
+const string Game::rowThree = "rowThree";
+const string Game::rowFour = "rowFour";
+const string Game::rowFive = "rowFive";
+
 Game::Game()
 	: playerOne(), playerTwo(), board(), gameConstants()
 {
+	//C++11 standard -- New array implamentation using the STL
+	//Provides more information about the array
+	array<const string, 21> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
+							   noPlayerPiece, oPlayerPiece, xPlayerPiece, columnOne, columnTwo, columnThree, columnFour, columnFive, rowOne, rowTwo, 
+							   rowThree, rowFour, rowFive};
+	array<int, 21> constantsValues = { 0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 };
 	//Zero gamesPlayed
 	roundsPlayed = 0;
 	//Zero draws as no games have been played yet...
@@ -32,9 +61,9 @@ Game::Game()
 	//It's also the number used to determine if somebody won the game
 	//The value is pulled from the board object
 	boundsLimit = board.GetMultiplier();
-	//Setting bounds limits for each player
-	playerOne.SetBoundsLimit(boundsLimit);
-	playerTwo.SetBoundsLimit(boundsLimit);
+	//Initializing each player
+	playerOne.InitializePlayer(boundsLimit);
+	playerTwo.InitializePlayer(boundsLimit);
 
 	//First time game is starting so firstPlay is true
 	firstPlay = true;
@@ -47,6 +76,11 @@ Game::Game()
 	else
 	{
 		playOrder = 2;
+	}
+	
+	for(int i = 0; i < constantsValues.size(); i++)
+	{
+		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
 	}
 }
 
