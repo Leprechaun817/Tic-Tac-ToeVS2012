@@ -63,6 +63,8 @@ private:
 	static const string rowThree;
 	static const string rowFour;
 	static const string rowFive;
+	static const string nullConstant;
+	static const string fatalError;
 
 	//Normal Variables
 	Player playerOne;

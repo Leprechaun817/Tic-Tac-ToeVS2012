@@ -1,58 +1,49 @@
 #include "WinDrawPacket.h"
 
-//Constants
-//Win/Draw constants
-const int WinDrawPacket::noWinDraw = 0;
-const int WinDrawPacket::win = 1;
-const int WinDrawPacket::draw = 2;
+//----Constants List Variables----//
+const string WinDrawPacket::noWinDrawState = "noWinDrawState";
+const string WinDrawPacket::winState = "winState";
+const string WinDrawPacket::drawState = "drawState";
+const string WinDrawPacket::acrossWinType = "acrossWinType";
+const string WinDrawPacket::downWinType = "downWinType";
+const string WinDrawPacket::diagonalWinType = "diagonalWinType";
+const string WinDrawPacket::diagonalLeftSubType = "diagonalLeftSubType";
+const string WinDrawPacket::diagonalRightSubType = "diagonalRightSubType";
+const string WinDrawPacket::noPlayerPiece = "noPlayerPiece";
+const string WinDrawPacket::oPlayerPiece = "oPlayerPiece";
+const string WinDrawPacket::xPlayerPiece = "xPlayerPiece";
+const string WinDrawPacket::columnOne = "columnOne";
+const string WinDrawPacket::columnTwo = "columnTwo";
+const string WinDrawPacket::columnThree = "columnThree";
+const string WinDrawPacket::columnFour = "columnFour";
+const string WinDrawPacket::columnFive = "columnFive";
+const string WinDrawPacket::rowOne = "rowOne";
+const string WinDrawPacket::rowTwo = "rowTwo";
+const string WinDrawPacket::rowThree = "rowThree";
+const string WinDrawPacket::rowFour = "rowFour";
+const string WinDrawPacket::rowFive = "rowFive";
+const string WinDrawPacket::nullConstant = "nullConstant";
+const string WinDrawPacket::fatalError = "fatalError";
 
-//Board Win Possibilities
-const int WinDrawPacket::across = 1;
-const int WinDrawPacket::down = 2;
-const int WinDrawPacket::diagonal = 3;
+const string WinDrawPacket::packetUnreadable = "Packet has not been created yet...\nPlease run CreatePacket before sending the WinDrawPacket\nback to the Game object\n"; 
 
-//Diagonal winning possibilities
-const int WinDrawPacket::diagonalLeft = 1;
-const int WinDrawPacket::diagonalRight = 2;
-
-//Column constants
-const int WinDrawPacket::colmOne = 10;
-const int WinDrawPacket::colmTwo = 20;
-const int WinDrawPacket::colmThree = 30;
-const int WinDrawPacket::colmFour = 40;
-const int WinDrawPacket::colmFive = 50;
-
-//Row constants
-const int WinDrawPacket::rowOne = 100;
-const int WinDrawPacket::rowTwo = 200;
-const int WinDrawPacket::rowThree = 300;
-const int WinDrawPacket::rowFour = 400;
-const int WinDrawPacket::rowFive = 500;
-
-//Piece constants
-const int WinDrawPacket::O = 1;
-const int WinDrawPacket::X = 2;
-
-//Other constants
-const int WinDrawPacket::nullConstant = -1;
-
-//Error States
-const int WinDrawPacket::fatalError = -2;
-const char WinDrawPacket::charFatalError = '!';
-
-const char WinDrawPacket::delimiter = '#';
-
-WinDrawPacket::WinDrawPacket()
+WinDrawPacket::WinDrawPacket(const ConstList &cList)
 {
-	//Fill all variables with an initial value
-	winDraw = fatalError;
-	playerPiece = fatalError;
-	winType = fatalError;
-	diagonalType = fatalError;
-	rowAcross = fatalError;
-	columnDown = fatalError;
+	(*this).constantsList = cList;
+	
+	ConstListIters_C cListIter;
+	cListIter = cList.find(fatalError);
+	int fatalErrorConst = cListIter->second;
+	
+	//Fill all variables with the initial value above
+	winDraw = fatalErrorConst;
+	playerPiece = fatalErrorConst;
+	winType = fatalErrorConst;
+	diagonalType = fatalErrorConst;
+	rowAcross = fatalErrorConst;
+	columnDown = fatalErrorConst;
 
-	readable = false;
+	packetCreated = false;
 }
 
 WinDrawPacket::WinDrawPacket(const WinDrawPacket& packet)
@@ -63,23 +54,25 @@ WinDrawPacket::WinDrawPacket(const WinDrawPacket& packet)
 	(*this).diagonalType = packet.diagonalType;
 	(*this).rowAcross = packet.rowAcross;
 	(*this).columnDown = packet.columnDown;
-	(*this).readable = packet.readable;
+	(*this).packetCreated = packet.packetCreated;
+	(*this).constantsList = packet.constantsList;
 }
 
 WinDrawPacket& WinDrawPacket::operator=(const WinDrawPacket& packet)
 {
-	winDraw = packet.winDraw;
-	playerPiece = packet.playerPiece;
-	winType = packet.winType;
-	diagonalType = packet.diagonalType;
-	rowAcross = packet.rowAcross;
-	columnDown = packet.columnDown;
-	readable = packet.readable;
+	(*this).winDraw = packet.winDraw;
+	(*this).playerPiece = packet.playerPiece;
+	(*this).winType = packet.winType;
+	(*this).diagonalType = packet.diagonalType;
+	(*this).rowAcross = packet.rowAcross;
+	(*this).columnDown = packet.columnDown;
+	(*this).packetCreated = packet.packetCreated;
+	(*this).constantsList = packet.constantsList;
 
 	return *this;
 }
 
-void WinDrawPacket::CreatePacket(string prePacket)
+void WinDrawPacket::CreatePacket(int gameOutcome, int piece, int winLocation, int diagonalLocation, int rowLocation, int columnLocation)
 {
 	const char Xs = 'X';
 	const char Os = 'O';
@@ -289,348 +282,92 @@ void WinDrawPacket::CreatePacket(string prePacket)
 	}
 }
 
-//Get functions with readable check
-//Only work when readable is set to true
 const int WinDrawPacket::GetWinDraw() const
 {
-	if(readable == true)
+	if(packetCreated == true)
 	{
 		return winDraw;
 	}
 	else
 	{
-		return fatalError;
+		cout<<packetUnreadable;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
 	}
 }
 
 const int WinDrawPacket::GetPlayerPiece() const
 {
-	if(readable == true)
+	if(packetCreated == true)
 	{
 		return playerPiece;
 	}
 	else
 	{
-		return fatalError;
+		cout<<packetUnreadable;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
 	}
 }
 
 const int WinDrawPacket::GetWinType() const
 {
-	if(readable == true)
+	if(packetCreated == true)
 	{
 		return winType;
 	}
 	else
 	{
-		return fatalError;
+		cout<<packetUnreadable;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
 	}
 }
 
 const int WinDrawPacket::GetDiagType() const
 {
-	if(readable == true)
+	if(packetCreated == true)
 	{
 		return diagonalType;
 	}
 	else
 	{
-		return fatalError;
+		cout<<packetUnreadable;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
 	}
 }
 
 const int WinDrawPacket::GetRow() const
 {
-	if(readable == true)
+	if(packetCreated == true)
 	{
 		return rowAcross;
 	}
 	else
 	{
-		return fatalError;
+		cout<<packetUnreadable;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
 	}
 }
 
 const int WinDrawPacket::GetColumn() const
 {
-	if(readable == true)
+	if(packetCreated == true)
 	{
 		return columnDown;
 	}
 	else
 	{
-		return fatalError;
-	}
-}
-
-//Get functions for constants with readable check
-//Only work when readable is set to false
-const int WinDrawPacket::GetConstNoWinDraw() const
-{
-	if(readable == false)
-	{
-		return noWinDraw;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstWin() const
-{
-	if(readable == false)
-	{
-		return win;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstDraw() const
-{
-	if(readable == false)
-	{
-		return draw;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstAcross() const
-{
-	if(readable == false)
-	{
-		return across;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstDown() const
-{
-	if(readable == false)
-	{
-		return down;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstDiagonal() const
-{
-	if(readable == false)
-	{
-		return diagonal;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstDiagonalLeft() const
-{
-	if(readable == false)
-	{
-		return diagonalLeft;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstDiagonalRight() const
-{
-	if(readable == false)
-	{
-		return diagonalRight;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstColumnOne() const
-{
-	if(readable == false)
-	{
-		return colmOne;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstColumnTwo() const
-{
-	if(readable == false)
-	{
-		return colmTwo;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstColumnThree() const
-{
-	if(readable == false)
-	{
-		return colmThree;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstColumnFour() const
-{
-	if(readable == false)
-	{
-		return colmFour;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstColumnFive() const
-{
-	if(readable == false)
-	{
-		return colmFive;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstRowOne() const
-{
-	if(readable == false)
-	{
-		return rowOne;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstRowTwo() const
-{
-	if(readable == false)
-	{
-		return rowTwo;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstRowThree() const
-{
-	if(readable == false)
-	{
-		return rowThree;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstRowFour() const
-{
-	if(readable == false)
-	{
-		return rowFour;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstRowFive() const
-{
-	if(readable == false)
-	{
-		return rowFive;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstNullConstant() const
-{
-	if(readable == false)
-	{
-		return nullConstant;
-	}
-	else
-	{
-		return fatalError;
-	}
-}
-
-const int WinDrawPacket::GetConstFatalError() const
-{
-	int tempFatalError;
-	if(readable == false)
-	{
-		tempFatalError = fatalError;
-	}
-	else
-	{
-		tempFatalError = 666;
-	}
-
-	return tempFatalError;
-}
-
-const char WinDrawPacket::GetConstCharFatalError() const
-{
-	char tempFatalError;
-	if(readable == false)
-	{
-		tempFatalError = charFatalError;
-	}
-	else
-	{
-		tempFatalError = '-';
-	}
-
-	return tempFatalError;
-}
-	
-const char WinDrawPacket::GetConstDelimiter() const
-{
-	if(readable == false)
-	{
-		return delimiter;
-	}
-	else
-	{
-		return charFatalError;
+		cout<<packetUnreadable;
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
 	}
 }

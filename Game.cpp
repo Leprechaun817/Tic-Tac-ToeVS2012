@@ -40,16 +40,18 @@ const string Game::rowTwo = "rowTwo";
 const string Game::rowThree = "rowThree";
 const string Game::rowFour = "rowFour";
 const string Game::rowFive = "rowFive";
+const string Game::nullConstant = "nullConstant";
+const string Game::fatalError = "fatalError";
 
 Game::Game()
 	: playerOne(), playerTwo(), board(), gameConstants()
 {
 	//C++11 standard -- New array implamentation using the STL
 	//Provides more information about the array
-	array<const string, 21> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
+	array<const string, 23> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
 							   noPlayerPiece, oPlayerPiece, xPlayerPiece, columnOne, columnTwo, columnThree, columnFour, columnFive, rowOne, rowTwo, 
-							   rowThree, rowFour, rowFive};
-	array<int, 21> constantsValues = { 0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 };
+							   rowThree, rowFour, rowFive, nullConstant, fatalError};
+	array<int, 23> constantsValues = {0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, -1, -2};
 	//Zero gamesPlayed
 	roundsPlayed = 0;
 	//Zero draws as no games have been played yet...

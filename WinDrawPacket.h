@@ -1,55 +1,45 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <map>
 #include <sstream>
 #include <conio.h>
 
 using namespace std;
 
+typedef map<const string, int> ConstList;
+typedef map<const string, int>::const_iterator ConstListIters_C;
+
 class WinDrawPacket
 {
 private:
-	//--Constants--
-	//Win/Draw constants
-	static const int noWinDraw;
-	static const int win;
-	static const int draw;
+	//----Constants List Variables----//
+	static const string noWinDrawState;
+	static const string winState;
+	static const string drawState;
+	static const string acrossWinType;
+	static const string downWinType;
+	static const string diagonalWinType;
+	static const string diagonalLeftSubType;
+	static const string diagonalRightSubType;
+	static const string noPlayerPiece;
+	static const string oPlayerPiece;
+	static const string xPlayerPiece;
+	static const string columnOne;
+	static const string columnTwo;
+	static const string columnThree;
+	static const string columnFour;
+	static const string columnFive;
+	static const string rowOne;
+	static const string rowTwo;
+	static const string rowThree;
+	static const string rowFour;
+	static const string rowFive;
+	static const string nullConstant;
+	static const string fatalError;
 
-	//Board Win Possibilities
-	static const int across;
-	static const int down;
-	static const int diagonal;
-
-	//Diagonal winning possibilities
-	static const int diagonalLeft;
-	static const int diagonalRight;
-
-	//Piece constants
-	static const int O;
-	static const int X;
-
-	//Column constants
-	static const int colmOne;
-	static const int colmTwo;
-	static const int colmThree;
-	static const int colmFour;
-	static const int colmFive;
-
-	//Row constants
-	static const int rowOne;
-	static const int rowTwo;
-	static const int rowThree;
-	static const int rowFour;
-	static const int rowFive;
-
-	//Other constants
-	static const int nullConstant;
-
-	//Error States
-	static const int fatalError;
-	static const char charFatalError;
-
-	static const char delimiter;	//Used when processing prepacket string
+	//Local Error String -- Unique to the WinDrawPacket object
+	static const string packetUnreadable;
 
 	//Regular variables
 	int winDraw;
@@ -58,18 +48,19 @@ private:
 	int diagonalType;
 	int rowAcross;
 	int columnDown;
+	ConstList constantsList;
 
-	bool readable;	//This makes the packet unreadable until CreatePacket has been run
+	bool packetCreated;	//This makes the packet unreadable until CreatePacket has been run
 	
 
 public:
-	WinDrawPacket();
-	WinDrawPacket(const WinDrawPacket& packet);
+	WinDrawPacket(const ConstList &cList);
+	WinDrawPacket(const WinDrawPacket &packet);
 	
-	WinDrawPacket& operator=(const WinDrawPacket& packet);
+	WinDrawPacket& operator=(const WinDrawPacket &packet);
 
 	//This used to create the packet that will get sent from the board object to the game object
-	void CreatePacket(string prePacket);
+	void CreatePacket(int gameOutcome, int piece, int winLocation, int diagonalLocation, int rowLocation, int columnLocation);
 
 	//----Const notes----
 	//Adding const before a function makes the compiler catch assignment errors in things like if statements
@@ -81,32 +72,4 @@ public:
 	const int GetDiagType() const;
 	const int GetRow() const;
 	const int GetColumn() const;
-
-	//Get functions for the constants
-	//Will be used in board object mostly
-	//Will only output the proper values if readable is set to false.
-	//I did it this way to insure that the gameConstants object in the Board object only gets used
-	//to output the necessary constants to build the prePacket.
-	const int GetConstNoWinDraw() const;
-	const int GetConstWin() const;
-	const int GetConstDraw() const;
-	const int GetConstAcross() const;
-	const int GetConstDown() const;
-	const int GetConstDiagonal() const;
-	const int GetConstDiagonalLeft() const;
-	const int GetConstDiagonalRight() const;
-	const int GetConstColumnOne() const;
-	const int GetConstColumnTwo() const;
-	const int GetConstColumnThree() const;
-	const int GetConstColumnFour() const;
-	const int GetConstColumnFive() const;
-	const int GetConstRowOne() const;
-	const int GetConstRowTwo() const;
-	const int GetConstRowThree() const;
-	const int GetConstRowFour() const;
-	const int GetConstRowFive() const;
-	const int GetConstNullConstant() const;
-	const int GetConstFatalError() const;
-	const char GetConstCharFatalError() const;
-	const char GetConstDelimiter() const;
 };

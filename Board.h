@@ -13,7 +13,6 @@
 using namespace std;
 
 typedef auto_ptr<WinDrawPacket> WDPacketPtr;
-typedef auto_ptr<vector<int>> IntVectorPtr;
 typedef vector<int> IntList;
 typedef vector<int>::iterator IntIter;
 typedef map<const string, int> ConstList;
