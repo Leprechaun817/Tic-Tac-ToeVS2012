@@ -32,39 +32,41 @@ private:
 	bool madeMove;
 	int boundsLimit;
 	bool playerInitialized;
-	WinDrawPacket gameConstants;
 	ConstList constantsList;
 	static int numOfPlayers;
+	static const int answerSize;
 	bool resetPlayerFunctionCalled;
 	void AssignPlayerPiece();  //Assign either an X or an O to a player
 	void DecidePlayerTurnOrder();	//Figures out whether the player goes second or third
 	int PieceGen();	//Used to generate the first players piece, X or O. Generates numbers 1 or 2 randomly and is sent back to calling function
-	static const int answerSize;
 	bool CheckPlayerMove(string choice);
 
 public:
-	Player(const ConstList &cList);
+	Player();
 	~Player();
+	//DisplayName and DisplayScore may be removed at some point. I don't think they will be needed
 	void DisplayName();
 	void DisplayScore();
 	void UpdateScore();
 	bool MakeMove();
 	void ResetPlayer(int boundsLimit);
 	void ResetPlayerPiece(); //Call this function before ResetPlayer is called. Very Important!!!
-	void InitializePlayer(int boundsLimit);
-	void ChangeToPlayerTextColor();
+	void InitializePlayer(int boundsLimit, const ConstList &cList);
+	const int SetPlayerTextColor() const;
 	//These return the id and the number representing the playerPiece respectively
-	int GetID() { return id; }
-	int GetPieceNum() { return playerPiece; }
+	const int GetID() const;
+	const int GetPiece() const;
 
 	//Get functions for name and score -- Only used when just the name or score is needed without all the other dialoge
-	string GetName() { return name; }
-	int GetScore() { return score; }
+	const string GetName() const;
+	const int GetScore() const;
 
 	//Get/Set functions for move
-	int GetMove() { return move; }
+	const int GetMove() const;
 	void ResetMove();
 	
-	//Check/Set functions for madeMove
-	bool CheckMadeMove() { return madeMove; }
+	//Checks if player has made their move or not returns whatever that value is
+	//and then toggles madeMove to the opposite of what it was.
+	//So if it was true after running this it will be false and visa versa...
+	bool HasPlayerMadeMove();
 };

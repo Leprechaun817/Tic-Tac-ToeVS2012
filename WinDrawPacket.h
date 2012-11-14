@@ -42,7 +42,8 @@ private:
 	static const string packetUnreadable;
 
 	//Regular variables
-	int winDraw;
+	int winDraw;		//Change this to gameState instead of winDraw, it's much more descriptive.
+						//Make these changes code wide. Any references to winDraw or anything like it are to be changed to gameState.
 	int playerPiece;
 	int winType;
 	int diagonalType;
@@ -51,16 +52,14 @@ private:
 	ConstList constantsList;
 
 	bool packetCreated;	//This makes the packet unreadable until CreatePacket has been run
+	int GetConstantFromList(string request);
 	
 
 public:
 	WinDrawPacket(const ConstList &cList);
-	WinDrawPacket(const WinDrawPacket &packet);
 	
-	WinDrawPacket& operator=(const WinDrawPacket &packet);
-
 	//This used to create the packet that will get sent from the board object to the game object
-	void CreatePacket(int gameOutcome, int piece, int winLocation, int diagonalLocation, int rowLocation, int columnLocation);
+	void CreatePacket(const int gameOutcome, const int winningPiece, const int winLocation, const int winDiagonalLocation, const int winRowLocation, const int winColumnLocation);
 
 	//----Const notes----
 	//Adding const before a function makes the compiler catch assignment errors in things like if statements

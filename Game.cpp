@@ -6,7 +6,7 @@ const string Game::gameDrawMessage = "The game has ended in a draw.\nYou can now
 const string Game::playerOneWinMessage = "Player 1 has won this round!!\nCongratulations!!!^o^\n";
 const string Game::playerTwoWinMessage = "Player 2 has won this round!!\nCongratulations!!!^o^\n";
 //WinDrawPacket Related Messages
-const string Game::winDrawErrorMessage = "An error has occured with the winDraw variable in the packet.\nCheck packet code.\n";
+const string Game::gameStateErrorMessage = "An error has occured with the winDraw variable in the packet.\nCheck packet code.\n";
 const string Game::playerPieceErrorMessage = "An error has occured with the playerPiece variable in the packet.\nCheck packet code.\n";
 const string Game::winTypeErrorMessage = "An error has occured with the winType variable in the packet.\nCheck packet code.\n";
 const string Game::diagonalTypeErrorMessage = "An error has occured with the diagonalType variable in the packet.\nCheck packet code.\n";
@@ -15,6 +15,7 @@ const string Game::columnDownErrorMessage = "An error has occured with the colum
 //Main Error Messages
 const string Game::fatalErrorMessage = "A fatal error has occurred.\nThe game will now close.\n";
 const string Game::minorErrorMessage = "A minor error has occurred.\nThe game will now close.\n";
+const string Game::unknownErrorMessage = "An unknown error has occurred.\nThe game will now close.\n";
 //Other Messages
 const string Game::anyKey = "Press any key to continue...\n";
 
@@ -44,7 +45,7 @@ const string Game::nullConstant = "nullConstant";
 const string Game::fatalError = "fatalError";
 
 Game::Game()
-	: playerOne(), playerTwo(), board(), gameConstants()
+	: playerOne(), playerTwo(), board()
 {
 	//C++11 standard -- New array implamentation using the STL
 	//Provides more information about the array
@@ -59,30 +60,33 @@ Game::Game()
 	//Turn counter set to zero
 	turnCounter = 0;
 
+	//constantsList must be created before board and the 2 players are initialized becuase otherwise I'd be sending them a empty map container
+	for(unsigned int i = 0; i < constantsValues.size(); i++)
+	{
+		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
+	}
+	
+	//Setup board
+	board.SetupBoard(constantsList);
 	//set bounds limit, basically players shouldn't be able to enter in values past this number
 	//It's also the number used to determine if somebody won the game
 	//The value is pulled from the board object
 	boundsLimit = board.GetMultiplier();
 	//Initializing each player
-	playerOne.InitializePlayer(boundsLimit);
-	playerTwo.InitializePlayer(boundsLimit);
+	playerOne.InitializePlayer(boundsLimit, constantsList);
+	playerTwo.InitializePlayer(boundsLimit, constantsList);
 
 	//First time game is starting so firstPlay is true
 	firstPlay = true;
 
 	//Figure out play order
-	if(playerOne.GetPieceNum() == 2)
+	if(playerOne.GetPiece() == 2)
 	{
 		playOrder = 1;
 	}
 	else
 	{
 		playOrder = 2;
-	}
-	
-	for(int i = 0; i < constantsValues.size(); i++)
-	{
-		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
 	}
 }
 
@@ -126,7 +130,7 @@ void Game::StartGame()
 	system("cls");
 
 	//Display the empty starting board
-	board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
+	board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
 	//Get the first round of player moves
 	//Call GameLoop at this point
 }
@@ -204,12 +208,8 @@ void Game::ResetGame()
 	playerOne.ResetPlayerPiece();
 
 	//Reset both players
-	playerOne.ResetPlayer();
-	playerTwo.ResetPlayer();
-
-	//Reset BoundsLimits for both players
-	playerOne.SetBoundsLimit(boundsLimit);
-	playerTwo.SetBoundsLimit(boundsLimit);
+	playerOne.ResetPlayer(boundsLimit);
+	playerTwo.ResetPlayer(boundsLimit);
 }
 
 //TODO:
@@ -226,7 +226,7 @@ bool Game::GetPlayerMoves()
 		if(continuePlay == true)
 		{
 			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
 		}
 		else
 		{
@@ -239,7 +239,7 @@ bool Game::GetPlayerMoves()
 			//Now that both players have made their moves increment the turnCounter by 1
 			turnCounter++;
 			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
 		}
 		else
 		{
@@ -252,7 +252,7 @@ bool Game::GetPlayerMoves()
 		if(continuePlay == true)
 		{
 			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
 		}
 		else
 		{
@@ -265,7 +265,7 @@ bool Game::GetPlayerMoves()
 			//Same thing, both players have made their moves. Increment the turnCounter by 1
 			turnCounter++;
 			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
+			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
 		}
 		else
 		{
@@ -443,9 +443,22 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	int tempType;
 	int tempDiagonalLocation;
 	int tempAcrossDownLocation;
-	if(packet->GetWinDraw() == gameConstants.GetConstNoWinDraw() || packet->GetWinDraw() == gameConstants.GetConstDraw())
+
+	//Value from packet
+	const int t_gameState = packet->GetWinDraw();
+	
+	//Error Values
+	const int t_nullConstant = GetConstantFromList(nullConstant);
+	const int t_fatalError = GetConstantFromList(fatalError);
+	
+	//Values from the map list to be compared against t_gameState
+	const int t_noWinDrawState = GetConstantFromList(noWinDrawState);
+	const int t_drawState = GetConstantFromList(drawState);
+	const int t_winState = GetConstantFromList(winState);
+
+	if(t_gameState == t_noWinDrawState || t_gameState == t_drawState)
 	{
-		if(packet->GetWinDraw() == gameConstants.GetConstDraw())
+		if(t_gameState == t_drawState)
 		{
 			gameDraws++;
 			//put message indicating that a draw has occurred and a new game is starting
@@ -460,10 +473,11 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			return continueGame;
 		}
 	}
-	else if(packet->GetWinDraw() == gameConstants.GetConstWin())
+	else if(t_gameState == t_winState)
 	{
+		continueGame = false;
 		//Get player piece and compare, update their winCounter
-		if(packet->GetPlayerPiece() == playerOne.GetPieceNum())
+		if(packet->GetPlayerPiece() == playerOne.GetPiece())
 		{
 			playerOne.UpdateScore();
 			//Message telling that player 1 has won the game
@@ -472,7 +486,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			cout<<anyKey;
 			_getche();
 		}
-		else if(packet->GetPlayerPiece() == playerTwo.GetPieceNum())
+		else if(packet->GetPlayerPiece() == playerTwo.GetPiece())
 		{
 			playerTwo.UpdateScore();
 			//Message telling that player 2 has won the game
@@ -492,21 +506,38 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			return continueGame;
 		}
 
+		//Value pulled from packet to be compared, in this case the type of win that occurred
+		const int t_winType = packet->GetWinType();
+		
+		//Values pulled from map list that will be compared against the winType to figure out what it is
+		const int t_diagonalWinType = GetConstantFromList(diagonalWinType);
+		const int t_acrossWinType = GetConstantFromList(acrossWinType);
+		const int t_downWinType = GetConstantFromList(downWinType);
+		
 		//Find out where player won, store values in temp variables and send to DisplayBoard function
-		if(packet->GetWinType() == gameConstants.GetConstDiagonal())
+		if(t_winType == t_diagonalWinType)
 		{
-			tempType = gameConstants.GetConstDiagonal();
-			if(packet->GetDiagType() == gameConstants.GetConstDiagonalLeft())
+			//The type of win is a diagonal type, entering that into the tempType variable here
+			tempType = t_diagonalWinType;
+			
+			//Value pulled from packet to be compared, in this case the type of diagonal win
+			const int t_winningDiagLocation = packet->GetDiagType();
+			
+			//Values pulled from the map list to be compared to the t_winningDiagLocation
+			const int t_diagonalLeftSubType = GetConstantFromList(diagonalLeftSubType);
+			const int t_diagonalRightSubType = GetConstantFromList(diagonalRightSubType);
+
+			if(t_winningDiagLocation == t_diagonalLeftSubType)
 			{
-				tempDiagonalLocation = gameConstants.GetConstDiagonalLeft();
+				tempDiagonalLocation = t_diagonalLeftSubType;
 			}
-			else if(packet->GetDiagType() == gameConstants.GetConstDiagonalRight())
+			else if(t_winningDiagLocation == t_diagonalRightSubType)
 			{
-				tempDiagonalLocation = gameConstants.GetConstDiagonalRight();
+				tempDiagonalLocation = t_diagonalRightSubType;
 			}
 			else //diagType didn't equal 1 or 2 even though the winning move was a diagonal, this is an error
-			{
-				if(packet->GetDiagType() == gameConstants.GetConstNullConstant())
+			{	
+				if(t_winningDiagLocation == t_nullConstant)
 				{
 					//Message stating a minor error has occurred and the code should be checked out
 					cout<<minorErrorMessage;
@@ -516,7 +547,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					cout<<anyKey;
 					_getche();
 				}
-				else //if packet->GetDiagType() returns a -2 -- Fatal Error
+				else if(t_winningDiagLocation == t_fatalError)
 				{
 					//Message stating the a fatal error has occurred
 					cout<<fatalErrorMessage;
@@ -526,39 +557,61 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					cout<<anyKey;
 					_getche();
 				}
+				else
+				{
+					//Message stating that an unknown error has occured
+					cout<<unknownErrorMessage;
+					cout<<diagonalTypeErrorMessage;
+					cout<<"The diagonalType variable had an unexpected output.\n";
+					cout<<"The number associated with the variable was "<<t_winningDiagLocation<<".\n";
+					cout<<"Please look into this right away!\n";
+					cout<<anyKey;
+					_getche();
+				}
 
 				//Both errors will result in the game closing
 				continueGame = false;
 				return continueGame;
 			}
 		}
-		else if(packet->GetWinType() == gameConstants.GetConstAcross())
+		else if(t_winType == t_acrossWinType)
 		{
-			tempType = gameConstants.GetConstAcross();
-			tempDiagonalLocation = gameConstants.GetConstNullConstant();
-			if(packet->GetRow() == gameConstants.GetConstRowOne())
+			tempType = t_acrossWinType;
+			tempDiagonalLocation = t_nullConstant;
+
+			//Value pulled from packet to be compared, in this case it's the row where a win was located
+			const int t_winningAcrossLocation = packet->GetRow();
+			
+			//Values pulled from the map list to be compared with the variable t_winningRowLocation
+			const int t_rowOne = GetConstantFromList(rowOne);
+			const int t_rowTwo = GetConstantFromList(rowTwo);
+			const int t_rowThree = GetConstantFromList(rowThree);
+			const int t_rowFour = GetConstantFromList(rowFour);
+			const int t_rowFive = GetConstantFromList(rowFive);
+
+			if(t_winningAcrossLocation == t_rowOne)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstRowOne();
+				tempAcrossDownLocation = t_rowOne;
 			}
-			else if(packet->GetRow() == gameConstants.GetConstRowTwo())
+			else if(t_winningAcrossLocation == t_rowTwo)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstRowTwo();
+				tempAcrossDownLocation = t_rowTwo;
 			}
-			else if(packet->GetRow() == gameConstants.GetConstRowThree())
+			else if(t_winningAcrossLocation == t_rowThree)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstRowThree();
+				tempAcrossDownLocation = t_rowThree;
 			}
-			else if(packet->GetRow() == gameConstants.GetConstRowFour())
+			else if(t_winningAcrossLocation == t_rowFour)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstRowFour();
+				tempAcrossDownLocation = t_rowFour;
 			}
-			else if(packet->GetRow() == gameConstants.GetConstRowFive())
+			else if(t_winningAcrossLocation == t_rowFive)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstRowFive();
+				tempAcrossDownLocation = t_rowFive;
 			}
 			else //the row didn't match any of the row locations, an error has occurred
 			{
-				if(packet->GetRow() == gameConstants.GetConstNullConstant())
+				if(t_winningAcrossLocation == t_nullConstant)
 				{
 					//Message stating minor error has occurred
 					cout<<minorErrorMessage;
@@ -567,7 +620,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					cout<<anyKey;
 					_getche();
 				}
-				else //if row didn't equal -1 then it must equal -2, which means a fatal error has occurred
+				else if(t_winningAcrossLocation == t_fatalError) 
 				{
 					//Message stating fatal error has occurred
 					cout<<fatalErrorMessage;
@@ -577,39 +630,61 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					cout<<anyKey;
 					_getche();
 				}
+				else
+				{
+					//Message stating that an unknown error has occured
+					cout<<unknownErrorMessage;
+					cout<<rowAcrossErrorMessage;
+					cout<<"The row variable had an unexpected output.\n";
+					cout<<"The number associated with the variable was "<<t_winningAcrossLocation<<".\n";
+					cout<<"Please look into this right away!\n";
+					cout<<anyKey;
+					_getche();
+				}
 
 				//End the game
 				continueGame = false;
 				return continueGame;
 			}
 		}
-		else if(packet->GetWinType() == gameConstants.GetConstDown())
+		else if(t_winType == t_downWinType)
 		{
-			tempType = gameConstants.GetConstDown();
-			tempDiagonalLocation = gameConstants.GetConstNullConstant();
-			if(packet->GetColumn() == gameConstants.GetConstColumnOne())
+			tempType = t_downWinType;
+			tempDiagonalLocation = t_nullConstant;
+
+			//Value pulled from packet to be compared, in this case it's the column where a win was located
+			const int t_winningDownLocation = packet->GetColumn();
+
+			//Values pulled from the map list to be compared with the variable t_winningDownLocation
+			const int t_columnOne = GetConstantFromList(columnOne);
+			const int t_columnTwo = GetConstantFromList(columnTwo);
+			const int t_columnThree = GetConstantFromList(columnThree);
+			const int t_columnFour = GetConstantFromList(columnFour);
+			const int t_columnFive = GetConstantFromList(columnFive);
+
+			if(t_winningDownLocation == t_columnOne)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstColumnOne();
+				tempAcrossDownLocation = t_columnOne;
 			}
-			else if(packet->GetColumn() == gameConstants.GetConstColumnTwo())
+			else if(t_winningDownLocation == t_columnTwo)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstColumnTwo();
+				tempAcrossDownLocation = t_columnTwo;
 			}
-			else if(packet->GetColumn() == gameConstants.GetConstColumnThree())
+			else if(t_winningDownLocation == t_columnThree)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstColumnThree();
+				tempAcrossDownLocation = t_columnThree;
 			}
-			else if(packet->GetColumn() == gameConstants.GetConstColumnFour())
+			else if(t_winningDownLocation == t_columnFour)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstColumnFour();
+				tempAcrossDownLocation = t_columnFour;
 			}
-			else if(packet->GetColumn() == gameConstants.GetConstColumnFive())
+			else if(t_winningDownLocation == t_columnFive)
 			{
-				tempAcrossDownLocation = gameConstants.GetConstColumnFive();
+				tempAcrossDownLocation = t_columnFive;
 			}
 			else   //column didn't match any column locations, an error has occured
 			{
-				if(packet->GetColumn() == gameConstants.GetConstNullConstant())
+				if(t_winningDownLocation == t_nullConstant)
 				{
 					//Message stating minor error has occurred
 					cout<<minorErrorMessage;
@@ -618,13 +693,24 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					cout<<anyKey;
 					_getche();
 				}
-				else //if column wasn't -1, then it must be -2, which means a fatal error has occured
+				else if(t_winningDownLocation == t_fatalError)
 				{
 					//Message stating a fatal error has occurred
 					cout<<fatalErrorMessage;
 					cout<<columnDownErrorMessage;
 					cout<<"The column variable shouldn't be a -2 when the winType is equal to a down.\n";
 					cout<<"Please check both the winType and column variables.\n";
+					cout<<anyKey;
+					_getche();
+				}
+				else
+				{
+					//Message stating that an unknown error has occured
+					cout<<unknownErrorMessage;
+					cout<<columnDownErrorMessage;
+					cout<<"The column variable had an unexpected output.\n";
+					cout<<"The number associated with the variable was "<<t_winningDownLocation<<".\n";
+					cout<<"Please look into this right away!\n";
 					cout<<anyKey;
 					_getche();
 				}
@@ -636,7 +722,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		}
 		else //win type didn't equal 1, 2, or 3, an error has occured
 		{
-			if(packet->GetWinType() == gameConstants.GetConstNullConstant())
+			if(t_winType == t_nullConstant)
 			{
 				//Message stating that minor error has occurred
 				//Can't have a win and a winType with a nullConstant
@@ -646,7 +732,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 				cout<<anyKey;
 				_getche();
 			}
-			else
+			else if(t_winType == t_fatalError)
 			{
 				//Message stating that fatal error has occurred
 				//Can't have a win and a winType with a fatal error
@@ -657,16 +743,26 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 				cout<<anyKey;
 				_getche();
 			}
+			else
+			{
+				//Message stating that unknown error has occurred
+				cout<<unknownErrorMessage;
+				cout<<winTypeErrorMessage;
+				cout<<"The winType definitly shouldn't be a unknown error.\nPlease double check code for serious errors!!\n";
+				cout<<anyKey;
+				_getche();
+			}
 
 			//End the game
 			continueGame = false;
 			return continueGame;
 		}
 	}
-	else //winDraw had a fatalError
+	else if(t_gameState == t_fatalError)
 	{
 		cout<<fatalErrorMessage;
-		cout<<winDrawErrorMessage;
+		cout<<gameStateErrorMessage;
+		//Change winDraw in this sentence to gameState once all the other changes have been made
 		cout<<"The winDraw variable cannot equal -2. Double check the logic in the code, something isn't right!!!\n";
 		cout<<anyKey;
 		_getche();
@@ -675,6 +771,17 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		continueGame = false;
 		return continueGame;
 	}
+	else
+	{
+		cout<<unknownErrorMessage;
+		cout<<gameStateErrorMessage;
+		//Change winDraw in this sentence to gameState once all the other changes have been made
+		cout<<"The winDraw variable has an unknown error value.\nThere is a major problem in the code that needs attention!!\n";
+		cout<<"Check the functions related to the creation of the packet in the WinDrawPAcket class,\n";
+		cout<<"as well as the functions related to packet creation and finding the win, draw, or neither right a way.\n";
+		cout<<anyKey;
+		_getche();
+	}
 
 	//Send temporary values to a display board function
 	//TODO:
@@ -682,4 +789,13 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	//Putting code in to process these values may make the original display function unnecessarily complicated
 	
 	return continueGame;
+}
+
+int Game::GetConstantFromList(string request)
+{
+	ConstListIters_C constListIter;
+	constListIter = constantsList.find(request);
+	int t_request = constListIter->second;
+
+	return t_request;
 }

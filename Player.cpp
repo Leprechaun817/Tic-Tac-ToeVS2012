@@ -8,7 +8,7 @@ const string Player::noPlayerPiece = "noPlayerPiece";
 const string Player::oPlayerPiece = "oPlayerPiece";
 const string Player::xPlayerPiece = "xPlayerPiece";
 
-Player::Player(const ConstList &cList)
+Player::Player()
 	: textColor()
 {
 	//if...else... here is used becuase of the fact that numOfPlayers is a static variable so if this class has been
@@ -31,17 +31,16 @@ Player::Player(const ConstList &cList)
 	madeMove = false;
 	playerInitialized = false;
 
-	(*this).constantsList = cList;
-
 	resetPlayerFunctionCalled = false;
 }
 
 Player::~Player()
 {}
 
-void Player::InitializePlayer(int boundsLimit)
+void Player::InitializePlayer(int boundsLimit, const ConstList &cList)
 {
 	(*this).boundsLimit = boundsLimit;
+	(*this).constantsList = cList;
 
 	//Ask player for name
 	//Had to put it here because I need the ID for the prompt...
@@ -56,8 +55,6 @@ void Player::InitializePlayer(int boundsLimit)
 
 	//Player has now been initialized
 	playerInitialized = true;
-	
-	//Decide player turn order (Who goes first and second)
 }
 
 void Player::AssignPlayerPiece()
@@ -259,7 +256,104 @@ bool Player::CheckPlayerMove(string choice)
 	return true;
 }
 
-int Player::GetTextColor() const
+const int Player::SetPlayerTextColor() const
 {
-	return textColor.GetColorAttribute();
+	textColor.SetTextToPlayerColor();
+}
+
+bool Player::HasPlayerMadeMove()
+{
+	bool returnValue;
+	if(madeMove == true)
+	{
+		returnValue = true;
+		madeMove = false;
+	}
+	else
+	{
+		returnValue = false;
+		madeMove = true;
+	}
+
+	return returnValue;
+}
+
+const int Player::GetID() const
+{
+	if(playerInitialized == true)
+	{
+		return id;
+	}
+	else
+	{
+		cout<<"This Player has not been initialized yet,\n";
+		cout<<"Please run the initialization function...\n";
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
+	}
+}
+
+const int Player::GetPiece() const
+{
+	if(playerInitialized == true)
+	{
+		return playerPiece;
+	}
+	else
+	{
+		cout<<"This Player has not been initialized yet,\n";
+		cout<<"Please run the initialization function...\n";
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return 666;
+	}
+}
+
+const string Player::GetName() const
+{
+	if(playerInitialized == true)
+	{
+		return name;
+	}
+	else
+	{
+		cout<<"This player has not been initialized yet,\n";
+		cout<<"Please run the initialization function...\n";
+		cout<<"Press any key to continue..."<<endl;
+		_getche();
+		return "666";
+	}
+}
+
+const int Player::GetScore() const
+{
+	if(playerInitialized == true)
+	{
+		return score;
+	}
+	else
+	{
+		cout<<"This player has not been initialized yet,\n";
+		cout<<"Please run the initialization function...\n";
+		cout<<"Press any key to continue...\n";
+		_getche();
+		return 666;
+	}
+}
+
+const int Player::GetMove() const
+{
+	if(playerInitialized == true)
+	{
+		return move;
+	}
+	else
+	{
+		cout<<"This player has not been initialized yet,\n";
+		cout<<"Please run the initialization function...\n";
+		cout<<"Press any key to continue...\n";
+		_getche();
+		return 666;
+	}
 }

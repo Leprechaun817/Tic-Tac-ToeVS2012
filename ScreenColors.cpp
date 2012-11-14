@@ -64,8 +64,8 @@ void ScreenColors::DecidePlayerScreenColor()
 	cout<<"Please enter the letter which represents your choice.\n";
 	cout<<"Ex. a\n";
 	cin>>selection;
-	bool check = false;
-	while(check == false)
+	bool checkForOtherPlayer = false;
+	while(checkForOtherPlayer == false)
 	{
 		if(otherPlayerColor == 0)
 		{
@@ -74,77 +74,77 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'a':
 			case 'A':
 				SetPlayerTextColor(dark_blue);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'b':
 			case 'B':
 				SetPlayerTextColor(dark_green);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'c':
 			case 'C':
 				SetPlayerTextColor(dark_cyan);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'd':
 			case 'D':
 				SetPlayerTextColor(dark_red);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'e':
 			case 'E':
 				SetPlayerTextColor(dark_purple);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'f':
 			case 'F':
 				SetPlayerTextColor(dark_yellow);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'g':
 			case 'G':
 				SetPlayerTextColor(dark_white);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'h':
 			case 'H':
 				SetPlayerTextColor(gray);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'i':
 			case 'I':
 				SetPlayerTextColor(blue);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'j':
 			case 'J':
 				SetPlayerTextColor(green);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'k':
 			case 'K':
 				SetPlayerTextColor(cyan);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'l':
 			case 'L':
 				SetPlayerTextColor(red);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'm':
 			case 'M':
 				SetPlayerTextColor(purple);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'n':
 			case 'N':
 				SetPlayerTextColor(yellow);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			case 'o':
 			case 'O':
 				SetPlayerTextColor(white);
-				check = true;
+				checkForOtherPlayer = true;
 				break;
 			default:
 				ResetConsoleColor();
@@ -166,7 +166,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = dark_blue;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'b':
@@ -178,7 +178,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = dark_green;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'c':
@@ -190,7 +190,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = dark_cyan;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'd':
@@ -202,7 +202,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = dark_red;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'e':
@@ -214,7 +214,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = dark_purple;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'f':
@@ -226,7 +226,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = dark_yellow;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'g':
@@ -238,7 +238,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = dark_white;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'h':
@@ -250,7 +250,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = gray;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'i':
@@ -262,7 +262,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = blue;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'j':
@@ -274,7 +274,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = green;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'k':
@@ -286,7 +286,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = cyan;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'l':
@@ -298,7 +298,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = red;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'm':
@@ -310,7 +310,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = purple;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'n':
@@ -322,7 +322,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = yellow;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			case 'o':
@@ -334,7 +334,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				else
 				{
 					colorAttribute = white;
-					check = true;
+					checkForOtherPlayer = true;
 				}
 				break;
 			default:

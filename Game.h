@@ -28,7 +28,7 @@ private:
 	static const string playerOneWinMessage;
 	static const string playerTwoWinMessage;
 	//WinDrawPacket Related Messages
-	static const string winDrawErrorMessage;
+	static const string gameStateErrorMessage;
 	static const string playerPieceErrorMessage;
 	static const string winTypeErrorMessage;
 	static const string diagonalTypeErrorMessage;
@@ -37,6 +37,7 @@ private:
 	//Main Error Messages
 	static const string fatalErrorMessage;
 	static const string minorErrorMessage;
+	static const string unknownErrorMessage;
 	//Other Messages
 	static const string anyKey;
 
@@ -76,7 +77,6 @@ private:
 	int gameDraws;	//Used to keep track of how many times the game closed with a draw
 	int playOrder;	//Dictates which player goes first
 	int turnCounter; //This gets incremented by 1 everytime both players have taken their turns. Resets after each new game... 
-	WinDrawPacket gameConstants;
 	ConstList constantsList;
 	bool GetPlayerMoves();
 	int FormatMove(string move);
@@ -84,6 +84,7 @@ private:
 	bool PlayerTwoMove();
 	bool CheckAndUpdateBoard(int move);
 	bool ProcessPacket(WDPacketPtr packet);
+	int GetConstantFromList(string request);
 	
 public:
 	Game();

@@ -4,11 +4,12 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <array>
 #include <vector>
 #include <conio.h>
 #include <Windows.h>
 #include <stdlib.h>
-#include "WinDrawPacket.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -51,24 +52,18 @@ private:
 	static const string rowThree;
 	static const string rowFour;
 	static const string rowFive;
+	static const string nullConstant;
+	static const string fatalError;
 	
 	//The characters that make up the board
 	static const string horizontalLine1;
 	static const char horizontalLine2;
 	static const char verticalLine;
-	static const char space;
-	static const char xPiece;
-	static const char oPiece;
-
+	
 	//Character measurements of board
 	static const int sizeOfSquareAcross;
 	static const int sizeOfSquareDown;
 	static const int pieceSpacing;
-	
-	//The integers that represent the characters on the board
-	static const int noPiece;
-	static const int X;
-	static const int O;
 	
 	//The integers that represent the total number of squares on the board
 	//There are 3 possible combinations
@@ -88,30 +83,28 @@ private:
 					 //keep track of which spaces are filled
 	IntList spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
 	IntList piecePlacement;  //Keeps track of just the piece types, their location on the board is figured out by their location within the vector
-	WinDrawPacket gameConstants;	//Used when making the prePacket. Setup only for that express purpose!
 	ConstList constantsList;
 	PieceList numToCharConversionList;
-	void SetupBoard();		//Asks user for number of spaces on board, figures out the multiplier
+	
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
-	char XorO(int num, bool special);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
-	//Creates the string that will be sent to the packet object for processing
-	string CreatePrePacket(int gameOutcome, int piece, int winLocation, int diagonalLocation, int rowLocation, int columnLocation);
-	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, int pieceColor = 0);
-	void DisplayWinningPiece(int &squareCount, int &temp2, int pieceSpacing, int playerColor);
-	void DisplayNonWinningPiece(int &squareCount, int &temp2, int pieceSpacing);
+	char XorO(int num);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
+	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing);
 	int ProcessSpaceList(int location, int playerPiece);
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();
+	int GetConstantFromList(string request);
+	char GetConstantFromList(int request);
 
 public:
-	Board(const ConstList &cList);	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
+	Board();	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
 	~Board();
+	void SetupBoard(const ConstList &cList);		//Asks user for number of spaces on board, figures out the multiplier
 	//DisplayBoard - Takes the spaceList vector and using that makes a new display of the board accordingly. Kind of like the Blit function in a graphical sense.
 	//All graphical or informative data to be displayed on screen is processed by this function.
-	void DisplayBoard(int numRounds, int numTies, string p1Name, int p1Score, int p1Piece, int p1PieceColor, string p2Name, int p2Score, int p2Piece, int p2PieceColor);
+	void DisplayBoard(int numRounds, int numTies, const Player &pOne, const Player &pTwo);
 	//This display function is only used when there was a win
 	//Displays the winning move on the board
-	void DisplayWinningBoard(bool playerOneWin, bool playerTwoWin, int type, int diagonalLocation, int acrossDownLocation, int playerOneColor, int playerTwoColor, int playerOnePiece, int playerTwoPiece);
+	void DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLocation, const Player &pOne, const Player &pTwo);
 	void ResetBoard();  //Resets board and sets it up for another play-through
 	int BoardRefresh(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus);
 	WDPacketPtr FindWinDraw();

@@ -46,240 +46,79 @@ WinDrawPacket::WinDrawPacket(const ConstList &cList)
 	packetCreated = false;
 }
 
-WinDrawPacket::WinDrawPacket(const WinDrawPacket& packet)
+void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, const int winLocation, const int winDiagonalLocation, const int winRowLocation, const int winColumnLocation)
 {
-	(*this).winDraw = packet.winDraw;
-	(*this).playerPiece = packet.playerPiece;
-	(*this).winType = packet.winType;
-	(*this).diagonalType = packet.diagonalType;
-	(*this).rowAcross = packet.rowAcross;
-	(*this).columnDown = packet.columnDown;
-	(*this).packetCreated = packet.packetCreated;
-	(*this).constantsList = packet.constantsList;
-}
+	packetCreated = true;
 
-WinDrawPacket& WinDrawPacket::operator=(const WinDrawPacket& packet)
-{
-	(*this).winDraw = packet.winDraw;
-	(*this).playerPiece = packet.playerPiece;
-	(*this).winType = packet.winType;
-	(*this).diagonalType = packet.diagonalType;
-	(*this).rowAcross = packet.rowAcross;
-	(*this).columnDown = packet.columnDown;
-	(*this).packetCreated = packet.packetCreated;
-	(*this).constantsList = packet.constantsList;
+	//Error values
+	const int t_nullConstant = GetConstantFromList(nullConstant);
+	const int t_fatalError = GetConstantFromList(nullConstant);
 
-	return *this;
-}
+	//Other values needed for testing
+	const int t_noWinDrawState = GetConstantFromList(noWinDrawState);
+	const int t_drawState = GetConstantFromList(drawState);
+	const int t_winState = GetConstantFromList(winState);
 
-void WinDrawPacket::CreatePacket(int gameOutcome, int piece, int winLocation, int diagonalLocation, int rowLocation, int columnLocation)
-{
-	const char Xs = 'X';
-	const char Os = 'O';
-	const char negative = '-';
-
-	stringstream ssConverter;
-	int poundCount = 0;
-	int tempNum;
-	char tempChar;
-	//Prepare stringstream for processing
-	ssConverter.clear();
-
-	//Make readable true so that the game object can read the data
-	readable = true;
-
-	for(unsigned int i = 0; i < prePacket.size(); i++)
+	if((gameOutcome == t_noWinDrawState) || (gameOutcome == t_drawState))
 	{
-		tempNum = NULL;
-		tempChar = NULL;
-		ssConverter<<prePacket[i];
-		
-		if(ssConverter.peek() == delimiter || ssConverter.peek() == Xs || ssConverter.peek() == Os)
-		{
-			ssConverter>>tempChar;
-			tempNum = (int)tempChar;
-		}
-		else if(ssConverter.peek() == negative)
-		{
-			ssConverter.clear();
-			ssConverter<<prePacket[(i + 1)];
-			ssConverter>>tempNum;
-			tempNum *= -1;
-			i++;
-		}
-		else
-		{
-			ssConverter>>tempNum;
-		}
-		
-		ssConverter.clear();
-		if((tempNum == noWinDraw || tempNum == draw) && poundCount == 0)
-		{
-			if(tempNum == noWinDraw)
-			{
-				winDraw = noWinDraw;
-			}
-			else
-			{
-				winDraw = draw;
-			}
-
-			playerPiece = nullConstant;
-			winType = nullConstant;
-			diagonalType = nullConstant;
-			rowAcross = nullConstant;
-			columnDown = nullConstant;
-		}
-		else if(tempNum == win && poundCount == 0)
-		{
-			winDraw = win;
-		}
-		else if(tempNum == delimiter)
-		{
-			poundCount++;
-		}
-
-		//Check for win, if no win exit the loop
-		if(winDraw != win)
-		{
-			break;
-		}
-		else
-		{
-			if((poundCount == 1 || poundCount == 2) && tempNum != delimiter)
-			{
-				switch(poundCount)
-				{
-				case 1:
-					if(tempNum == nullConstant)
-					{
-						playerPiece = nullConstant;
-					}
-					else if(tempNum == Os)
-					{
-						playerPiece = O;
-					}
-					else if(tempNum == Xs)
-					{
-						playerPiece = X;
-					}
-					else
-					{
-						playerPiece = fatalError;
-					}
-					break;
-				case 2:
-					if(tempNum == nullConstant)
-					{
-						winType = nullConstant;
-					}
-					else if(tempNum == across)
-					{
-						winType = across;
-					}
-					else if(tempNum == down)
-					{
-						winType = down;
-					}
-					else if(tempNum == diagonal)
-					{
-						winType = diagonal;
-					}
-					else
-					{
-						playerPiece = fatalError;
-					}
-				}
-			}
-			else if(winType == diagonal && poundCount == 3)
-			{
-				if(tempNum != delimiter)
-				{
-					if(tempNum == diagonalLeft)
-					{
-						diagonalType = diagonalLeft;
-					}
-					else if(tempNum == diagonalRight)
-					{
-						diagonalType = diagonalRight;
-					}
-					else
-					{
-						diagonalType = fatalError;
-					}
-
-					//Since it's diagonal fill in the rest of the packet and break out of the loop
-					rowAcross = nullConstant;
-					columnDown = nullConstant;
-					break;
-				}
-			}
-			else if(winType == across && poundCount == 4)
-			{
-				if(tempNum != delimiter)
-				{
-					tempNum *= 100;
-					switch(tempNum)
-					{
-					case rowOne:
-						rowAcross = rowOne;
-						break;
-					case rowTwo:
-						rowAcross = rowTwo;
-						break;
-					case rowThree:
-						rowAcross = rowThree;
-						break;
-					case rowFour:
-						rowAcross = rowFour;
-						break;
-					case rowFive:
-						rowAcross = rowFive;
-						break;
-					default:
-						rowAcross = fatalError;
-					}
-
-					//Fill in the rest of the packet and break out of loop
-					diagonalType = nullConstant;
-					columnDown = nullConstant;
-					break;
-				}
-			}
-			else if(winType == down && poundCount == 5)
-			{
-				if(tempNum != delimiter)
-				{
-					tempNum *= 10;
-					switch(tempNum)
-					{
-					case colmOne:
-						columnDown = colmOne;
-						break;
-					case colmTwo:
-						columnDown = colmTwo;
-						break;
-					case colmThree:
-						columnDown = colmThree;
-						break;
-					case colmFour:
-						columnDown = colmFour;
-						break;
-					case colmFive:
-						columnDown = colmFive;
-						break;
-					default:
-						columnDown = fatalError;
-					}
-
-					//Fill in the rest of the packet and break out of loop
-					diagonalType = nullConstant;
-					rowAcross = nullConstant;
-					break;
-				}
-			}
-		}
+		winDraw = gameOutcome;
+		//Adding nullConstants here so if parser code in ProcessPacket goes to far it will pop up with a minor error
+		playerPiece = t_nullConstant;
+		winType = t_nullConstant;
+		diagonalType = t_nullConstant;
+		rowAcross = t_nullConstant;
+		columnDown = t_nullConstant;
 	}
+	else if(gameOutcome == t_winState)
+	{
+		winDraw = gameOutcome;
+		playerPiece = winningPiece;
+		winType = winLocation;
+		diagonalType = winDiagonalLocation;
+		rowAcross = winRowLocation;
+		columnDown = winColumnLocation;
+	}
+	else if(gameOutcome == t_nullConstant)
+	{
+		//Minor error, list all variables with minor errors regardless of what they were before
+		winDraw = t_nullConstant;
+		playerPiece = t_nullConstant;
+		winType = t_nullConstant;
+		diagonalType = t_nullConstant;
+		rowAcross = t_nullConstant;
+		columnDown = t_nullConstant;
+	}
+	else if(gameOutcome == t_fatalError)
+	{
+		//Major Error, list all variables with major errors regardless of what they were before
+		winDraw = t_fatalError;
+		playerPiece = t_fatalError;
+		winType = t_fatalError;
+		diagonalType = t_fatalError;
+		rowAcross = t_fatalError;
+		columnDown = t_fatalError;
+	}
+	else
+	{
+		//If gameOutcome has an unknown value treat as major error//
+		//winDraw and all the other variables will equal whatever the weird number was in gameOutcome
+		winDraw = gameOutcome;
+		playerPiece = gameOutcome;
+		winType = gameOutcome;
+		diagonalType = gameOutcome;
+		rowAcross = gameOutcome;
+		columnDown = gameOutcome;
+	}
+
+}
+
+int WinDrawPacket::GetConstantFromList(string request)
+{
+	ConstListIters_C constListIter;
+	constListIter = constantsList.find(request);
+	int t_request = constListIter->second;
+
+	return t_request;
 }
 
 const int WinDrawPacket::GetWinDraw() const
