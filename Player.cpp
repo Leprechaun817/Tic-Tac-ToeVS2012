@@ -30,6 +30,7 @@ Player::Player()
 
 	madeMove = false;
 	playerInitialized = false;
+	win = false;
 
 	resetPlayerFunctionCalled = false;
 }
@@ -83,20 +84,12 @@ void Player::AssignPlayerPiece()
 	}
 }
 
-void Player::DecidePlayerTurnOrder()
-{
-	//Order of play decided by who has which pieces
-	//X's go first
-	//O's go second
-	if(playerPiece == 1)
-		;
-}
-
 //Make sure to call this after AssignPlayerPiece is called. This is very important!!!
 void Player::ResetPlayer(int boundsLimit)
 {
 	madeMove = false;
 	playerPiece = 0;
+	move = 0;
 	//Set boundsLimit
 	(*this).boundsLimit = boundsLimit;
 	AssignPlayerPiece();
@@ -155,108 +148,107 @@ void Player::UpdateScore()
 	//Quite simple really...
 }
 
-bool Player::MakeMove()
+int Player::MakeMove()
 {
-	bool answer = false;
-	bool continuePlay = true;
+	int answer;
+	const int quit = 0;
+	
 	DisplayName();
 	string choice;
 	cout<<endl;
-	cout<<"Enter in your choice below..."<<endl;
+	cout<<"Enter in your choice below...\n";
 	cout<<"Ex. 1,1 or q to quit the game"<<endl;
 	cin>>choice;
-	while(answer == false)
+
+	bool checkMove = true;
+	bool loop = false;
+	while(loop == false)
 	{
 		//Used unsigned int here because move.size is also an unsigned integer.
 		//Keeps warning messages about type mismatches from showing up in the compiler window...
-		for(unsigned int i = 0; i < move.size(); i++)	//Don't know size of string at this time.
+		for(unsigned int i = 0; i < choice.size(); i++)	//Don't know size of string at this time.
 		{
-			if(move[i] == 'q' || move[i] == 'Q')	//Searching the whole string looking for an instance of q or Q
+			if(choice[i] == 'q' || choice[i] == 'Q')	//Searching the whole string looking for an instance of q or Q
 			{
-				//Player wishes to quit the current game
-				continuePlay = false;
-				//Break out of loop as there's no need to continue
-				break;
+				answer = quit;
+				loop = true; //Just in case
+				return answer;
 			}
 		}
 
-		//If continuePlay is false, skip the move check and exit out of loop and function right away
-		//The call for quiting will propogate from this function
-		if(continuePlay == false)
+		checkMove = CheckMoveFormat(choice);
+		if(checkMove == false)
 		{
-			//break out of loop
-			break;
+			cout<<"Please re-enter your choice\n";
+			cin>>choice;
 		}
 		else
 		{
-			answer = CheckPlayerMove();
-			//This if...then... is only evaluated when continuePlay is true
-			//This way it won't ask you to re-enter your move after typing a q or Q into the prompt
-			if(answer == false)
-			{
-				cout<<"Please enter your move again..."<<endl;
-				cin>>move;
-			}
+			answer = ReformatMove(choice);
+			loop = true;
 		}
 	}
 
-	return continuePlay;
+	madeMove = true;
+
+	return answer;
 }
 
-bool Player::CheckPlayerMove(string choice)
+bool Player::CheckMoveFormat(string choice)
 {
-	//stringstream for converstion
-	stringstream s;
+	const unsigned int sizeOfMove = 3;
+	const char middleCharacter = ',';
 
-	//temporary strings to store numbers in while waiting for converstion into integers
-	string temp1 = move.substr(0,1);
-	string temp3 = move.substr(2,1);
-
-	int part1 = 0;
-	char part2 = move[1];
-	int part3 = 0;
-
-	s.clear();
-	//Converting temp1
-	s<<temp1;
-	s>>part1;
-	s.clear();
-	//Converting temp2
-	s<<temp3;
-	s>>part3;
-	 
-	if(move.size() > answerSize)
+	if(choice.size() > sizeOfMove)
 	{
-		cout<<"Your move was to long, please re-enter your\n";
-		cout<<"move in the proper format..."<<endl;
+		cout<<"Your entry has to many characters, please try again...\n";
 		return false;
 	}
-	else if(move.size() < answerSize)
+	else if(choice.size() < sizeOfMove)
 	{
-		cout<<"Your move was to short, please re-enter your\n";
-		cout<<"move in the proper format..."<<endl;
+		cout<<"Your entry has to few characters, please try again...\n";
 		return false;
 	}
-	else if(part1 < 1 || part1 > boundsLimit)
+	else if(choice[1] != middleCharacter)
 	{
-		cout<<"First number is to high, please enter in a lower value"<<endl;
+		cout<<"Your entry must have a comma in it, please try again...\n";
 		return false;
 	}
-	else if(part3 < 1 || part3 > boundsLimit)
+	else
 	{
-		cout<<"Third number is to high, please enter in a lower value"<<endl;
-		return false;
+		//Move format is good, return true
+		return true;
 	}
-	else if(part2 != ',')
-	{
-		cout<<"Your move must have a comma in between the 2 numbers"<<endl;
-		return false;
-	}
-
-	return true;
 }
 
-const int Player::SetPlayerTextColor() const
+int Player::ReformatMove(string choice)
+{
+	const int hundred = 100;
+	const int ten = 10;
+	
+	stringstream ss;
+	ss.clear();
+
+	int firstNumber;
+	int secondNumber;
+	int returnNumber;
+
+	ss<<choice[0];
+	ss>>firstNumber;
+	ss.clear();
+
+	ss<<choice[2];
+	ss>>secondNumber;
+	ss.clear();
+
+	firstNumber *= hundred;
+	secondNumber *= ten;
+	returnNumber = firstNumber + secondNumber;
+
+	return returnNumber;
+}
+
+const void Player::SetPlayerTextColor() const
 {
 	textColor.SetTextToPlayerColor();
 }
@@ -356,4 +348,14 @@ const int Player::GetMove() const
 		_getche();
 		return 666;
 	}
+}
+
+void Player::SetPlayerWon()
+{
+	win = true;
+}
+
+const bool Player::DidPlayerWin() const
+{
+	return win;
 }

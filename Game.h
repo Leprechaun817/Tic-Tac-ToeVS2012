@@ -74,17 +74,15 @@ private:
 	bool firstPlay;
 	int roundsPlayed;  //Keeps track of total number of games played
 	int boundsLimit;
-	int gameDraws;	//Used to keep track of how many times the game closed with a draw
+	int gameDraws;	//Used to keep track of how many times all of the rounds played closed with a draw
 	int playOrder;	//Dictates which player goes first
 	int turnCounter; //This gets incremented by 1 everytime both players have taken their turns. Resets after each new game... 
 	ConstList constantsList;
-	bool GetPlayerMoves();
-	int FormatMove(string move);
-	bool PlayerOneMove();
-	bool PlayerTwoMove();
-	bool CheckAndUpdateBoard(int move);
+	bool gameFatalError;
+	bool GetPlayerMove(int order);
 	bool ProcessPacket(WDPacketPtr packet);
 	int GetConstantFromList(string request);
+	void DecidePlayOrder();
 	
 public:
 	Game();
@@ -92,4 +90,7 @@ public:
 	bool GameLoop();		//All the different states that the game could be in are listed as
 	bool EndGame();			//functions here. These are called as is necessary through the game loop
 	void ResetGame();		//in the main.
+
+	const bool HasGameHadFatalError() const;
+	const bool HasWinOccurred() const;
 };

@@ -30,6 +30,7 @@ private:
 	int playerTurnOrder;
 	int move;	//Stores the move of the player temporarly
 	bool madeMove;
+	bool win;
 	int boundsLimit;
 	bool playerInitialized;
 	ConstList constantsList;
@@ -37,9 +38,9 @@ private:
 	static const int answerSize;
 	bool resetPlayerFunctionCalled;
 	void AssignPlayerPiece();  //Assign either an X or an O to a player
-	void DecidePlayerTurnOrder();	//Figures out whether the player goes second or third
 	int PieceGen();	//Used to generate the first players piece, X or O. Generates numbers 1 or 2 randomly and is sent back to calling function
-	bool CheckPlayerMove(string choice);
+	bool CheckMoveFormat(string choice);
+	int ReformatMove(string choice);
 
 public:
 	Player();
@@ -48,11 +49,11 @@ public:
 	void DisplayName();
 	void DisplayScore();
 	void UpdateScore();
-	bool MakeMove();
+	int MakeMove();
 	void ResetPlayer(int boundsLimit);
 	void ResetPlayerPiece(); //Call this function before ResetPlayer is called. Very Important!!!
 	void InitializePlayer(int boundsLimit, const ConstList &cList);
-	const int SetPlayerTextColor() const;
+	const void SetPlayerTextColor() const;
 	//These return the id and the number representing the playerPiece respectively
 	const int GetID() const;
 	const int GetPiece() const;
@@ -64,6 +65,12 @@ public:
 	//Get/Set functions for move
 	const int GetMove() const;
 	void ResetMove();
+
+	//Only sets win to true
+	void SetPlayerWon();
+
+	//Get for win variable
+	const bool DidPlayerWin() const;
 	
 	//Checks if player has made their move or not returns whatever that value is
 	//and then toggles madeMove to the opposite of what it was.

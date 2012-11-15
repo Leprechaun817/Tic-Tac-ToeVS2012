@@ -10,6 +10,7 @@
 #include <Windows.h>
 #include <stdlib.h>
 #include "Player.h"
+#include "WinDrawPacket.h"
 
 using namespace std;
 
@@ -20,6 +21,8 @@ typedef map<const string, int> ConstList;
 typedef map<const string, int>::const_iterator ConstListIters_C;
 typedef map<const int, char> PieceList;
 typedef map<const int, char>::const_iterator PieceListIters_C;
+typedef map<const int, string> IntStringList;
+typedef map<const int, string>::const_iterator ISListIter_C;
 
 //TODO:
 //-Use typedefs for spacelist and piecePlacement
@@ -72,26 +75,29 @@ private:
 	static const int C;
 
 	//Board related error codes
-	static const int noError;
-	static const int error0;
 	static const int error1;
 	static const int error2;
+	static const int error3;
 
 	HANDLE hConsoleWindow;	//This will be used when changing the text colors
 	int multiplier; //total number of spaces in one line going across or down. Also acts as the height and width for the board, as well as the winning number
 	int numOfSpaces; //calculated during the making of the board, this number is used when creating the vector that will
 					 //keep track of which spaces are filled
+	int totalXsOnBoard;
+	int totalOsOnBoard;
 	IntList spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
 	IntList piecePlacement;  //Keeps track of just the piece types, their location on the board is figured out by their location within the vector
 	ConstList constantsList;
 	PieceList numToCharConversionList;
-	
+	IntStringList errorMsgList;
+	bool boardFatalError;
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
 	char XorO(int num);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
 	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing);
-	int ProcessSpaceList(int location, int playerPiece);
+	bool ProcessSpaceList(int location, int playerPiece);
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();
+	bool CheckMoveLocation(int location);
 	int GetConstantFromList(string request);
 	char GetConstantFromList(int request);
 
@@ -106,9 +112,11 @@ public:
 	//Displays the winning move on the board
 	void DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLocation, const Player &pOne, const Player &pTwo);
 	void ResetBoard();  //Resets board and sets it up for another play-through
-	int BoardRefresh(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus);
+	bool UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus);
 	WDPacketPtr FindWinDraw();
 
 	//Get functions
-	int GetMultiplier() const;
+	const int GetMultiplier() const;
+	const bool GetFatalError() const;
+	const int GetTotalNumOfPiecesOnBoard() const;
 };

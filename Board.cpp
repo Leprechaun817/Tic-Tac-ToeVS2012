@@ -40,24 +40,41 @@ const int Board::A = 9;
 const int Board::B = 16;
 const int Board::C = 25;
 //Error value constants
-const int Board::noError = 4;
-const int Board::error0 = 0;
 const int Board::error1 = 1;
 const int Board::error2 = 2;
+const int Board::error3 = 3;
 
 Board::Board()
 {
+	const int sizeOfPieceArr = 3;
+	const int sizeOfErrorArr = 3;
 	hConsoleWindow = GetStdHandle(STD_OUTPUT_HANDLE);
 	system("cls");
 
 	//Enter values into the numToCharConversionList
-	array<const int, 3> pieceNumbersArr = {0, 1, 2};
-	array<char, 3> pieceCharactersArr = {' ', 'O', 'X'};
+	array<const int, sizeOfPieceArr> pieceNumbersArr = {0, 1, 2};
+	array<char, sizeOfPieceArr> pieceCharactersArr = {' ', 'O', 'X'};
 
-	for(unsigned int i = 0; i < pieceNumbersArr.size(); i++)
+	for(int i = 0; i < sizeOfPieceArr; i++)
 	{
 		numToCharConversionList.insert(pair<const int, char>(pieceNumbersArr[i], pieceCharactersArr[i]));
 	}
+
+	//Enter values for error codes (Specific to the board object)
+	array<const int, sizeOfErrorArr> errorNumArr = {1, 2, 3};
+	array<string, sizeOfErrorArr> errorMsgArr = {"This location already has a piece on it\n",
+												 "This location doesn't exist on the board\n",
+												 "Fatal error, something is wrong with the code. (DEBUG MESSAGE)\n"};
+
+	for(unsigned int i = 0; i < sizeOfErrorArr; i++)
+	{
+		errorMsgList.insert(pair<const int, string>(errorNumArr[i], errorMsgArr[i]));
+	}
+
+	totalXsOnBoard = 0;
+	totalOsOnBoard = 0;
+
+	boardFatalError = false;
 }	
 
 Board::~Board()
@@ -149,6 +166,16 @@ void Board::InitiateBoard()
 	ProcessPiecePlacementList();
 }
 
+void Board::ResetBoard()
+{
+	spaceList.clear();
+	system("cls");
+	SetupBoard(constantsList);
+	system("cls");
+	totalOsOnBoard = 0;
+	totalXsOnBoard = 0;
+}
+
 void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing)
 {
 	//Reset the text color just to be sure
@@ -161,9 +188,11 @@ void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing)
 	squareCount++;
 }
 
-int Board::ProcessSpaceList(int location, int playerPiece)
+bool Board::ProcessSpaceList(int location, int playerPiece)
 {
-	int errorValue = noError;
+	bool error = false; //No errors right now
+	//Only error that can be produced here is where the piece already exists at the
+	//specified spot in the spaceList at which point error would become true
 	
 	//Process spaceList adding the new values
 	IntIter spaceListIter;
@@ -173,20 +202,19 @@ int Board::ProcessSpaceList(int location, int playerPiece)
 		{
 			//location matched location on grid exactly. No piece already exists here. Add in piece, return noError
 			*spaceListIter += playerPiece;
-			errorValue = noError;
-			//If location gets matched, the loop ends. No reason to stay in the loop at this point
+			//If location gets matched, the loop ends.
 			break;
 		}
 		else if((location + 1) == *spaceListIter || (location + 2) == *spaceListIter)
 		{
 			//location given already has a piece added into it, return error1
-			errorValue = error1;
+			error = true;
 			//Error found, loop ending
 			break;
 		}
 	}
 
-	return errorValue;
+	return error;
 }
 
 void Board::ProcessPiecePlacementList()
@@ -293,7 +321,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	//Winning player string
 	string winningPlayer;
 	
-	if(pOne.GetScore() > pTwo.GetScore())
+	if(pOne.DidPlayerWin())
 	{
 		const int lineSize = 46;
 		system("cls");
@@ -1624,33 +1652,66 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 	}
 }
 
-void Board::ResetBoard()
+bool Board::CheckMoveLocation(int location)
 {
-	spaceList.clear();
-	system("cls");
-	SetupBoard(constantsList);
-	system("cls");
+	int tens = 10 * multiplier;
+	int hundreds = 100 * multiplier;
+	int locationCheck = (tens + hundreds);
+
+	if(location > locationCheck)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
-int Board::BoardRefresh(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus)
+bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus)
 {
+	ISListIter_C errorListIter;
 	
-	int valueGood = -1;
-	
-
-	//Process spaceList
-	valueGood = ProcessSpaceList(location, playerPiece);
-
-	//Test returned value to make sure it's ok and then double check player's move statuses and adjust error code accordingly
-	if((valueGood != error1 && valueGood != noError) && (playerOneMoveStatus == false && playerTwoMoveStatus == false))
+	if(playerOneMoveStatus == false && playerTwoMoveStatus == false)
 	{
-		valueGood = 0;
+		//Fatal Error has occurred, take a look at the code
+		errorListIter = errorMsgList.find(error3);
+		cout<<(errorListIter->second);
+		boardFatalError = true;
+		return false;
+	}
+	
+	if(CheckMoveLocation(location) == false)
+	{
+		errorListIter = errorMsgList.find(error2);
+		cout<<(errorListIter->second);
+		return false;
 	}
 
-	//Process piecePlacement after spaceList has been processed
+	if(ProcessSpaceList(location, playerPiece) == false)
+	{
+		errorListIter = errorMsgList.find(error1);
+		cout<<(errorListIter->second);
+		return false;
+	}
+	else
+	{
+		const int t_xPlayerPiece = GetConstantFromList(xPlayerPiece);
+
+		if(playerPiece == t_xPlayerPiece)
+		{
+			totalXsOnBoard++;
+		}
+		else
+		{
+			totalOsOnBoard++;
+		}
+	}
+
+	ProcessSpaceList(location, playerPiece);
 	ProcessPiecePlacementList();
 
-	return valueGood;
+	return true;
 }
 
 char Board::XorO(int num)
@@ -1740,7 +1801,17 @@ char Board::GetConstantFromList(int request)
 	return t_request;
 }
 
-int Board::GetMultiplier() const
+const int Board::GetMultiplier() const
 {
 	return multiplier;
+}
+
+const bool Board::GetFatalError() const
+{
+	return boardFatalError;
+}
+
+const int Board::GetTotalNumOfPiecesOnBoard() const
+{
+	return (totalOsOnBoard + totalXsOnBoard);
 }

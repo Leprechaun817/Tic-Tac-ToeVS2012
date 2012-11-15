@@ -2,7 +2,6 @@
 #include <memory>
 #include <conio.h>
 #include <ctime>
-#include <conio.h>
 #include "Game.h"
 
 using namespace std;
@@ -35,10 +34,13 @@ int main()
 
 			if(end == false)	//No, player doesn't want to quit, wants to start a new round
 			{
-				game->ResetGame();
-				game->StartGame();
-				//Reset gameRunning to true so that it continues to loop
-				gameRunning = true;
+				if(game->HasGameHadFatalError() == false)
+				{
+					game->ResetGame();
+					game->StartGame();
+					//Reset gameRunning to true so that it continues to loop
+					gameRunning = true;
+				}
 			}
 			else				//Yes, player does want to quit. Doesn't want to start a new round
 			{
@@ -51,9 +53,16 @@ int main()
 
 	//TODO:
 	//Show final stats here right after the screen is cleared
-	cout<<"Hope you enjoyed the game!!"<<endl;
-	cout<<"Thanks for playing... ^_^"<<endl;
-	_getche();
+	if(game->HasGameHadFatalError() == false)
+	{
+		cout<<"Hope you enjoyed the game!!"<<endl;
+		cout<<"Thanks for playing... ^_^"<<endl;
+		_getche();
+	}
+	else
+	{
+		//Message here about what to do in the event of an error.
+	}
 
 	return 0;
 }

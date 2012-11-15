@@ -79,15 +79,9 @@ Game::Game()
 	//First time game is starting so firstPlay is true
 	firstPlay = true;
 
-	//Figure out play order
-	if(playerOne.GetPiece() == 2)
-	{
-		playOrder = 1;
-	}
-	else
-	{
-		playOrder = 2;
-	}
+	gameFatalError = false;
+
+	DecidePlayOrder();
 }
 
 void Game::StartGame()
@@ -137,13 +131,40 @@ void Game::StartGame()
 
 bool Game::GameLoop()
 {
+	const int playerOneTurn = 1;
+	const int playerTwoTurn = 2;
 	bool continueGame = true;
 	
-	//Let players make their moves
-	continueGame = GetPlayerMoves();
-	
-	//Check for win or draw, only after the amounts of total turns taken equals the multiplier
-	if(turnCounter >= boundsLimit)
+	if(playOrder == 1)
+	{
+		continueGame = GetPlayerMove(playerOneTurn);
+		if(continueGame == false)
+		{
+			return continueGame;
+		}
+		
+		continueGame = GetPlayerMove(playerTwoTurn);
+		if(continueGame == false)
+		{
+			return continueGame;
+		}
+	}
+	else
+	{
+		continueGame = GetPlayerMove(playerTwoTurn);
+		if(continueGame == false)
+		{
+			return continueGame;
+		}
+
+		continueGame = GetPlayerMove(playerOneTurn);
+		if(continueGame == false)
+		{
+			return continueGame;
+		}
+	}
+
+	if(board.GetTotalNumOfPiecesOnBoard() >= boundsLimit)
 	{
 		continueGame = ProcessPacket(board.FindWinDraw());
 	}
@@ -193,7 +214,7 @@ void Game::ResetGame()
 	//Game object specific stuff
 	turnCounter = 0;
 	firstPlay = false;
-	
+	playOrder = 0;
 	//Reset the board first
 	board.ResetBoard();
 	
@@ -201,240 +222,103 @@ void Game::ResetGame()
 	//This keeps problems with bounds issues popping up
 	boundsLimit = board.GetMultiplier();
 
-	//Reset the player piece using one of the players
-	//This works because otherPlayerPiece in the Player class is static
-	//and doesn't change when a new player is instaniated. Unless you go in
-	//and chnage it through a call or manually
+	//Call this before ResetPlayer or bad things will happen
 	playerOne.ResetPlayerPiece();
 
 	//Reset both players
 	playerOne.ResetPlayer(boundsLimit);
 	playerTwo.ResetPlayer(boundsLimit);
+
+	DecidePlayOrder();
 }
 
-//TODO:
-//How player moves are handled needs to be redesigned...
-//Player related functions as well as the checks for the player moves need to be enclosed within the player object
-//not within the game object
-bool Game::GetPlayerMoves()
+bool Game::GetPlayerMove(int order)
 {
+	const int quit = 0;
 	bool continuePlay = true;
 
-	if(playOrder == 1)
+	if(order == 1)
 	{
-		continuePlay = PlayerOneMove();
-		if(continuePlay == true)
+		int playerOneMove;
+		bool playerOneGood = false;
+		while(playerOneGood == false)
 		{
 			system("cls");
 			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
-		}
-		else
-		{
-			return continuePlay;
-		}
-		
-		continuePlay = PlayerTwoMove();
-		if(continuePlay == true)
-		{
-			//Now that both players have made their moves increment the turnCounter by 1
-			turnCounter++;
-			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
-		}
-		else
-		{
-			return continuePlay;
+			playerOneMove = playerOne.MakeMove();
+			if(playerOneMove == quit)
+			{
+				continuePlay = false;
+				return continuePlay;
+			}
+			
+			if(board.UpdateBoard(playerOne.GetPiece(), playerOneMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove()) == false)
+			{
+				if(board.GetFatalError() == true)
+				{
+					cout<<"Now exiting the program.\n";
+					cout<<"There has been a fatal error...\n";
+					cout<<"Press any key to continue...\n"<<endl;
+					_getche();
+					continuePlay = false;
+					gameFatalError = true;
+					return continuePlay;
+				}
+				else
+				{
+					cout<<"Please re-enter your choice.\n";
+					cout<<anyKey<<endl;
+					_getche();
+				}
+			}
+			else
+			{
+				playerOneGood = true;
+			}
 		}
 	}
 	else
 	{
-		continuePlay = PlayerTwoMove();
-		if(continuePlay == true)
+		int playerTwoMove;
+		bool playerTwoGood = false;
+		while(playerTwoGood == false)
 		{
 			system("cls");
 			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
-		}
-		else
-		{
-			return continuePlay;
-		}
-
-		continuePlay = PlayerOneMove();
-		if(continuePlay == true)
-		{
-			//Same thing, both players have made their moves. Increment the turnCounter by 1
-			turnCounter++;
-			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
-		}
-		else
-		{
-			return continuePlay;
-		}
-	}
-
-	return continuePlay;
-}
-
-bool Game::PlayerOneMove()
-{
-	bool moveIsGood = false;
-	bool continuePlay = true;
-	while(moveIsGood == false)
-	{
-		continuePlay = playerOne.MakeMove();
-		if(continuePlay == false)
-		{
-			//Break out of loop and continue quit propogation
-			break;
-		}
-
-		playerOne.SetMadeMove(true);
-		cout<<endl;
-		moveIsGood = CheckAndUpdateBoard(FormatMove(playerOne.GetMove()));
-		//If move is no good, move through loop until player enters a good move
-		if(moveIsGood == false)
-		{
-			playerOne.SetMove(" ");
-			//playerOne->SetMadeMove(false);
-			//SetMadeMove will be called in CheckAndUpdateBoard in the event that the move is no good
-			//If this doesn't work, uncomment the first line as an insurance policy to make sure that madeMove is
-			//made false. Otherwise the move check might get messed up.
-			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne.GetName(), playerOne.GetScore(), playerOne.GetPieceNum(), playerOne.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
-			cout<<endl;
-			cout<<"Please re-enter your move."<<endl;
-			_getche();
-		}
-		else
-		{
-			//If move checked out ok and was entered into the vector in preperation for the board refresh
-			//Reset players move and set players madeMove variable to false in preperation for next turn
-			playerOne.SetMove(" ");
-			playerOne.SetMadeMove(false);
+			playerTwoMove = playerTwo.MakeMove();
+			if(playerTwoMove == quit)
+			{
+				continuePlay = false;
+				return continuePlay;
+			}
+			
+			if(board.UpdateBoard(playerTwo.GetPiece(), playerTwoMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove()) == false)
+			{
+				if(board.GetFatalError() == true)
+				{
+					cout<<"Now exiting the program.\n";
+					cout<<"There has been a fatal error...\n";
+					cout<<"Press any key to continue...\n"<<endl;
+					_getche();
+					continuePlay = false;
+					gameFatalError = true;
+					return continuePlay;
+				}
+				else
+				{
+					cout<<"Please re-enter your choice.\n";
+					cout<<anyKey<<endl;
+					_getche();
+				}
+			}
+			else
+			{
+				playerTwoGood = true;
+			}
 		}
 	}
 
 	return continuePlay;
-}
-
-bool Game::PlayerTwoMove()
-{
-	bool moveIsGood = false;
-	bool continuePlay = true;
-	while(moveIsGood == false)
-	{
-		continuePlay = playerTwo.MakeMove();
-		if(continuePlay == false)
-		{
-			//Break out of loop and continue quit propogation
-			break;
-		}
-
-		playerTwo.SetMadeMove(true);
-		cout<<endl;
-		moveIsGood = CheckAndUpdateBoard(FormatMove(playerTwo.GetMove()));
-		//If move is no good, move through if,then statement and reset everything.
-		//Then player will be told to re-enter the move
-		if(moveIsGood == false)
-		{
-			playerTwo.SetMove(" ");
-			//playerTwo->SetMadeMove(false);
-			//SetMadeMove will be called in CheckAndUpdateBoard in the event that the move is no good
-			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor(), playerTwo.GetName(), playerTwo.GetScore(), playerTwo.GetPieceNum(), playerTwo.GetTextColor());
-			cout<<endl;
-			cout<<"Please re-enter your move."<<endl;
-			_getche();
-		}
-		else
-		{
-			//If move checked out ok and was entered into the vector in preperation for the board refresh
-			//Reset players move and set players madeMove variable to false in preperation for next turn
-			playerTwo.SetMove(" ");
-			playerTwo.SetMadeMove(false);
-		}
-	}
-
-	return continuePlay;
-}
-
-int Game::FormatMove(string move)
-{
-	stringstream s;
-	string temp;
-	int newMove = 0;
-
-	temp += move[0];
-	temp += move[2];
-
-	s<<temp;
-	s>>newMove;
-	
-	newMove *= 10;
-
-	return newMove;
-}
-
-bool Game::CheckAndUpdateBoard(int move)
-{
-	//string constants for error codes...
-	//I would of put them in the class, but they're specific to this function so it makes more sense
-	//to me to just put them in the function instead of the class
-	const string error0 = "No moves made, check GetPlayerMoves, as well as PlayerOneMove and\nPlayerTwoMove";
-	const string error1 = "This location already has a piece on it\n";
-	const string error2 = "This location doesn't match any of the locations on the grid\n";
-	const string error3 = "Fatal error, something is wrong with the code. (DEBUG MESSAGE)\n";	//Only used during debuging, remove afterwards
-	const string anyKey = "Press any key to continue...\n";
-	int moveError = 4;	//moveCheck is declared with 4 because 0 - 3 are error codes.
-						//Basically, if this still equals 4 after the if...then...else, then there are no errors
-	bool moveCheck = false;		//moveCheck is false until the moveError has been evaluated. If moveError still equals 4
-								//then there are no errors and the check passes, therefore moveCheck will be true.
-								//Less code this way, moveCheck is only made true if no errors are found, so the moveCheck needs to be changed
-								//exactly once
-	
-	if(playerOne.CheckMadeMove() == false && playerTwo.CheckMadeMove() == false)
-	{
-		moveError = 0;
-	}
-	else if(playerOne.CheckMadeMove() == true)
-	{
-		moveError = board.BoardRefresh(playerOne.GetPieceNum(), move, playerOne.CheckMadeMove(), playerTwo.CheckMadeMove());
-	}
-	else if(playerTwo.CheckMadeMove() == true)
-	{
-		moveError = board.BoardRefresh(playerTwo.GetPieceNum(), move, playerOne.CheckMadeMove(), playerTwo.CheckMadeMove());
-	}
-	else	//This is else is purely for debug purposes. Under normal circumstances this should never get called!!!
-	{
-		moveError = 3;
-	}
-
-	switch (moveError)
-	{
-	case 0:
-		cout<<error0<<anyKey;
-		_getche();
-		break;
-	case 1:
-		cout<<error1<<anyKey;
-		_getche();
-		break;
-	case 2:
-		cout<<error2<<anyKey;
-		_getche();
-		break;
-	case 3:
-		cout<<error3<<anyKey;
-		_getche();
-		break;
-	case 4:
-		//No errors made, move is good
-		moveCheck = true;
-		break;
-	}
-
-	return moveCheck;
 }
 
 bool Game::ProcessPacket(WDPacketPtr packet)
@@ -480,6 +364,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		if(packet->GetPlayerPiece() == playerOne.GetPiece())
 		{
 			playerOne.UpdateScore();
+			playerOne.SetPlayerWon();
 			//Message telling that player 1 has won the game
 			cout<<playerOneWinMessage;
 			playerOne.DisplayScore();
@@ -489,6 +374,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		else if(packet->GetPlayerPiece() == playerTwo.GetPiece())
 		{
 			playerTwo.UpdateScore();
+			playerTwo.SetPlayerWon();
 			//Message telling that player 2 has won the game
 			cout<<playerTwoWinMessage;
 			playerTwo.DisplayScore();
@@ -571,6 +457,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 				//Both errors will result in the game closing
 				continueGame = false;
+				gameFatalError = true;
 				return continueGame;
 			}
 		}
@@ -644,6 +531,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 				//End the game
 				continueGame = false;
+				gameFatalError = true;
 				return continueGame;
 			}
 		}
@@ -717,6 +605,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 				//End the game
 				continueGame = false;
+				gameFatalError = true;
 				return continueGame;
 			}
 		}
@@ -755,6 +644,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 			//End the game
 			continueGame = false;
+			gameFatalError = true;
 			return continueGame;
 		}
 	}
@@ -769,6 +659,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 		//End the game
 		continueGame = false;
+		gameFatalError = true;
 		return continueGame;
 	}
 	else
@@ -781,14 +672,32 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		cout<<"as well as the functions related to packet creation and finding the win, draw, or neither right a way.\n";
 		cout<<anyKey;
 		_getche();
+
+		//End the game
+		continueGame = false;
+		gameFatalError = true;
+		return continueGame;
 	}
 
-	//Send temporary values to a display board function
-	//TODO:
-	//May need special board draw function for this, as this is a special case
-	//Putting code in to process these values may make the original display function unnecessarily complicated
-	
+	if(playerOne.DidPlayerWin() == true || playerTwo.DidPlayerWin() == true)
+	{
+		board.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne, playerTwo);
+	}
+
 	return continueGame;
+}
+
+void Game::DecidePlayOrder()
+{
+	//Figure out play order
+	if(playerOne.GetPiece() == 2)
+	{
+		playOrder = 1;
+	}
+	else
+	{
+		playOrder = 2;
+	}
 }
 
 int Game::GetConstantFromList(string request)
@@ -798,4 +707,9 @@ int Game::GetConstantFromList(string request)
 	int t_request = constListIter->second;
 
 	return t_request;
+}
+
+const bool Game::HasGameHadFatalError() const
+{
+	return gameFatalError;
 }
