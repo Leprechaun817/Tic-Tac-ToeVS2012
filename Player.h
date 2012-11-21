@@ -14,34 +14,6 @@ typedef map<const string, int>::const_iterator ConstListIters_C;
 
 class Player
 {
-private:
-	//Constants
-	static const string noPlayerPiece;
-	static const string oPlayerPiece;
-	static const string xPlayerPiece;
-	
-	//Regular Variables
-	ScreenColors textColor;
-	int id_;
-	string name_;
-	int score_;
-	int playerPiece_;
-	static int otherPlayerPiece_;
-	int playerTurnOrder_;
-	int move_;	//Stores the move of the player temporarly
-	bool madeMove_;
-	bool win_;
-	int boundsLimit_;
-	bool playerInitialized_;
-	ConstList constantsList;
-	static int numOfPlayers_;
-	static const int answerSize;
-	bool resetPlayerFunctionCalled_;
-	void AssignPlayerPiece();  //Assign either an X or an O to a player
-	int PieceGen();	//Used to generate the first players piece, X or O. Generates numbers 1 or 2 randomly and is sent back to calling function
-	bool CheckMoveFormat(string choice);
-	int ReformatMove(string choice);
-
 public:
 	Player();
 	~Player();
@@ -76,4 +48,42 @@ public:
 	//and then toggles madeMove to the opposite of what it was.
 	//So if it was true after running this it will be false and visa versa...
 	bool HasPlayerMadeMove();
+
+//Protected Functions
+//Made these protected in preperation for the computer player (AI player)
+//Computer player class will derive from this one
+//Other changes coming soon...
+protected:
+	void AssignPlayerPiece();  //Assign either an X or an O to a player
+	int PieceGen();	//Used to generate the first players piece, X or O. Generates numbers 1 or 2 randomly and is sent back to calling function
+	bool CheckMoveFormat(string choice);
+	int ReformatMove(string choice);
+
+//Constants
+private:
+	static const string noPlayerPiece;
+	static const string oPlayerPiece;
+	static const string xPlayerPiece;
+
+//Container Variables
+private:
+	ScreenColors textColor;
+	ConstList constantsList;
+
+//Regular Variables
+private:
+	int id_;
+	string name_;
+	int score_;
+	int playerPiece_;
+	static int otherPlayerPiece_;
+	int playerTurnOrder_;
+	int move_;	//Stores the move of the player temporarly
+	bool madeMove_;
+	bool win_;
+	int boundsLimit_;
+	bool playerInitialized_;
+	static int numOfPlayers_;
+	static const int answerSize;
+	bool resetPlayerFunctionCalled_;
 };

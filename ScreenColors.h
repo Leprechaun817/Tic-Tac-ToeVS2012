@@ -6,8 +6,14 @@ using namespace std;
 
 class ScreenColors
 {
+public:
+	ScreenColors();
+	void DecidePlayerScreenColor();
+	void SetTextToPlayerColor() const;
+	void ResetConsoleColor();
+
+//Color constants
 private:
-	//Color constants
 	static const int black;
 	static const int dark_blue;
 	static const int dark_green;
@@ -24,15 +30,16 @@ private:
 	static const int purple;
 	static const int yellow;
 	static const int white;
+	
+//Regular Variables
+private:
 	HANDLE hConsole_;
 	//Actual player color, shows what will appear on screen
 	int colorAttribute_;
 	static int otherPlayerColor_;
+
+//Private Functions
+private:
 	void SetPlayerTextColor(int color);
 	char ChangeErrorTextColor(int color);
-public:
-	ScreenColors();
-	void DecidePlayerScreenColor();
-	void SetTextToPlayerColor() const;
-	void ResetConsoleColor();
 };
