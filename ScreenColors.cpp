@@ -160,9 +160,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'a':
 			case 'A':
 				if(otherPlayerColor_ == dark_blue)
-				{
 					selection = ChangeErrorTextColor(dark_blue);
-				}
 				else
 				{
 					colorAttribute_ = dark_blue;
@@ -172,9 +170,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'b':
 			case 'B':
 				if(otherPlayerColor_ == dark_green)
-				{
 					selection = ChangeErrorTextColor(dark_green);
-				}
 				else
 				{
 					colorAttribute_ = dark_green;
@@ -184,9 +180,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'c':
 			case 'C':
 				if(otherPlayerColor_ == dark_cyan)
-				{
 					selection = ChangeErrorTextColor(dark_cyan);
-				}
 				else
 				{
 					colorAttribute_ = dark_cyan;
@@ -196,9 +190,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'd':
 			case 'D':
 				if(otherPlayerColor_ == dark_red)
-				{
 					selection = ChangeErrorTextColor(dark_red);
-				}
 				else
 				{
 					colorAttribute_ = dark_red;
@@ -208,9 +200,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'e':
 			case 'E':
 				if(otherPlayerColor_ == dark_purple)
-				{
 					selection = ChangeErrorTextColor(dark_purple);
-				}
 				else
 				{
 					colorAttribute_ = dark_purple;
@@ -220,9 +210,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'f':
 			case 'F':
 				if(otherPlayerColor_ == dark_yellow)
-				{
 					selection = ChangeErrorTextColor(dark_yellow);
-				}
 				else
 				{
 					colorAttribute_ = dark_yellow;
@@ -232,9 +220,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'g':
 			case 'G':
 				if(otherPlayerColor_ == dark_white)
-				{
 					selection = ChangeErrorTextColor(dark_white);
-				}
 				else
 				{
 					colorAttribute_ = dark_white;
@@ -244,9 +230,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'h':
 			case 'H':
 				if(otherPlayerColor_ == gray)
-				{
 					selection = ChangeErrorTextColor(gray);
-				}
 				else
 				{
 					colorAttribute_ = gray;
@@ -256,9 +240,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'i':
 			case 'I':
 				if(otherPlayerColor_ == blue)
-				{
 					selection = ChangeErrorTextColor(blue);
-				}
 				else
 				{
 					colorAttribute_ = blue;
@@ -268,9 +250,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'j':
 			case 'J':
 				if(otherPlayerColor_ == green)
-				{
 					selection = ChangeErrorTextColor(green);
-				}
 				else
 				{
 					colorAttribute_ = green;
@@ -280,9 +260,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'k':
 			case 'K':
 				if(otherPlayerColor_ == cyan)
-				{
 					selection = ChangeErrorTextColor(cyan);
-				}
 				else
 				{
 					colorAttribute_ = cyan;
@@ -292,9 +270,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'l':
 			case 'L':
 				if(otherPlayerColor_ == red)
-				{
 					selection = ChangeErrorTextColor(red);
-				}
 				else
 				{
 					colorAttribute_ = red;
@@ -304,9 +280,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'm':
 			case 'M':
 				if(otherPlayerColor_ == purple)
-				{
 					selection = ChangeErrorTextColor(purple);
-				}
 				else
 				{
 					colorAttribute_ = purple;
@@ -316,9 +290,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'n':
 			case 'N':
 				if(otherPlayerColor_ == yellow)
-				{
 					selection = ChangeErrorTextColor(yellow);
-				}
 				else
 				{
 					colorAttribute_ = yellow;
@@ -328,9 +300,7 @@ void ScreenColors::DecidePlayerScreenColor()
 			case 'o':
 			case 'O':
 				if(otherPlayerColor_ == white)
-				{
 					selection = ChangeErrorTextColor(white);
-				}
 				else
 				{
 					colorAttribute_ = white;

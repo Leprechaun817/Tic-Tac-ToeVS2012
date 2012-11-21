@@ -14,13 +14,9 @@ Player::Player()
 	//if...else... here is used becuase of the fact that numOfPlayers is a static variable so if this class has been
 	//instantiated once this variable will already have a value. So the constructor has to check for that and account for it.
 	if(numOfPlayers_ == 0)	//if numOfPlayers hasn't been used before
-	{
 		numOfPlayers_ = 1;
-	}
 	else	//if numOfPlayers has been used before
-	{
 		numOfPlayers_++;
-	}
 
 	//ID will equal the current number of players, which normally won't be more than 2 anyways.
 	//Might as well code for expansion anyways though
@@ -72,13 +68,9 @@ void Player::AssignPlayerPiece()
 	else
 	{
 		if(otherPlayerPiece_ == 1)
-		{
 			playerPiece_ = 2;
-		}
 		else
-		{
 			playerPiece_ = 1;
-		}
 
 		resetPlayerFunctionCalled_ = false;
 	}
@@ -118,14 +110,10 @@ int Player::PieceGen()
 	int num;
 
 	if(temp >= 1 && temp <= 20)
-	{
 		num = 1;
-	}
 
 	if(temp >= 21 && temp <= 40)
-	{
 		num = 2;
-	}
 
 	return num;
 }
@@ -215,10 +203,8 @@ bool Player::CheckMoveFormat(string choice)
 		return false;
 	}
 	else
-	{
 		//Move format is good, return true
 		return true;
-	}
 }
 
 int Player::ReformatMove(string choice)
@@ -273,9 +259,7 @@ bool Player::HasPlayerMadeMove()
 const int Player::GetID() const
 {
 	if(playerInitialized_ == true)
-	{
 		return id_;
-	}
 	else
 	{
 		cout<<"This Player has not been initialized yet,\n";
@@ -289,9 +273,7 @@ const int Player::GetID() const
 const int Player::GetPiece() const
 {
 	if(playerInitialized_ == true)
-	{
 		return playerPiece_;
-	}
 	else
 	{
 		cout<<"This Player has not been initialized yet,\n";
@@ -305,9 +287,7 @@ const int Player::GetPiece() const
 const string Player::GetName() const
 {
 	if(playerInitialized_ == true)
-	{
 		return name_;
-	}
 	else
 	{
 		cout<<"This player has not been initialized yet,\n";
@@ -321,9 +301,7 @@ const string Player::GetName() const
 const int Player::GetScore() const
 {
 	if(playerInitialized_ == true)
-	{
 		return score_;
-	}
 	else
 	{
 		cout<<"This player has not been initialized yet,\n";
@@ -337,9 +315,21 @@ const int Player::GetScore() const
 const int Player::GetMove() const
 {
 	if(playerInitialized_ == true)
-	{
 		return move_;
+	else
+	{
+		cout<<"This player has not been initialized yet,\n";
+		cout<<"Please run the initialization function...\n";
+		cout<<"Press any key to continue...\n";
+		_getche();
+		return 666;
 	}
+}
+
+const bool Player::DidPlayerWin() const
+{
+	if(playerInitialized_ == true)
+		return win_;
 	else
 	{
 		cout<<"This player has not been initialized yet,\n";
@@ -353,9 +343,4 @@ const int Player::GetMove() const
 void Player::SetPlayerWon()
 {
 	win_ = true;
-}
-
-const bool Player::DidPlayerWin() const
-{
-	return win_;
 }

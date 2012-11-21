@@ -112,13 +112,9 @@ void Game::StartGame()
 	//Set gamesPlayed to 1 as this is the first game, unless that was already the case.
 	//When that happens roundsPlayed is incremented by 1
 	if(roundsPlayed_ == 0)
-	{
 		roundsPlayed_ = 1;
-	}
 	else
-	{
 		roundsPlayed_++;
-	}
 
 	//Clear screen, display first play board
 	system("cls");
@@ -139,35 +135,25 @@ bool Game::GameLoop()
 	{
 		continueGame = GetPlayerMove(playerOneTurn);
 		if(continueGame == false)
-		{
 			return continueGame;
-		}
 		
 		continueGame = GetPlayerMove(playerTwoTurn);
 		if(continueGame == false)
-		{
 			return continueGame;
-		}
 	}
 	else
 	{
 		continueGame = GetPlayerMove(playerTwoTurn);
 		if(continueGame == false)
-		{
 			return continueGame;
-		}
 
 		continueGame = GetPlayerMove(playerOneTurn);
 		if(continueGame == false)
-		{
 			return continueGame;
-		}
 	}
 
 	if(board.GetTotalNumOfPiecesOnBoard() >= boundsLimit_)
-	{
 		continueGame = ProcessPacket(board.FindWinDraw());
-	}
 
 	return continueGame;
 }
@@ -272,9 +258,7 @@ bool Game::GetPlayerMove(int order)
 				}
 			}
 			else
-			{
 				playerOneGood = true;
-			}
 		}
 	}
 	else
@@ -312,9 +296,7 @@ bool Game::GetPlayerMove(int order)
 				}
 			}
 			else
-			{
 				playerTwoGood = true;
-			}
 		}
 	}
 
@@ -353,9 +335,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			return continueGame;
 		}
 		else
-		{
 			return continueGame;
-		}
 	}
 	else if(t_gameState == t_winState)
 	{
@@ -414,13 +394,9 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			const int t_diagonalRightSubType = GetConstantFromList(diagonalRightSubType);
 
 			if(t_winningDiagLocation == t_diagonalLeftSubType)
-			{
 				tempDiagonalLocation = t_diagonalLeftSubType;
-			}
 			else if(t_winningDiagLocation == t_diagonalRightSubType)
-			{
 				tempDiagonalLocation = t_diagonalRightSubType;
-			}
 			else //diagType didn't equal 1 or 2 even though the winning move was a diagonal, this is an error
 			{	
 				if(t_winningDiagLocation == t_nullConstant)
@@ -477,25 +453,15 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			const int t_rowFive = GetConstantFromList(rowFive);
 
 			if(t_winningAcrossLocation == t_rowOne)
-			{
 				tempAcrossDownLocation = t_rowOne;
-			}
 			else if(t_winningAcrossLocation == t_rowTwo)
-			{
 				tempAcrossDownLocation = t_rowTwo;
-			}
 			else if(t_winningAcrossLocation == t_rowThree)
-			{
 				tempAcrossDownLocation = t_rowThree;
-			}
 			else if(t_winningAcrossLocation == t_rowFour)
-			{
 				tempAcrossDownLocation = t_rowFour;
-			}
 			else if(t_winningAcrossLocation == t_rowFive)
-			{
 				tempAcrossDownLocation = t_rowFive;
-			}
 			else //the row didn't match any of the row locations, an error has occurred
 			{
 				if(t_winningAcrossLocation == t_nullConstant)
@@ -551,25 +517,15 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			const int t_columnFive = GetConstantFromList(columnFive);
 
 			if(t_winningDownLocation == t_columnOne)
-			{
 				tempAcrossDownLocation = t_columnOne;
-			}
 			else if(t_winningDownLocation == t_columnTwo)
-			{
 				tempAcrossDownLocation = t_columnTwo;
-			}
 			else if(t_winningDownLocation == t_columnThree)
-			{
 				tempAcrossDownLocation = t_columnThree;
-			}
 			else if(t_winningDownLocation == t_columnFour)
-			{
 				tempAcrossDownLocation = t_columnFour;
-			}
 			else if(t_winningDownLocation == t_columnFive)
-			{
 				tempAcrossDownLocation = t_columnFive;
-			}
 			else   //column didn't match any column locations, an error has occured
 			{
 				if(t_winningDownLocation == t_nullConstant)
@@ -680,9 +636,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	}
 
 	if(playerOne.DidPlayerWin() == true || playerTwo.DidPlayerWin() == true)
-	{
 		board.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne, playerTwo);
-	}
 
 	return continueGame;
 }
@@ -691,13 +645,9 @@ void Game::DecidePlayOrder()
 {
 	//Figure out play order
 	if(playerOne.GetPiece() == 2)
-	{
 		playOrder_ = 1;
-	}
 	else
-	{
 		playOrder_ = 2;
-	}
 }
 
 int Game::GetConstantFromList(string request)
