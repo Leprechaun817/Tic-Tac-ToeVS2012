@@ -54,11 +54,11 @@ Game::Game()
 							   rowThree, rowFour, rowFive, nullConstant, fatalError};
 	array<int, 23> constantsValues = {0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, -1, -2};
 	//Zero gamesPlayed
-	roundsPlayed = 0;
+	roundsPlayed_ = 0;
 	//Zero draws as no games have been played yet...
-	gameDraws = 0;
+	gameDraws_ = 0;
 	//Turn counter set to zero
-	turnCounter = 0;
+	turnCounter_ = 0;
 
 	//constantsList must be created before board and the 2 players are initialized becuase otherwise I'd be sending them a empty map container
 	for(unsigned int i = 0; i < constantsValues.size(); i++)
@@ -71,15 +71,15 @@ Game::Game()
 	//set bounds limit, basically players shouldn't be able to enter in values past this number
 	//It's also the number used to determine if somebody won the game
 	//The value is pulled from the board object
-	boundsLimit = board.GetMultiplier();
+	boundsLimit_ = board.GetMultiplier();
 	//Initializing each player
-	playerOne.InitializePlayer(boundsLimit, constantsList);
-	playerTwo.InitializePlayer(boundsLimit, constantsList);
+	playerOne.InitializePlayer(boundsLimit_, constantsList);
+	playerTwo.InitializePlayer(boundsLimit_, constantsList);
 
 	//First time game is starting so firstPlay is true
-	firstPlay = true;
+	firstPlay_ = true;
 
-	gameFatalError = false;
+	gameFatalError_ = false;
 
 	DecidePlayOrder();
 }
@@ -88,43 +88,43 @@ void Game::StartGame()
 {
 	//First board was layed out when the board object was instantiated so all that's left
 	//to do is to give the player some instructions
-	if(firstPlay == true)
+	if(firstPlay_ == true)
 	{
 		cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<endl;
-		cout<<"Get "<<boundsLimit<<" in a row to win."<<endl;
+		cout<<"Get "<<boundsLimit_<<" in a row to win."<<endl;
 		cout<<"Each player will enter his/her choice into the prompt,\n";
 		cout<<"your choice will then appear on the board and you will get a chance to\n";
 		cout<<"enter in another choice."<<endl;
 		cout<<"When somebody wins the game or the game is a draw, you can play another\n";
 		cout<<"or, you can quit. The number of wins or draws that you rack up will be\n";
 		cout<<"displayed as you play."<<endl;
-		cout<<"Remember columns go down and are numbered 1 - "<<boundsLimit<<" going from\n";
-		cout<<"left to right. Rows go across and are number 1 - "<<boundsLimit<<" going from\n";
+		cout<<"Remember columns go down and are numbered 1 - "<<boundsLimit_<<" going from\n";
+		cout<<"left to right. Rows go across and are number 1 - "<<boundsLimit_<<" going from\n";
 		cout<<"top to bottom. So to put an X or O on the first square you would type in\n";
 		cout<<"\"1,1\". Don't forget the comma you have to have that."<<endl;
 		cout<<"The player who got Xs will go first, this is picked randomly each time a new game is played"<<endl;
 		cout<<"Whenever you're ready we can start..."<<endl;
 		cout<<"Press any key to continue..."<<endl;
 		_getche();
-		firstPlay = false;
+		firstPlay_ = false;
 	}
 	
 	//Set gamesPlayed to 1 as this is the first game, unless that was already the case.
 	//When that happens roundsPlayed is incremented by 1
-	if(roundsPlayed == 0)
+	if(roundsPlayed_ == 0)
 	{
-		roundsPlayed = 1;
+		roundsPlayed_ = 1;
 	}
 	else
 	{
-		roundsPlayed++;
+		roundsPlayed_++;
 	}
 
 	//Clear screen, display first play board
 	system("cls");
 
 	//Display the empty starting board
-	board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
+	board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
 	//Get the first round of player moves
 	//Call GameLoop at this point
 }
@@ -135,7 +135,7 @@ bool Game::GameLoop()
 	const int playerTwoTurn = 2;
 	bool continueGame = true;
 	
-	if(playOrder == 1)
+	if(playOrder_ == 1)
 	{
 		continueGame = GetPlayerMove(playerOneTurn);
 		if(continueGame == false)
@@ -164,7 +164,7 @@ bool Game::GameLoop()
 		}
 	}
 
-	if(board.GetTotalNumOfPiecesOnBoard() >= boundsLimit)
+	if(board.GetTotalNumOfPiecesOnBoard() >= boundsLimit_)
 	{
 		continueGame = ProcessPacket(board.FindWinDraw());
 	}
@@ -212,22 +212,22 @@ bool Game::EndGame()
 void Game::ResetGame()
 {
 	//Game object specific stuff
-	turnCounter = 0;
-	firstPlay = false;
-	playOrder = 0;
+	turnCounter_ = 0;
+	firstPlay_ = false;
+	playOrder_ = 0;
 	//Reset the board first
 	board.ResetBoard();
 	
 	//Then get multiplier from the board
 	//This keeps problems with bounds issues popping up
-	boundsLimit = board.GetMultiplier();
+	boundsLimit_ = board.GetMultiplier();
 
 	//Call this before ResetPlayer or bad things will happen
 	playerOne.ResetPlayerPiece();
 
 	//Reset both players
-	playerOne.ResetPlayer(boundsLimit);
-	playerTwo.ResetPlayer(boundsLimit);
+	playerOne.ResetPlayer(boundsLimit_);
+	playerTwo.ResetPlayer(boundsLimit_);
 
 	DecidePlayOrder();
 }
@@ -244,7 +244,7 @@ bool Game::GetPlayerMove(int order)
 		while(playerOneGood == false)
 		{
 			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
+			board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
 			playerOneMove = playerOne.MakeMove();
 			if(playerOneMove == quit)
 			{
@@ -261,7 +261,7 @@ bool Game::GetPlayerMove(int order)
 					cout<<"Press any key to continue...\n"<<endl;
 					_getche();
 					continuePlay = false;
-					gameFatalError = true;
+					gameFatalError_ = true;
 					return continuePlay;
 				}
 				else
@@ -284,7 +284,7 @@ bool Game::GetPlayerMove(int order)
 		while(playerTwoGood == false)
 		{
 			system("cls");
-			board.DisplayBoard(roundsPlayed, gameDraws, playerOne, playerTwo);
+			board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
 			playerTwoMove = playerTwo.MakeMove();
 			if(playerTwoMove == quit)
 			{
@@ -301,7 +301,7 @@ bool Game::GetPlayerMove(int order)
 					cout<<"Press any key to continue...\n"<<endl;
 					_getche();
 					continuePlay = false;
-					gameFatalError = true;
+					gameFatalError_ = true;
 					return continuePlay;
 				}
 				else
@@ -344,7 +344,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	{
 		if(t_gameState == t_drawState)
 		{
-			gameDraws++;
+			gameDraws_++;
 			//put message indicating that a draw has occurred and a new game is starting
 			cout<<gameDrawMessage;
 			cout<<anyKey;
@@ -457,7 +457,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 				//Both errors will result in the game closing
 				continueGame = false;
-				gameFatalError = true;
+				gameFatalError_ = true;
 				return continueGame;
 			}
 		}
@@ -531,7 +531,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 				//End the game
 				continueGame = false;
-				gameFatalError = true;
+				gameFatalError_ = true;
 				return continueGame;
 			}
 		}
@@ -605,7 +605,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 				//End the game
 				continueGame = false;
-				gameFatalError = true;
+				gameFatalError_ = true;
 				return continueGame;
 			}
 		}
@@ -644,7 +644,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 			//End the game
 			continueGame = false;
-			gameFatalError = true;
+			gameFatalError_ = true;
 			return continueGame;
 		}
 	}
@@ -659,7 +659,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 		//End the game
 		continueGame = false;
-		gameFatalError = true;
+		gameFatalError_ = true;
 		return continueGame;
 	}
 	else
@@ -675,7 +675,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 		//End the game
 		continueGame = false;
-		gameFatalError = true;
+		gameFatalError_ = true;
 		return continueGame;
 	}
 
@@ -692,11 +692,11 @@ void Game::DecidePlayOrder()
 	//Figure out play order
 	if(playerOne.GetPiece() == 2)
 	{
-		playOrder = 1;
+		playOrder_ = 1;
 	}
 	else
 	{
-		playOrder = 2;
+		playOrder_ = 2;
 	}
 }
 
@@ -711,5 +711,5 @@ int Game::GetConstantFromList(string request)
 
 const bool Game::HasGameHadFatalError() const
 {
-	return gameFatalError;
+	return gameFatalError_;
 }

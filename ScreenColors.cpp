@@ -16,48 +16,48 @@ const int ScreenColors::red = 12 % 16;
 const int ScreenColors::purple = 13 % 16;
 const int ScreenColors::yellow = 14 % 16;
 const int ScreenColors::white = 15 % 16;
-int ScreenColors::otherPlayerColor = 0;
+int ScreenColors::otherPlayerColor_ = 0;
 
 ScreenColors::ScreenColors()
 {
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	otherPlayerColor = -1;
-	colorAttribute = 0;
+	hConsole_ = GetStdHandle(STD_OUTPUT_HANDLE);
+	otherPlayerColor_ = -1;
+	colorAttribute_ = 0;
 }
 
 void ScreenColors::DecidePlayerScreenColor()
 {
 	char selection;
 	cout<<"What color do you want your piece to be?"<<endl;
-	SetConsoleTextAttribute(hConsole, dark_blue);
+	SetConsoleTextAttribute(hConsole_, dark_blue);
 	cout<<"		a - dark blue";
-	SetConsoleTextAttribute(hConsole, dark_green);
+	SetConsoleTextAttribute(hConsole_, dark_green);
 	cout<<"		b - dark green\n";
-	SetConsoleTextAttribute(hConsole, dark_cyan);
+	SetConsoleTextAttribute(hConsole_, dark_cyan);
 	cout<<"		c - dark cyan";
-	SetConsoleTextAttribute(hConsole, dark_red);
+	SetConsoleTextAttribute(hConsole_, dark_red);
 	cout<<"		d - dark red\n";
-	SetConsoleTextAttribute(hConsole, dark_purple);
+	SetConsoleTextAttribute(hConsole_, dark_purple);
 	cout<<"		e - dark purple";
-	SetConsoleTextAttribute(hConsole, dark_yellow);
+	SetConsoleTextAttribute(hConsole_, dark_yellow);
 	cout<<"		f - dark yellow\n";
-	SetConsoleTextAttribute(hConsole, dark_white);
+	SetConsoleTextAttribute(hConsole_, dark_white);
 	cout<<"		g - dark white";
-	SetConsoleTextAttribute(hConsole, gray);
+	SetConsoleTextAttribute(hConsole_, gray);
 	cout<<"		h - gray\n";
-	SetConsoleTextAttribute(hConsole, blue);
+	SetConsoleTextAttribute(hConsole_, blue);
 	cout<<"		i - blue";
-	SetConsoleTextAttribute(hConsole, green);
+	SetConsoleTextAttribute(hConsole_, green);
 	cout<<"		j - green\n";
-	SetConsoleTextAttribute(hConsole, cyan);
+	SetConsoleTextAttribute(hConsole_, cyan);
 	cout<<"		k - cyan";
-	SetConsoleTextAttribute(hConsole, red);
+	SetConsoleTextAttribute(hConsole_, red);
 	cout<<"		l - red\n";
-	SetConsoleTextAttribute(hConsole, purple);
+	SetConsoleTextAttribute(hConsole_, purple);
 	cout<<"		m - purple";
-	SetConsoleTextAttribute(hConsole, yellow);
+	SetConsoleTextAttribute(hConsole_, yellow);
 	cout<<"		n - yellow\n";
-	SetConsoleTextAttribute(hConsole, white);
+	SetConsoleTextAttribute(hConsole_, white);
 	cout<<"		o - white\n";
 	
 	ResetConsoleColor();
@@ -67,7 +67,7 @@ void ScreenColors::DecidePlayerScreenColor()
 	bool checkForOtherPlayer = false;
 	while(checkForOtherPlayer == false)
 	{
-		if(otherPlayerColor == 0)
+		if(otherPlayerColor_ == 0)
 		{
 			switch(selection)
 			{
@@ -159,181 +159,181 @@ void ScreenColors::DecidePlayerScreenColor()
 			{
 			case 'a':
 			case 'A':
-				if(otherPlayerColor == dark_blue)
+				if(otherPlayerColor_ == dark_blue)
 				{
 					selection = ChangeErrorTextColor(dark_blue);
 				}
 				else
 				{
-					colorAttribute = dark_blue;
+					colorAttribute_ = dark_blue;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'b':
 			case 'B':
-				if(otherPlayerColor == dark_green)
+				if(otherPlayerColor_ == dark_green)
 				{
 					selection = ChangeErrorTextColor(dark_green);
 				}
 				else
 				{
-					colorAttribute = dark_green;
+					colorAttribute_ = dark_green;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'c':
 			case 'C':
-				if(otherPlayerColor == dark_cyan)
+				if(otherPlayerColor_ == dark_cyan)
 				{
 					selection = ChangeErrorTextColor(dark_cyan);
 				}
 				else
 				{
-					colorAttribute = dark_cyan;
+					colorAttribute_ = dark_cyan;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'd':
 			case 'D':
-				if(otherPlayerColor == dark_red)
+				if(otherPlayerColor_ == dark_red)
 				{
 					selection = ChangeErrorTextColor(dark_red);
 				}
 				else
 				{
-					colorAttribute = dark_red;
+					colorAttribute_ = dark_red;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'e':
 			case 'E':
-				if(otherPlayerColor == dark_purple)
+				if(otherPlayerColor_ == dark_purple)
 				{
 					selection = ChangeErrorTextColor(dark_purple);
 				}
 				else
 				{
-					colorAttribute = dark_purple;
+					colorAttribute_ = dark_purple;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'f':
 			case 'F':
-				if(otherPlayerColor == dark_yellow)
+				if(otherPlayerColor_ == dark_yellow)
 				{
 					selection = ChangeErrorTextColor(dark_yellow);
 				}
 				else
 				{
-					colorAttribute = dark_yellow;
+					colorAttribute_ = dark_yellow;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'g':
 			case 'G':
-				if(otherPlayerColor == dark_white)
+				if(otherPlayerColor_ == dark_white)
 				{
 					selection = ChangeErrorTextColor(dark_white);
 				}
 				else
 				{
-					colorAttribute = dark_white;
+					colorAttribute_ = dark_white;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'h':
 			case 'H':
-				if(otherPlayerColor == gray)
+				if(otherPlayerColor_ == gray)
 				{
 					selection = ChangeErrorTextColor(gray);
 				}
 				else
 				{
-					colorAttribute = gray;
+					colorAttribute_ = gray;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'i':
 			case 'I':
-				if(otherPlayerColor == blue)
+				if(otherPlayerColor_ == blue)
 				{
 					selection = ChangeErrorTextColor(blue);
 				}
 				else
 				{
-					colorAttribute = blue;
+					colorAttribute_ = blue;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'j':
 			case 'J':
-				if(otherPlayerColor == green)
+				if(otherPlayerColor_ == green)
 				{
 					selection = ChangeErrorTextColor(green);
 				}
 				else
 				{
-					colorAttribute = green;
+					colorAttribute_ = green;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'k':
 			case 'K':
-				if(otherPlayerColor == cyan)
+				if(otherPlayerColor_ == cyan)
 				{
 					selection = ChangeErrorTextColor(cyan);
 				}
 				else
 				{
-					colorAttribute = cyan;
+					colorAttribute_ = cyan;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'l':
 			case 'L':
-				if(otherPlayerColor == red)
+				if(otherPlayerColor_ == red)
 				{
 					selection = ChangeErrorTextColor(red);
 				}
 				else
 				{
-					colorAttribute = red;
+					colorAttribute_ = red;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'm':
 			case 'M':
-				if(otherPlayerColor == purple)
+				if(otherPlayerColor_ == purple)
 				{
 					selection = ChangeErrorTextColor(purple);
 				}
 				else
 				{
-					colorAttribute = purple;
+					colorAttribute_ = purple;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'n':
 			case 'N':
-				if(otherPlayerColor == yellow)
+				if(otherPlayerColor_ == yellow)
 				{
 					selection = ChangeErrorTextColor(yellow);
 				}
 				else
 				{
-					colorAttribute = yellow;
+					colorAttribute_ = yellow;
 					checkForOtherPlayer = true;
 				}
 				break;
 			case 'o':
 			case 'O':
-				if(otherPlayerColor == white)
+				if(otherPlayerColor_ == white)
 				{
 					selection = ChangeErrorTextColor(white);
 				}
 				else
 				{
-					colorAttribute = white;
+					colorAttribute_ = white;
 					checkForOtherPlayer = true;
 				}
 				break;
@@ -349,14 +349,14 @@ void ScreenColors::DecidePlayerScreenColor()
 
 void ScreenColors::SetPlayerTextColor(int color)
 {
-	colorAttribute = color;
-	otherPlayerColor = color;
+	colorAttribute_ = color;
+	otherPlayerColor_ = color;
 }
 
 char ScreenColors::ChangeErrorTextColor(int color)
 {
 	char returnSelection;
-	SetConsoleTextAttribute(hConsole, color);
+	SetConsoleTextAttribute(hConsole_, color);
 	
 	switch(color)
 	{
@@ -417,10 +417,10 @@ char ScreenColors::ChangeErrorTextColor(int color)
 
 void ScreenColors::SetTextToPlayerColor() const
 {
-	SetConsoleTextAttribute(hConsole, colorAttribute);
+	SetConsoleTextAttribute(hConsole_, colorAttribute_);
 }
 
 void ScreenColors::ResetConsoleColor()
 {
-	SetConsoleTextAttribute(hConsole, dark_white);
+	SetConsoleTextAttribute(hConsole_, dark_white);
 }

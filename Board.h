@@ -79,18 +79,18 @@ private:
 	static const int error2;
 	static const int error3;
 
-	HANDLE hConsoleWindow;	//This will be used when changing the text colors
-	int multiplier; //total number of spaces in one line going across or down. Also acts as the height and width for the board, as well as the winning number
-	int numOfSpaces; //calculated during the making of the board, this number is used when creating the vector that will
+	HANDLE hConsoleWindow_;	//This will be used when changing the text colors
+	int multiplier_; //total number of spaces in one line going across or down. Also acts as the height and width for the board, as well as the winning number
+	int numOfSpaces_; //calculated during the making of the board, this number is used when creating the vector that will
 					 //keep track of which spaces are filled
-	int totalXsOnBoard;
-	int totalOsOnBoard;
+	int totalXsOnBoard_;
+	int totalOsOnBoard_;
 	IntList spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
 	IntList piecePlacement;  //Keeps track of just the piece types, their location on the board is figured out by their location within the vector
 	ConstList constantsList;
 	PieceList numToCharConversionList;
 	IntStringList errorMsgList;
-	bool boardFatalError;
+	bool boardFatalError_;
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
 	char XorO(int num);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
 	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing);

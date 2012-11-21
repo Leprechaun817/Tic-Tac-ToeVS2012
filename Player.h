@@ -22,21 +22,21 @@ private:
 	
 	//Regular Variables
 	ScreenColors textColor;
-	int id;
-	string name;
-	int score;
-	int playerPiece;
-	static int otherPlayerPiece;
-	int playerTurnOrder;
-	int move;	//Stores the move of the player temporarly
-	bool madeMove;
-	bool win;
-	int boundsLimit;
-	bool playerInitialized;
+	int id_;
+	string name_;
+	int score_;
+	int playerPiece_;
+	static int otherPlayerPiece_;
+	int playerTurnOrder_;
+	int move_;	//Stores the move of the player temporarly
+	bool madeMove_;
+	bool win_;
+	int boundsLimit_;
+	bool playerInitialized_;
 	ConstList constantsList;
-	static int numOfPlayers;
+	static int numOfPlayers_;
 	static const int answerSize;
-	bool resetPlayerFunctionCalled;
+	bool resetPlayerFunctionCalled_;
 	void AssignPlayerPiece();  //Assign either an X or an O to a player
 	int PieceGen();	//Used to generate the first players piece, X or O. Generates numbers 1 or 2 randomly and is sent back to calling function
 	bool CheckMoveFormat(string choice);

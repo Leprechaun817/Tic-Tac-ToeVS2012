@@ -1,7 +1,7 @@
 #include "Player.h"
 
-int Player::numOfPlayers = 0;
-int Player::otherPlayerPiece = 0;
+int Player::numOfPlayers_ = 0;
+int Player::otherPlayerPiece_ = 0;
 const int Player::answerSize = 3;
 
 const string Player::noPlayerPiece = "noPlayerPiece";
@@ -13,26 +13,26 @@ Player::Player()
 {
 	//if...else... here is used becuase of the fact that numOfPlayers is a static variable so if this class has been
 	//instantiated once this variable will already have a value. So the constructor has to check for that and account for it.
-	if(numOfPlayers == 0)	//if numOfPlayers hasn't been used before
+	if(numOfPlayers_ == 0)	//if numOfPlayers hasn't been used before
 	{
-		numOfPlayers = 1;
+		numOfPlayers_ = 1;
 	}
 	else	//if numOfPlayers has been used before
 	{
-		numOfPlayers++;
+		numOfPlayers_++;
 	}
 
 	//ID will equal the current number of players, which normally won't be more than 2 anyways.
 	//Might as well code for expansion anyways though
-	id = numOfPlayers;
-	score = 0;
+	id_ = numOfPlayers_;
+	score_ = 0;
 	AssignPlayerPiece();	
 
-	madeMove = false;
-	playerInitialized = false;
-	win = false;
+	madeMove_ = false;
+	playerInitialized_ = false;
+	win_ = false;
 
-	resetPlayerFunctionCalled = false;
+	resetPlayerFunctionCalled_ = false;
 }
 
 Player::~Player()
@@ -40,22 +40,22 @@ Player::~Player()
 
 void Player::InitializePlayer(int boundsLimit, const ConstList &cList)
 {
-	(*this).boundsLimit = boundsLimit;
+	(*this).boundsLimit_ = boundsLimit;
 	(*this).constantsList = cList;
 
 	//Ask player for name
 	//Had to put it here because I need the ID for the prompt...
 	string n;
-	cout<<"Player "<<id<<": What is your name?"<<endl;
+	cout<<"Player "<<id_<<": What is your name?"<<endl;
 	cin>>n;
 
 	//Assigning string value n to name
-	name = n;
+	name_ = n;
 
 	textColor.DecidePlayerScreenColor();
 
 	//Player has now been initialized
-	playerInitialized = true;
+	playerInitialized_ = true;
 }
 
 void Player::AssignPlayerPiece()
@@ -63,45 +63,45 @@ void Player::AssignPlayerPiece()
 	//Decide on piece for player
 	//1 = O
 	//2 = X
-	if(otherPlayerPiece == 0) //if otherPlayerPiece hasn't been filled yet, which means that player 1 hasn't been assigned a piece
+	if(otherPlayerPiece_ == 0) //if otherPlayerPiece hasn't been filled yet, which means that player 1 hasn't been assigned a piece
 	{
 		int piece = PieceGen();
-		playerPiece = piece;
-		otherPlayerPiece = piece;
+		playerPiece_ = piece;
+		otherPlayerPiece_ = piece;
 	}
 	else
 	{
-		if(otherPlayerPiece == 1)
+		if(otherPlayerPiece_ == 1)
 		{
-			playerPiece = 2;
+			playerPiece_ = 2;
 		}
 		else
 		{
-			playerPiece = 1;
+			playerPiece_ = 1;
 		}
 
-		resetPlayerFunctionCalled = false;
+		resetPlayerFunctionCalled_ = false;
 	}
 }
 
 //Make sure to call this after AssignPlayerPiece is called. This is very important!!!
 void Player::ResetPlayer(int boundsLimit)
 {
-	madeMove = false;
-	playerPiece = 0;
-	move = 0;
+	madeMove_ = false;
+	playerPiece_ = 0;
+	move_ = 0;
 	//Set boundsLimit
-	(*this).boundsLimit = boundsLimit;
+	(*this).boundsLimit_ = boundsLimit;
 	AssignPlayerPiece();
 }
 
 //This must be called before ResetPlayer has been called in order for this to work correctly
 void Player::ResetPlayerPiece()
 {
-	if(resetPlayerFunctionCalled == false)
+	if(resetPlayerFunctionCalled_ == false)
 	{
-		otherPlayerPiece = 0;
-		resetPlayerFunctionCalled = true;
+		otherPlayerPiece_ = 0;
+		resetPlayerFunctionCalled_ = true;
 	}
 	else
 	{
@@ -132,19 +132,19 @@ int Player::PieceGen()
 
 void Player::DisplayName()
 {
-	cout<<"Player "<<id<<": "<<name;
+	cout<<"Player "<<id_<<": "<<name_;
 }
 
 void Player::DisplayScore()
 {
-	cout<<"Player "<<id<<"'s score is: "<<score;
+	cout<<"Player "<<id_<<"'s score is: "<<score_;
 }
 
 void Player::UpdateScore()
 {
 	//This function only incrememnts the score by 1.
 	//This way there's no way to change the score by adding more than one at the same time
-	score++;
+	score_++;
 	//Quite simple really...
 }
 
@@ -189,7 +189,7 @@ int Player::MakeMove()
 		}
 	}
 
-	madeMove = true;
+	madeMove_ = true;
 
 	return answer;
 }
@@ -256,15 +256,15 @@ const void Player::SetPlayerTextColor() const
 bool Player::HasPlayerMadeMove()
 {
 	bool returnValue;
-	if(madeMove == true)
+	if(madeMove_ == true)
 	{
 		returnValue = true;
-		madeMove = false;
+		madeMove_ = false;
 	}
 	else
 	{
 		returnValue = false;
-		madeMove = true;
+		madeMove_ = true;
 	}
 
 	return returnValue;
@@ -272,9 +272,9 @@ bool Player::HasPlayerMadeMove()
 
 const int Player::GetID() const
 {
-	if(playerInitialized == true)
+	if(playerInitialized_ == true)
 	{
-		return id;
+		return id_;
 	}
 	else
 	{
@@ -288,9 +288,9 @@ const int Player::GetID() const
 
 const int Player::GetPiece() const
 {
-	if(playerInitialized == true)
+	if(playerInitialized_ == true)
 	{
-		return playerPiece;
+		return playerPiece_;
 	}
 	else
 	{
@@ -304,9 +304,9 @@ const int Player::GetPiece() const
 
 const string Player::GetName() const
 {
-	if(playerInitialized == true)
+	if(playerInitialized_ == true)
 	{
-		return name;
+		return name_;
 	}
 	else
 	{
@@ -320,9 +320,9 @@ const string Player::GetName() const
 
 const int Player::GetScore() const
 {
-	if(playerInitialized == true)
+	if(playerInitialized_ == true)
 	{
-		return score;
+		return score_;
 	}
 	else
 	{
@@ -336,9 +336,9 @@ const int Player::GetScore() const
 
 const int Player::GetMove() const
 {
-	if(playerInitialized == true)
+	if(playerInitialized_ == true)
 	{
-		return move;
+		return move_;
 	}
 	else
 	{
@@ -352,10 +352,10 @@ const int Player::GetMove() const
 
 void Player::SetPlayerWon()
 {
-	win = true;
+	win_ = true;
 }
 
 const bool Player::DidPlayerWin() const
 {
-	return win;
+	return win_;
 }

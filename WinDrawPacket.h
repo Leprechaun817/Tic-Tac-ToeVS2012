@@ -42,16 +42,16 @@ private:
 	static const string packetUnreadable;
 
 	//Regular variables
-	int winDraw;		//Change this to gameState instead of winDraw, it's much more descriptive.
+	int winDraw_;		//Change this to gameState instead of winDraw, it's much more descriptive.
 						//Make these changes code wide. Any references to winDraw or anything like it are to be changed to gameState.
-	int playerPiece;
-	int winType;
-	int diagonalType;
-	int rowAcross;
-	int columnDown;
+	int playerPiece_;
+	int winType_;
+	int diagonalType_;
+	int rowAcross_;
+	int columnDown_;
 	ConstList constantsList;
 
-	bool packetCreated;	//This makes the packet unreadable until CreatePacket has been run
+	bool packetCreated_;	//This makes the packet unreadable until CreatePacket has been run
 	int GetConstantFromList(string request);
 	
 

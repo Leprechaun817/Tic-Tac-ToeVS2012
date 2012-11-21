@@ -24,10 +24,10 @@ private:
 	static const int purple;
 	static const int yellow;
 	static const int white;
-	HANDLE hConsole;
+	HANDLE hConsole_;
 	//Actual player color, shows what will appear on screen
-	int colorAttribute;
-	static int otherPlayerColor;
+	int colorAttribute_;
+	static int otherPlayerColor_;
 	void SetPlayerTextColor(int color);
 	char ChangeErrorTextColor(int color);
 public:

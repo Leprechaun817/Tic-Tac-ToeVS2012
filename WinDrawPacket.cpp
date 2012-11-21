@@ -36,19 +36,19 @@ WinDrawPacket::WinDrawPacket(const ConstList &cList)
 	int fatalErrorConst = cListIter->second;
 	
 	//Fill all variables with the initial value above
-	winDraw = fatalErrorConst;
-	playerPiece = fatalErrorConst;
-	winType = fatalErrorConst;
-	diagonalType = fatalErrorConst;
-	rowAcross = fatalErrorConst;
-	columnDown = fatalErrorConst;
+	winDraw_ = fatalErrorConst;
+	playerPiece_ = fatalErrorConst;
+	winType_ = fatalErrorConst;
+	diagonalType_ = fatalErrorConst;
+	rowAcross_ = fatalErrorConst;
+	columnDown_ = fatalErrorConst;
 
-	packetCreated = false;
+	packetCreated_ = false;
 }
 
 void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, const int winLocation, const int winDiagonalLocation, const int winRowLocation, const int winColumnLocation)
 {
-	packetCreated = true;
+	packetCreated_ = true;
 
 	//Error values
 	const int t_nullConstant = GetConstantFromList(nullConstant);
@@ -61,53 +61,53 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 
 	if((gameOutcome == t_noWinDrawState) || (gameOutcome == t_drawState))
 	{
-		winDraw = gameOutcome;
+		winDraw_ = gameOutcome;
 		//Adding nullConstants here so if parser code in ProcessPacket goes to far it will pop up with a minor error
-		playerPiece = t_nullConstant;
-		winType = t_nullConstant;
-		diagonalType = t_nullConstant;
-		rowAcross = t_nullConstant;
-		columnDown = t_nullConstant;
+		playerPiece_ = t_nullConstant;
+		winType_ = t_nullConstant;
+		diagonalType_ = t_nullConstant;
+		rowAcross_ = t_nullConstant;
+		columnDown_ = t_nullConstant;
 	}
 	else if(gameOutcome == t_winState)
 	{
-		winDraw = gameOutcome;
-		playerPiece = winningPiece;
-		winType = winLocation;
-		diagonalType = winDiagonalLocation;
-		rowAcross = winRowLocation;
-		columnDown = winColumnLocation;
+		winDraw_ = gameOutcome;
+		playerPiece_ = winningPiece;
+		winType_ = winLocation;
+		diagonalType_ = winDiagonalLocation;
+		rowAcross_ = winRowLocation;
+		columnDown_ = winColumnLocation;
 	}
 	else if(gameOutcome == t_nullConstant)
 	{
 		//Minor error, list all variables with minor errors regardless of what they were before
-		winDraw = t_nullConstant;
-		playerPiece = t_nullConstant;
-		winType = t_nullConstant;
-		diagonalType = t_nullConstant;
-		rowAcross = t_nullConstant;
-		columnDown = t_nullConstant;
+		winDraw_ = t_nullConstant;
+		playerPiece_ = t_nullConstant;
+		winType_ = t_nullConstant;
+		diagonalType_ = t_nullConstant;
+		rowAcross_ = t_nullConstant;
+		columnDown_ = t_nullConstant;
 	}
 	else if(gameOutcome == t_fatalError)
 	{
 		//Major Error, list all variables with major errors regardless of what they were before
-		winDraw = t_fatalError;
-		playerPiece = t_fatalError;
-		winType = t_fatalError;
-		diagonalType = t_fatalError;
-		rowAcross = t_fatalError;
-		columnDown = t_fatalError;
+		winDraw_ = t_fatalError;
+		playerPiece_ = t_fatalError;
+		winType_ = t_fatalError;
+		diagonalType_ = t_fatalError;
+		rowAcross_ = t_fatalError;
+		columnDown_ = t_fatalError;
 	}
 	else
 	{
 		//If gameOutcome has an unknown value treat as major error//
 		//winDraw and all the other variables will equal whatever the weird number was in gameOutcome
-		winDraw = gameOutcome;
-		playerPiece = gameOutcome;
-		winType = gameOutcome;
-		diagonalType = gameOutcome;
-		rowAcross = gameOutcome;
-		columnDown = gameOutcome;
+		winDraw_ = gameOutcome;
+		playerPiece_ = gameOutcome;
+		winType_ = gameOutcome;
+		diagonalType_ = gameOutcome;
+		rowAcross_ = gameOutcome;
+		columnDown_ = gameOutcome;
 	}
 
 }
@@ -123,9 +123,9 @@ int WinDrawPacket::GetConstantFromList(string request)
 
 const int WinDrawPacket::GetWinDraw() const
 {
-	if(packetCreated == true)
+	if(packetCreated_ == true)
 	{
-		return winDraw;
+		return winDraw_;
 	}
 	else
 	{
@@ -138,9 +138,9 @@ const int WinDrawPacket::GetWinDraw() const
 
 const int WinDrawPacket::GetPlayerPiece() const
 {
-	if(packetCreated == true)
+	if(packetCreated_ == true)
 	{
-		return playerPiece;
+		return playerPiece_;
 	}
 	else
 	{
@@ -153,9 +153,9 @@ const int WinDrawPacket::GetPlayerPiece() const
 
 const int WinDrawPacket::GetWinType() const
 {
-	if(packetCreated == true)
+	if(packetCreated_ == true)
 	{
-		return winType;
+		return winType_;
 	}
 	else
 	{
@@ -168,9 +168,9 @@ const int WinDrawPacket::GetWinType() const
 
 const int WinDrawPacket::GetDiagType() const
 {
-	if(packetCreated == true)
+	if(packetCreated_ == true)
 	{
-		return diagonalType;
+		return diagonalType_;
 	}
 	else
 	{
@@ -183,9 +183,9 @@ const int WinDrawPacket::GetDiagType() const
 
 const int WinDrawPacket::GetRow() const
 {
-	if(packetCreated == true)
+	if(packetCreated_ == true)
 	{
-		return rowAcross;
+		return rowAcross_;
 	}
 	else
 	{
@@ -198,9 +198,9 @@ const int WinDrawPacket::GetRow() const
 
 const int WinDrawPacket::GetColumn() const
 {
-	if(packetCreated == true)
+	if(packetCreated_ == true)
 	{
-		return columnDown;
+		return columnDown_;
 	}
 	else
 	{

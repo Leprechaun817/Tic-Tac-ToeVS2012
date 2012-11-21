@@ -48,7 +48,7 @@ Board::Board()
 {
 	const int sizeOfPieceArr = 3;
 	const int sizeOfErrorArr = 3;
-	hConsoleWindow = GetStdHandle(STD_OUTPUT_HANDLE);
+	hConsoleWindow_ = GetStdHandle(STD_OUTPUT_HANDLE);
 	system("cls");
 
 	//Enter values into the numToCharConversionList
@@ -71,10 +71,10 @@ Board::Board()
 		errorMsgList.insert(pair<const int, string>(errorNumArr[i], errorMsgArr[i]));
 	}
 
-	totalXsOnBoard = 0;
-	totalOsOnBoard = 0;
+	totalXsOnBoard_ = 0;
+	totalOsOnBoard_ = 0;
 
-	boardFatalError = false;
+	boardFatalError_ = false;
 }	
 
 Board::~Board()
@@ -103,20 +103,20 @@ void Board::SetupBoard(const ConstList &cList)
 
 		if(input == 'a' || input == 'A')
 		{
-			multiplier = A / DIVIDER;
-			numOfSpaces = A;
+			multiplier_ = A / DIVIDER;
+			numOfSpaces_ = A;
 			answer = true;
 		}
 		else if(input == 'b' || input == 'B')
 		{
-			multiplier = B / (DIVIDER + 1);
-			numOfSpaces = B;
+			multiplier_ = B / (DIVIDER + 1);
+			numOfSpaces_ = B;
 			answer = true;
 		}
 		else if(input == 'c' || input == 'C')
 		{
-			multiplier = C / (DIVIDER + 2);
-			numOfSpaces = C;
+			multiplier_ = C / (DIVIDER + 2);
+			numOfSpaces_ = C;
 			answer = true;
 		}
 		else
@@ -134,9 +134,9 @@ void Board::SetupBoard(const ConstList &cList)
 
 void Board::InitiateBoard()
 {
-	spaceList.resize (numOfSpaces);
-	const int ROW_CONST = multiplier * 100;
-	const int COLMN_CONST = multiplier * 10;
+	spaceList.resize (numOfSpaces_);
+	const int ROW_CONST = multiplier_ * 100;
+	const int COLMN_CONST = multiplier_ * 10;
 	const int t_noPlayerPiece = GetConstantFromList(noPlayerPiece);
 	//Inititalize vector with square designations and no x's and o's present
 	//So if the multiplier was 4 then the spaceList would look something like this...
@@ -162,7 +162,7 @@ void Board::InitiateBoard()
 	}
 
 	//Initalize piecePlacement with the proper number of spaces as well
-	piecePlacement.resize(numOfSpaces);
+	piecePlacement.resize(numOfSpaces_);
 	ProcessPiecePlacementList();
 }
 
@@ -172,8 +172,8 @@ void Board::ResetBoard()
 	system("cls");
 	SetupBoard(constantsList);
 	system("cls");
-	totalOsOnBoard = 0;
-	totalXsOnBoard = 0;
+	totalOsOnBoard_ = 0;
+	totalXsOnBoard_ = 0;
 }
 
 void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing)
@@ -251,8 +251,8 @@ void Board::ProcessPiecePlacementList()
 void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLocation, const Player &pOne, const Player &pTwo)
 {
 	//Constants
-	const int sizeOfBoardAcross = (5 * multiplier) + 1;
-	const int sizeOfBoardDown = (5 * multiplier) + 1;
+	const int sizeOfBoardAcross = (5 * multiplier_) + 1;
+	const int sizeOfBoardDown = (5 * multiplier_) + 1;
 	
 	const int boardStart = 0;
 
@@ -445,9 +445,9 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
-					if((numOfSpaces == A && squareCount == endOfRowOneA) ||
-					   (numOfSpaces == B && squareCount == endOfRowOneB) ||
-					   (numOfSpaces == C && squareCount == endOfRowOneC))
+					if((numOfSpaces_ == A && squareCount == endOfRowOneA) ||
+					   (numOfSpaces_ == B && squareCount == endOfRowOneB) ||
+					   (numOfSpaces_ == C && squareCount == endOfRowOneC))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
@@ -475,14 +475,14 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFour && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
 					{
 						if(squareCount == startOfColumnFour)
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFive && numOfSpaces == C)
+					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
 					{
 						if(squareCount == startOfColumnFive)
 						{
@@ -574,30 +574,30 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				}
 				else if(j == temp2 && diagonal == true && diagonalLeft == true)
 				{
-					if(numOfSpaces == A && squareCount == (startOfRowTwoA + 1))
+					if(numOfSpaces_ == A && squareCount == (startOfRowTwoA + 1))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == B && squareCount == (startOfRowTwoB + 1))
+					else if(numOfSpaces_ == B && squareCount == (startOfRowTwoB + 1))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == C && squareCount == (startOfRowTwoC + 1))
+					else if(numOfSpaces_ == C && squareCount == (startOfRowTwoC + 1))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
-					if(numOfSpaces == A && squareCount == (endOfRowTwoA - 1))
+					if(numOfSpaces_ == A && squareCount == (endOfRowTwoA - 1))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == B && squareCount == (endOfRowTwoB - 1))
+					else if(numOfSpaces_ == B && squareCount == (endOfRowTwoB - 1))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == C && squareCount == (endOfRowTwoC - 1))
+					else if(numOfSpaces_ == C && squareCount == (endOfRowTwoC - 1))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
@@ -606,35 +606,35 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
-						if(squareCount == (boardStart + multiplier))
+						if(squareCount == (boardStart + multiplier_))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnTwo)
 					{
-						if(squareCount == (startOfColumnTwo + multiplier))
+						if(squareCount == (startOfColumnTwo + multiplier_))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnThree)
 					{
-						if(squareCount == (startOfColumnThree + multiplier))
+						if(squareCount == (startOfColumnThree + multiplier_))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFour && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
 					{
-						if(squareCount == (startOfColumnFour + multiplier))
+						if(squareCount == (startOfColumnFour + multiplier_))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFive && numOfSpaces == C)
+					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
 					{
-						if(squareCount == (startOfColumnFive + multiplier))
+						if(squareCount == (startOfColumnFive + multiplier_))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
@@ -721,30 +721,30 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				}
 				else if(j == temp2 && diagonal == true && diagonalLeft == true)
 				{
-					if(numOfSpaces == A && squareCount == endOfRowThreeA)
+					if(numOfSpaces_ == A && squareCount == endOfRowThreeA)
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == B && squareCount == (startOfRowThreeB + 2))
+					else if(numOfSpaces_ == B && squareCount == (startOfRowThreeB + 2))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == C && squareCount == (startOfRowThreeC + 2))
+					else if(numOfSpaces_ == C && squareCount == (startOfRowThreeC + 2))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
-					if(numOfSpaces == A && squareCount == startOfRowThreeA)
+					if(numOfSpaces_ == A && squareCount == startOfRowThreeA)
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == B && squareCount == (endOfRowThreeB - 2))
+					else if(numOfSpaces_ == B && squareCount == (endOfRowThreeB - 2))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == C && squareCount == (endOfRowThreeC - 2))
+					else if(numOfSpaces_ == C && squareCount == (endOfRowThreeC - 2))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
@@ -753,35 +753,35 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
-						if(squareCount == (boardStart + (multiplier * 2)))
+						if(squareCount == (boardStart + (multiplier_ * 2)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnTwo)
 					{
-						if(squareCount == (startOfColumnTwo + (multiplier * 2)))
+						if(squareCount == (startOfColumnTwo + (multiplier_ * 2)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnThree)
 					{
-						if(squareCount == (startOfColumnThree + (multiplier * 2)))
+						if(squareCount == (startOfColumnThree + (multiplier_ * 2)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFour && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
 					{
-						if(squareCount == (startOfColumnFour + (multiplier * 2)))
+						if(squareCount == (startOfColumnFour + (multiplier_ * 2)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFive && numOfSpaces == C)
+					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
 					{
-						if(squareCount == (startOfColumnFive + (multiplier * 2)))
+						if(squareCount == (startOfColumnFive + (multiplier_ * 2)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
@@ -869,22 +869,22 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				}
 				else if(j == temp2 && diagonal == true && diagonalLeft == true)
 				{
-					if(numOfSpaces == B && squareCount == endOfRowFourB)
+					if(numOfSpaces_ == B && squareCount == endOfRowFourB)
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == C && squareCount == (startOfRowFourC + 3))
+					else if(numOfSpaces_ == C && squareCount == (startOfRowFourC + 3))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
 				else if(j == temp2 && diagonal == true && diagonalRight == true)
 				{
-					if(numOfSpaces == B && squareCount == startOfRowFourB)
+					if(numOfSpaces_ == B && squareCount == startOfRowFourB)
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
-					else if(numOfSpaces == C && squareCount == (endOfRowFourC - 3))
+					else if(numOfSpaces_ == C && squareCount == (endOfRowFourC - 3))
 					{
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
@@ -893,35 +893,35 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
-						if(squareCount == (boardStart + (multiplier * 3)))
+						if(squareCount == (boardStart + (multiplier_ * 3)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnTwo)
 					{
-						if(squareCount == (startOfColumnTwo + (multiplier * 3)))
+						if(squareCount == (startOfColumnTwo + (multiplier_ * 3)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnThree)
 					{
-						if(squareCount == (startOfColumnThree + (multiplier * 3)))
+						if(squareCount == (startOfColumnThree + (multiplier_ * 3)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFour && (numOfSpaces == B || numOfSpaces == C))
+					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
 					{
-						if(squareCount == (startOfColumnFour + (multiplier * 3)))
+						if(squareCount == (startOfColumnFour + (multiplier_ * 3)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
-					else if(acrossDownLocation == t_columnFive && numOfSpaces == C)
+					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
 					{
-						if(squareCount == (startOfColumnFour + (multiplier * 3)))
+						if(squareCount == (startOfColumnFour + (multiplier_ * 3)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
@@ -1019,35 +1019,35 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
-						if(squareCount == (boardStart + (multiplier * 4)))
+						if(squareCount == (boardStart + (multiplier_ * 4)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnTwo)
 					{
-						if(squareCount == (startOfColumnTwo + (multiplier * 4)))
+						if(squareCount == (startOfColumnTwo + (multiplier_ * 4)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnThree)
 					{
-						if(squareCount == (startOfColumnThree + (multiplier * 4)))
+						if(squareCount == (startOfColumnThree + (multiplier_ * 4)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnFour)
 					{
-						if(squareCount == (startOfColumnFour + (multiplier * 4)))
+						if(squareCount == (startOfColumnFour + (multiplier_ * 4)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
 					}
 					else if(acrossDownLocation == t_columnFive)
 					{
-						if(squareCount == (startOfColumnFive + (multiplier * 4)))
+						if(squareCount == (startOfColumnFive + (multiplier_ * 4)))
 						{
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 						}
@@ -1189,8 +1189,8 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const Player &pTwo)
 {
 	//Constants
-	const int sizeOfBoardAcross = (5 * multiplier) + 1;
-	const int sizeOfBoardDown = (4 * multiplier) + 1;
+	const int sizeOfBoardAcross = (5 * multiplier_) + 1;
+	const int sizeOfBoardDown = (4 * multiplier_) + 1;
 	//Temporary variables
 	int temp1 = 1;	//Used for vertical line spacing
 	int temp2 = 3;	//Used for piece spacing
@@ -1654,8 +1654,8 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 
 bool Board::CheckMoveLocation(int location)
 {
-	int tens = 10 * multiplier;
-	int hundreds = 100 * multiplier;
+	int tens = 10 * multiplier_;
+	int hundreds = 100 * multiplier_;
 	int locationCheck = (tens + hundreds);
 
 	if(location > locationCheck)
@@ -1677,7 +1677,7 @@ bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus,
 		//Fatal Error has occurred, take a look at the code
 		errorListIter = errorMsgList.find(error3);
 		cout<<(errorListIter->second);
-		boardFatalError = true;
+		boardFatalError_ = true;
 		return false;
 	}
 	
@@ -1700,11 +1700,11 @@ bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus,
 
 		if(playerPiece == t_xPlayerPiece)
 		{
-			totalXsOnBoard++;
+			totalXsOnBoard_++;
 		}
 		else
 		{
-			totalOsOnBoard++;
+			totalOsOnBoard_++;
 		}
 	}
 
@@ -1780,7 +1780,7 @@ WDPacketPtr Board::FindWinDraw()
 void Board::ResetConsoleColor()
 {
 	int dark_white = 7 % 16;
-	SetConsoleTextAttribute(hConsoleWindow, dark_white);
+	SetConsoleTextAttribute(hConsoleWindow_, dark_white);
 }
 
 int Board::GetConstantFromList(string request)
@@ -1803,15 +1803,15 @@ char Board::GetConstantFromList(int request)
 
 const int Board::GetMultiplier() const
 {
-	return multiplier;
+	return multiplier_;
 }
 
 const bool Board::GetFatalError() const
 {
-	return boardFatalError;
+	return boardFatalError_;
 }
 
 const int Board::GetTotalNumOfPiecesOnBoard() const
 {
-	return (totalOsOnBoard + totalXsOnBoard);
+	return (totalOsOnBoard_ + totalXsOnBoard_);
 }

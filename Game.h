@@ -71,14 +71,14 @@ private:
 	Player playerOne;
 	Player playerTwo;
 	Board board;
-	bool firstPlay;
-	int roundsPlayed;  //Keeps track of total number of games played
-	int boundsLimit;
-	int gameDraws;	//Used to keep track of how many times all of the rounds played closed with a draw
-	int playOrder;	//Dictates which player goes first
-	int turnCounter; //This gets incremented by 1 everytime both players have taken their turns. Resets after each new game... 
+	bool firstPlay_;
+	int roundsPlayed_;  //Keeps track of total number of games played
+	int boundsLimit_;
+	int gameDraws_;	//Used to keep track of how many times all of the rounds played closed with a draw
+	int playOrder_;	//Dictates which player goes first
+	int turnCounter_; //This gets incremented by 1 everytime both players have taken their turns. Resets after each new game... 
 	ConstList constantsList;
-	bool gameFatalError;
+	bool gameFatalError_;
 	bool GetPlayerMove(int order);
 	bool ProcessPacket(WDPacketPtr packet);
 	int GetConstantFromList(string request);
