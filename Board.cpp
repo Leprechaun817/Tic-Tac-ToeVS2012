@@ -88,7 +88,7 @@ void Board::SetupBoard(const ConstList &cList)
 	char input;
 	bool answer = false;
 	const int DIVIDER = 3;
-	while(answer == false)	//Makes sure user enter in either a,b or c and not something else. It also alerts the user when this happens...
+	while(!answer)	//Makes sure user enter in either a,b or c and not something else. It also alerts the user when this happens...
 	{
 		//Give user chance to select how big the board should. This also dictates the length of the game.
 		//Bigger board = Longer game
@@ -402,7 +402,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<t_space;
 				break;
 			case 3:
-				if(playerOneWon == true)
+				if(playerOneWon)
 					pOne.SetPlayerTextColor();
 				else
 					pTwo.SetPlayerTextColor();
@@ -418,9 +418,9 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal == true && diagonalLeft == true && squareCount == boardStart)
+				else if(j == temp2 && diagonal && diagonalLeft && squareCount == boardStart)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && diagonal == true && diagonalRight == true)
+				else if(j == temp2 && diagonal && diagonalRight)
 				{
 					if((numOfSpaces_ == A && squareCount == endOfRowOneA) ||
 					   (numOfSpaces_ == B && squareCount == endOfRowOneB) ||
@@ -429,7 +429,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}		 
-				else if(j == temp2 && down == true && across == false && diagonal == false)
+				else if(j == temp2 && down && !across && !diagonal)
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
@@ -457,9 +457,9 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == t_rowOne)
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowOne)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && diagonal == false && across == false && down == false)
+				else if(j == temp2 && !diagonal && !across && !down)
 				{
 					//If piece not winning, then reset the console color to a plain white
 					//This only applies to the DisplayWinningBoard function
@@ -505,7 +505,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<t_space;
 				break;
 			case 7:
-				if(playerOneWon == true)
+				if(playerOneWon)
 					pOne.SetPlayerTextColor();
 				else
 					pTwo.SetPlayerTextColor();
@@ -521,7 +521,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal == true && diagonalLeft == true)
+				else if(j == temp2 && diagonal && diagonalLeft)
 				{
 					if(numOfSpaces_ == A && squareCount == (startOfRowTwoA + 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -530,7 +530,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(numOfSpaces_ == C && squareCount == (startOfRowTwoC + 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 				}
-				else if(j == temp2 && diagonal == true && diagonalRight == true)
+				else if(j == temp2 && diagonal && diagonalRight)
 				{
 					if(numOfSpaces_ == A && squareCount == (endOfRowTwoA - 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -539,7 +539,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(numOfSpaces_ == C && squareCount == (endOfRowTwoC - 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 				}
-				else if(j == temp2 && down == true && across == false && diagonal == false)
+				else if(j == temp2 && down && !across && !diagonal)
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
@@ -567,9 +567,9 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == t_rowTwo)
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowTwo)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && diagonal == false && across == false && down == false)
+				else if(j == temp2 && !diagonal && !across && !down)
 				{
 					ResetConsoleColor();
 					DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -612,7 +612,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<t_space;
 				break;
 			case 11:
-				if(playerOneWon == true)
+				if(playerOneWon)
 					pOne.SetPlayerTextColor();
 				else
 					pTwo.SetPlayerTextColor();
@@ -628,7 +628,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal == true && diagonalLeft == true)
+				else if(j == temp2 && diagonal && diagonalLeft)
 				{
 					if(numOfSpaces_ == A && squareCount == endOfRowThreeA)
 						DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -637,7 +637,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(numOfSpaces_ == C && squareCount == (startOfRowThreeC + 2))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 				}
-				else if(j == temp2 && diagonal == true && diagonalRight == true)
+				else if(j == temp2 && diagonal && diagonalRight)
 				{
 					if(numOfSpaces_ == A && squareCount == startOfRowThreeA)
 						DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -646,7 +646,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(numOfSpaces_ == C && squareCount == (endOfRowThreeC - 2))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 				}
-				else if(j == temp2 && down == true && across == false && diagonal == false)
+				else if(j == temp2 && down && !across && !diagonal)
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
@@ -674,9 +674,9 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == t_rowThree)
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowThree)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && diagonal == false && across == false && down == false)
+				else if(j == temp2 && !diagonal && !across && !down)
 				{
 					ResetConsoleColor();
 					DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -720,7 +720,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<t_space;
 				break;
 			case 15:
-				if(playerOneWon == true)
+				if(playerOneWon)
 					pOne.SetPlayerTextColor();
 				else
 					pTwo.SetPlayerTextColor();
@@ -736,21 +736,21 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal == true && diagonalLeft == true)
+				else if(j == temp2 && diagonal && diagonalLeft)
 				{
 					if(numOfSpaces_ == B && squareCount == endOfRowFourB)
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					else if(numOfSpaces_ == C && squareCount == (startOfRowFourC + 3))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 				}
-				else if(j == temp2 && diagonal == true && diagonalRight == true)
+				else if(j == temp2 && diagonal && diagonalRight)
 				{
 					if(numOfSpaces_ == B && squareCount == startOfRowFourB)
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 					else if(numOfSpaces_ == C && squareCount == (endOfRowFourC - 3))
 						DisplayPiece(squareCount, temp2, pieceSpacing);
 				}
-				else if(j == temp2 && down == true && across == false && diagonal == false)
+				else if(j == temp2 && down && !across && !diagonal)
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
@@ -778,9 +778,9 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == t_rowFour)
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFour)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && diagonal == false && across == false && down == false)
+				else if(j == temp2 && !diagonal && !across && !down)
 				{
 					ResetConsoleColor();
 					DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -824,7 +824,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<t_space;
 				break;
 			case 19:
-				if(playerOneWon == true)
+				if(playerOneWon)
 					pOne.SetPlayerTextColor();
 				else
 					pTwo.SetPlayerTextColor();
@@ -840,11 +840,11 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal == true && diagonalLeft == true && squareCount == endOfRowFiveC)
+				else if(j == temp2 && diagonal && diagonalLeft && squareCount == endOfRowFiveC)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && diagonal == true && diagonalRight == true && squareCount == startOfRowFiveC)
+				else if(j == temp2 && diagonal && diagonalRight && squareCount == startOfRowFiveC)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && down == true && across == false && diagonal == false)
+				else if(j == temp2 && down && !across && !diagonal)
 				{
 					if(acrossDownLocation == t_columnOne)
 					{
@@ -872,9 +872,9 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 							DisplayPiece(squareCount, temp2, pieceSpacing);
 					}
 				}
-				else if(j == temp2 && across == true && down == false && diagonal == false && acrossDownLocation == t_rowFive)
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFive)
 					DisplayPiece(squareCount, temp2, pieceSpacing);
-				else if(j == temp2 && diagonal == false && across == false && down == false)
+				else if(j == temp2 && !diagonal && !across && !down)
 				{
 					ResetConsoleColor();
 					DisplayPiece(squareCount, temp2, pieceSpacing);
@@ -919,20 +919,20 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	cout<<endl;
 
 	//Change color of text to that of winning players
-	if(playerOneWon == true)
+	if(playerOneWon)
 		pOne.SetPlayerTextColor();
 	else
 		pTwo.SetPlayerTextColor();
 
 	//Tell how the player won
-	if(diagonal == true && across == false && down == false)
+	if(diagonal && !across && !down)
 	{
-		if(diagonalLeft == true)
+		if(diagonalLeft)
 			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from left to right"<<endl;
-		if(diagonalRight == true)
+		if(diagonalRight)
 			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from right to left"<<endl;
 	}
-	else if(across == true && down == false && diagonal == false)
+	else if(across && !down && !diagonal)
 	{
 		if(acrossDownLocation == t_rowOne)
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 1"<<endl;
@@ -945,7 +945,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 		else if(acrossDownLocation == t_rowFive)
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 5"<<endl;
 	}
-	else if(down == true && across == false && diagonal == false)
+	else if(down && !across && !diagonal)
 	{
 		if(acrossDownLocation == t_columnOne)
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going down on column 1"<<endl;
@@ -1353,7 +1353,7 @@ bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus,
 {
 	ISListIter_C errorListIter;
 	
-	if(playerOneMoveStatus == false && playerTwoMoveStatus == false)
+	if(!playerOneMoveStatus && !playerTwoMoveStatus)
 	{
 		//Fatal Error has occurred, take a look at the code
 		errorListIter = errorMsgList.find(error3);
@@ -1362,14 +1362,14 @@ bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus,
 		return false;
 	}
 	
-	if(CheckMoveLocation(location) == false)
+	if(!(CheckMoveLocation(location)))
 	{
 		errorListIter = errorMsgList.find(error2);
 		cout<<(errorListIter->second);
 		return false;
 	}
 
-	if(ProcessSpaceList(location, playerPiece) == false)
+	if(!(ProcessSpaceList(location, playerPiece)))
 	{
 		errorListIter = errorMsgList.find(error1);
 		cout<<(errorListIter->second);

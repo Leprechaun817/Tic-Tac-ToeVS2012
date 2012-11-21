@@ -123,7 +123,7 @@ int WinDrawPacket::GetConstantFromList(string request)
 
 const int WinDrawPacket::GetWinDraw() const
 {
-	if(packetCreated_ == true)
+	if(packetCreated_)
 		return winDraw_;
 	else
 	{
@@ -136,7 +136,7 @@ const int WinDrawPacket::GetWinDraw() const
 
 const int WinDrawPacket::GetPlayerPiece() const
 {
-	if(packetCreated_ == true)
+	if(packetCreated_)
 		return playerPiece_;
 	else
 	{
@@ -149,7 +149,7 @@ const int WinDrawPacket::GetPlayerPiece() const
 
 const int WinDrawPacket::GetWinType() const
 {
-	if(packetCreated_ == true)
+	if(packetCreated_)
 		return winType_;
 	else
 	{
@@ -162,7 +162,7 @@ const int WinDrawPacket::GetWinType() const
 
 const int WinDrawPacket::GetDiagType() const
 {
-	if(packetCreated_ == true)
+	if(packetCreated_)
 		return diagonalType_;
 	else
 	{
@@ -175,7 +175,7 @@ const int WinDrawPacket::GetDiagType() const
 
 const int WinDrawPacket::GetRow() const
 {
-	if(packetCreated_ == true)
+	if(packetCreated_)
 		return rowAcross_;
 	else
 	{
@@ -188,7 +188,7 @@ const int WinDrawPacket::GetRow() const
 
 const int WinDrawPacket::GetColumn() const
 {
-	if(packetCreated_ == true)
+	if(packetCreated_)
 		return columnDown_;
 	else
 	{

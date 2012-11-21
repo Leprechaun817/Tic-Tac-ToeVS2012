@@ -90,7 +90,7 @@ void Player::ResetPlayer(int boundsLimit)
 //This must be called before ResetPlayer has been called in order for this to work correctly
 void Player::ResetPlayerPiece()
 {
-	if(resetPlayerFunctionCalled_ == false)
+	if(!resetPlayerFunctionCalled_)
 	{
 		otherPlayerPiece_ = 0;
 		resetPlayerFunctionCalled_ = true;
@@ -150,7 +150,7 @@ int Player::MakeMove()
 
 	bool checkMove = true;
 	bool loop = false;
-	while(loop == false)
+	while(!loop)
 	{
 		//Used unsigned int here because move.size is also an unsigned integer.
 		//Keeps warning messages about type mismatches from showing up in the compiler window...
@@ -165,7 +165,7 @@ int Player::MakeMove()
 		}
 
 		checkMove = CheckMoveFormat(choice);
-		if(checkMove == false)
+		if(!checkMove)
 		{
 			cout<<"Please re-enter your choice\n";
 			cin>>choice;
@@ -242,7 +242,7 @@ const void Player::SetPlayerTextColor() const
 bool Player::HasPlayerMadeMove()
 {
 	bool returnValue;
-	if(madeMove_ == true)
+	if(madeMove_)
 	{
 		returnValue = true;
 		madeMove_ = false;
@@ -258,7 +258,7 @@ bool Player::HasPlayerMadeMove()
 
 const int Player::GetID() const
 {
-	if(playerInitialized_ == true)
+	if(playerInitialized_)
 		return id_;
 	else
 	{
@@ -272,7 +272,7 @@ const int Player::GetID() const
 
 const int Player::GetPiece() const
 {
-	if(playerInitialized_ == true)
+	if(playerInitialized_)
 		return playerPiece_;
 	else
 	{
@@ -286,7 +286,7 @@ const int Player::GetPiece() const
 
 const string Player::GetName() const
 {
-	if(playerInitialized_ == true)
+	if(playerInitialized_)
 		return name_;
 	else
 	{
@@ -300,7 +300,7 @@ const string Player::GetName() const
 
 const int Player::GetScore() const
 {
-	if(playerInitialized_ == true)
+	if(playerInitialized_)
 		return score_;
 	else
 	{
@@ -314,7 +314,7 @@ const int Player::GetScore() const
 
 const int Player::GetMove() const
 {
-	if(playerInitialized_ == true)
+	if(playerInitialized_)
 		return move_;
 	else
 	{
@@ -328,7 +328,7 @@ const int Player::GetMove() const
 
 const bool Player::DidPlayerWin() const
 {
-	if(playerInitialized_ == true)
+	if(playerInitialized_)
 		return win_;
 	else
 	{

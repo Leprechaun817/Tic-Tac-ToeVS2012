@@ -65,7 +65,7 @@ void ScreenColors::DecidePlayerScreenColor()
 	cout<<"Ex. a\n";
 	cin>>selection;
 	bool checkForOtherPlayer = false;
-	while(checkForOtherPlayer == false)
+	while(!checkForOtherPlayer)
 	{
 		if(otherPlayerColor_ == 0)
 		{

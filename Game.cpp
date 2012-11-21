@@ -88,7 +88,7 @@ void Game::StartGame()
 {
 	//First board was layed out when the board object was instantiated so all that's left
 	//to do is to give the player some instructions
-	if(firstPlay_ == true)
+	if(firstPlay_)
 	{
 		cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<endl;
 		cout<<"Get "<<boundsLimit_<<" in a row to win."<<endl;
@@ -134,21 +134,21 @@ bool Game::GameLoop()
 	if(playOrder_ == 1)
 	{
 		continueGame = GetPlayerMove(playerOneTurn);
-		if(continueGame == false)
+		if(!continueGame)
 			return continueGame;
 		
 		continueGame = GetPlayerMove(playerTwoTurn);
-		if(continueGame == false)
+		if(!continueGame)
 			return continueGame;
 	}
 	else
 	{
 		continueGame = GetPlayerMove(playerTwoTurn);
-		if(continueGame == false)
+		if(!continueGame)
 			return continueGame;
 
 		continueGame = GetPlayerMove(playerOneTurn);
-		if(continueGame == false)
+		if(!continueGame)
 			return continueGame;
 	}
 
@@ -168,7 +168,7 @@ bool Game::EndGame()
 	//Show results of the last round played
 	//Ask player/s whether they want to play another round
 	bool loop = false;
-	while(loop == false)
+	while(!loop)
 	{
 		cout<<"Would you like to play for another round? y or n"<<endl;
 		cin>>answer;
@@ -227,7 +227,7 @@ bool Game::GetPlayerMove(int order)
 	{
 		int playerOneMove;
 		bool playerOneGood = false;
-		while(playerOneGood == false)
+		while(!playerOneGood)
 		{
 			system("cls");
 			board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
@@ -240,7 +240,7 @@ bool Game::GetPlayerMove(int order)
 			
 			if(board.UpdateBoard(playerOne.GetPiece(), playerOneMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove()) == false)
 			{
-				if(board.GetFatalError() == true)
+				if((board.GetFatalError()))
 				{
 					cout<<"Now exiting the program.\n";
 					cout<<"There has been a fatal error...\n";
@@ -278,7 +278,7 @@ bool Game::GetPlayerMove(int order)
 			
 			if(board.UpdateBoard(playerTwo.GetPiece(), playerTwoMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove()) == false)
 			{
-				if(board.GetFatalError() == true)
+				if((board.GetFatalError()))
 				{
 					cout<<"Now exiting the program.\n";
 					cout<<"There has been a fatal error...\n";
@@ -635,7 +635,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		return continueGame;
 	}
 
-	if(playerOne.DidPlayerWin() == true || playerTwo.DidPlayerWin() == true)
+	if((playerOne.DidPlayerWin()) || (playerTwo.DidPlayerWin()))
 		board.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne, playerTwo);
 
 	return continueGame;
