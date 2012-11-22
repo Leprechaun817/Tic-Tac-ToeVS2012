@@ -4,6 +4,8 @@
 #include <map>
 #include <sstream>
 #include <conio.h>
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
 
 using namespace std;
 
@@ -63,6 +65,7 @@ private:
 //Container Variables
 private:
 	ConstList constantsList;
+	ErrorTypes err;
 
 //Regular variables
 private:

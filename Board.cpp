@@ -344,7 +344,15 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	}
 	catch(Exception &e)
 	{
-		throw;
+		if(e.GetErrorType() == err.Invalid_Variable_Access)
+		{
+			cout<<e.what()<<"\n";
+			cout<<"Press any key to continue...\n";
+			_getche();
+			throw;
+		}
+		else
+			throw;
 	}
 	
 	//Figure out where the pieces on the board should be highlighted
@@ -964,10 +972,12 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 	int temp2 = 3;	//Used for piece spacing
 	int squareCount = 0;
 	
+	int p1Piece;
+	int p2Piece;
 	try
 	{
-		int p1Piece = pOne.GetPiece();
-		int p2Piece = pTwo.GetPiece();
+		p1Piece = pOne.GetPiece();
+		p2Piece = pTwo.GetPiece();
 	}
 	catch(Exception &e)
 	{
@@ -1054,26 +1064,46 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 				break;
 			case 5:
 				ResetConsoleColor();
-				if(j == 1)
-					cout<<t_space;
-				else if(j == sizeOfBoardAcross)
-					cout<<t_space<<"          Player 1: "<<pOne.GetName();
-				else
-					cout<<horizontalLine2;
+				try
+				{
+					if(j == 1)
+						cout<<t_space;
+					else if(j == sizeOfBoardAcross)
+						cout<<t_space<<"          Player 1: "<<pOne.GetName();
+					else
+						cout<<horizontalLine2;
+				}
+				catch(Exception &e)
+				{
+					cout<<e.what()<<"\n";
+					cout<<"Press any key to continue...\n";
+					_getche();
+					throw;
+				}
 				break;
 			case 6:
 				ResetConsoleColor();
-				if(j == 1)
-					cout<<verticalLine;
-				else if(j == sizeOfBoardAcross)
-					cout<<verticalLine<<"          Player 1's Score: "<<pOne.GetScore();
-				else if(j == temp1)
+				try
 				{
-					cout<<verticalLine;
-					temp1 += sizeOfSquareAcross;
+					if(j == 1)
+						cout<<verticalLine;
+					else if(j == sizeOfBoardAcross)
+						cout<<verticalLine<<"          Player 1's Score: "<<pOne.GetScore();
+					else if(j == temp1)
+					{
+						cout<<verticalLine;
+						temp1 += sizeOfSquareAcross;
+					}
+					else
+						cout<<t_space;
 				}
-				else
-					cout<<t_space;
+				catch(Exception &e)
+				{
+					cout<<e.what()<<"\n";
+					cout<<"Press any key to continue...\n";
+					_getche();
+					throw;
+				}
 				break;
 			case 7:
 				ResetConsoleColor();
@@ -1109,26 +1139,46 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 				break;
 			case 8:
 				ResetConsoleColor();
-				if(j == 1)
-					cout<<verticalLine;
-				else if(j == sizeOfBoardAcross)
-					cout<<verticalLine<<"          Player 2: "<<pTwo.GetName();
-				else if(j == temp1)
+				try
 				{
-					cout<<verticalLine;
-					temp1 += sizeOfSquareAcross;
+					if(j == 1)
+						cout<<verticalLine;
+					else if(j == sizeOfBoardAcross)
+						cout<<verticalLine<<"          Player 2: "<<pTwo.GetName();
+					else if(j == temp1)
+					{
+						cout<<verticalLine;
+						temp1 += sizeOfSquareAcross;
+					}
+					else
+						cout<<t_space;
 				}
-				else
-					cout<<t_space;
+				catch(Exception &e)
+				{
+					cout<<e.what()<<"\n";
+					cout<<"Press any key to continue...\n";
+					_getche();
+					throw;
+				}
 				break;
 			case 9:
 				ResetConsoleColor();
-				if(j == 1)
-					cout<<t_space;
-				else if(j == sizeOfBoardAcross)
-					cout<<t_space<<"          Player 2's Score: "<<pTwo.GetScore();
-				else
-					cout<<horizontalLine2;
+				try
+				{
+					if(j == 1)
+						cout<<t_space;
+					else if(j == sizeOfBoardAcross)
+						cout<<t_space<<"          Player 2's Score: "<<pTwo.GetScore();
+					else
+						cout<<horizontalLine2;
+				}
+				catch(Exception &e)
+				{
+					cout<<e.what()<<"\n";
+					cout<<"Press any key to continue...\n";
+					_getche();
+					throw;
+				}
 				break;
 			case 10:
 				ResetConsoleColor();
@@ -1361,7 +1411,7 @@ bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus,
 	}
 	catch(Exception &e)
 	{
-		e.what();
+		cout<<e.what()<<"\n";
 		throw;
 	}
 	

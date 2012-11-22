@@ -126,12 +126,7 @@ const int WinDrawPacket::GetWinDraw() const
 	if(packetCreated_)
 		return winDraw_;
 	else
-	{
-		cout<<packetUnreadable;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
 }
 
 const int WinDrawPacket::GetPlayerPiece() const
@@ -139,12 +134,7 @@ const int WinDrawPacket::GetPlayerPiece() const
 	if(packetCreated_)
 		return playerPiece_;
 	else
-	{
-		cout<<packetUnreadable;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
 }
 
 const int WinDrawPacket::GetWinType() const
@@ -152,12 +142,7 @@ const int WinDrawPacket::GetWinType() const
 	if(packetCreated_)
 		return winType_;
 	else
-	{
-		cout<<packetUnreadable;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
 }
 
 const int WinDrawPacket::GetDiagType() const
@@ -165,12 +150,7 @@ const int WinDrawPacket::GetDiagType() const
 	if(packetCreated_)
 		return diagonalType_;
 	else
-	{
-		cout<<packetUnreadable;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
 }
 
 const int WinDrawPacket::GetRow() const
@@ -178,12 +158,7 @@ const int WinDrawPacket::GetRow() const
 	if(packetCreated_)
 		return rowAcross_;
 	else
-	{
-		cout<<packetUnreadable;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
 }
 
 const int WinDrawPacket::GetColumn() const
@@ -191,10 +166,5 @@ const int WinDrawPacket::GetColumn() const
 	if(packetCreated_)
 		return columnDown_;
 	else
-	{
-		cout<<packetUnreadable;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
 }

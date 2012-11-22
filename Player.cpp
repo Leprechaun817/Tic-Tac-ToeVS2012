@@ -254,7 +254,7 @@ const int Player::GetID() const
 	if(playerInitialized_)
 		return id_;
 	else
-		throw Exception(err.Fatal_Error, varError); 
+		throw Exception(err.Invalid_Variable_Access, varError); 
 }
 
 const int Player::GetPiece() const
@@ -262,7 +262,7 @@ const int Player::GetPiece() const
 	if(playerInitialized_)
 		return playerPiece_;
 	else
-		throw Exception(err.Fatal_Error, varError);
+		throw Exception(err.Invalid_Variable_Access, varError);
 }
 
 const string Player::GetName() const
@@ -270,7 +270,7 @@ const string Player::GetName() const
 	if(playerInitialized_)
 		return name_;
 	else
-		throw Exception(err.Fatal_Error, varError);
+		throw Exception(err.Invalid_Variable_Access, varError);
 }
 
 const int Player::GetScore() const
@@ -278,7 +278,7 @@ const int Player::GetScore() const
 	if(playerInitialized_)
 		return score_;
 	else
-		throw Exception(err.Fatal_Error, varError);
+		throw Exception(err.Invalid_Variable_Access, varError);
 }
 
 const int Player::GetMove() const
@@ -286,7 +286,7 @@ const int Player::GetMove() const
 	if(playerInitialized_)
 		return move_;
 	else
-		throw Exception(err.Fatal_Error, varError);
+		throw Exception(err.Invalid_Variable_Access, varError);
 }
 
 const bool Player::DidPlayerWin() const
@@ -294,7 +294,7 @@ const bool Player::DidPlayerWin() const
 	if(playerInitialized_)
 		return win_;
 	else
-		throw Exception(err.Fatal_Error, varError);
+		throw Exception(err.Invalid_Variable_Access, varError);
 }
 
 void Player::SetPlayerWon()

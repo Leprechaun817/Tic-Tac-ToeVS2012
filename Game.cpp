@@ -68,8 +68,6 @@ Game::Game()
 	//First time game is starting so firstPlay is true
 	firstPlay_ = true;
 
-	gameFatalError_ = false;
-
 	DecidePlayOrder();
 }
 
@@ -163,9 +161,16 @@ bool Game::GameLoop()
 	}
 	catch(Exception &e)
 	{
-		//All errors coming from ProcessPacket will result in closure of the program
-		//Rethrowing exception to the main
-		throw;
+		if(e.GetErrorType() == err.Invalid_Variable_Access)
+		{
+			cout<<e.what()<<"\n";
+			cout<<"Press any key to continue...\n";
+			_getche();
+			throw;
+		}
+		else
+			//Rethrowing exception to the main
+			throw;
 	}
 
 	return continueGame;
@@ -259,6 +264,13 @@ bool Game::GetPlayerMove(int order)
 			{
 				if(e.GetErrorType() == err.Fatal_Error)
 					throw;
+				else if(e.GetErrorType() == err.Invalid_Variable_Access)
+				{
+					cout<<e.what()<<"\n";
+					cout<<"Press any key to continue...\n";
+					_getche();
+					throw;
+				}
 				else
 				{
 					cout<<"Please re-enter your choice.\n";
@@ -290,6 +302,13 @@ bool Game::GetPlayerMove(int order)
 			{
 				if(e.GetErrorType() == err.Fatal_Error)
 					throw;
+				else if(e.GetErrorType() == err.Invalid_Variable_Access)
+				{
+					cout<<e.what()<<"\n";
+					cout<<"Press any key to continue...\n";
+					_getche();
+					throw;
+				}
 				else
 				{
 					cout<<"Please re-enter your choice.\n";
@@ -310,7 +329,18 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	int tempAcrossDownLocation;
 
 	//Value from packet
-	const int t_gameState = packet->GetWinDraw();
+	int t_gameState;
+	try
+	{
+		t_gameState = packet->GetWinDraw();
+	}
+	catch(Exception &e)
+	{
+		cout<<e.what()<<"\n";
+		cout<<"Press any key to continue...\n";
+		_getche();
+		throw;
+	}
 	
 	//Error Values
 	const int t_nullConstant = GetConstantFromList(nullConstant);
@@ -363,8 +393,19 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		else
 			throw Exception(err.Bad_PlayerPiece_Variable_Fatal);
 
-		//Value pulled from packet to be compared, in this case the type of win that occurred
-		const int t_winType = packet->GetWinType();
+		int t_winType;
+		try
+		{
+			//Value pulled from packet to be compared, in this case the type of win that occurred
+			t_winType  = packet->GetWinType();
+		}
+		catch(Exception &e)
+		{
+			cout<<e.what()<<"\n";
+			cout<<"Press any key to continue...\n";
+			_getche();
+			throw;
+		}
 		
 		//Values pulled from map list that will be compared against the winType to figure out what it is
 		const int t_diagonalWinType = GetConstantFromList(diagonalWinType);
@@ -378,7 +419,18 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			tempType = t_diagonalWinType;
 			
 			//Value pulled from packet to be compared, in this case the type of diagonal win
-			const int t_winningDiagLocation = packet->GetDiagType();
+			int t_winningDiagLocation;
+			try
+			{
+				t_winningDiagLocation = packet->GetDiagType();
+			}
+			catch(Exception &e)
+			{
+				cout<<e.what()<<"\n";
+				cout<<"Press any key to continue...\n";
+				_getche();
+				throw;
+			}
 			
 			//Values pulled from the map list to be compared to the t_winningDiagLocation
 			const int t_diagonalLeftSubType = GetConstantFromList(diagonalLeftSubType);
@@ -404,7 +456,18 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			tempDiagonalLocation = t_nullConstant;
 
 			//Value pulled from packet to be compared, in this case it's the row where a win was located
-			const int t_winningAcrossLocation = packet->GetRow();
+			int t_winningAcrossLocation;
+			try
+			{
+				t_winningAcrossLocation = packet->GetRow();
+			}
+			catch(Exception &e)
+			{
+				cout<<e.what()<<"\n";
+				cout<<"Press any key to continue...\n";
+				_getche();
+				throw;
+			}
 			
 			//Values pulled from the map list to be compared with the variable t_winningRowLocation
 			const int t_rowOne = GetConstantFromList(rowOne);
@@ -439,7 +502,18 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			tempDiagonalLocation = t_nullConstant;
 
 			//Value pulled from packet to be compared, in this case it's the column where a win was located
-			const int t_winningDownLocation = packet->GetColumn();
+			int t_winningDownLocation;
+			try
+			{
+				t_winningDownLocation = packet->GetColumn();
+			}
+			catch(Exception &e)
+			{
+				cout<<e.what()<<"\n";
+				cout<<"Press any key to continue...\n";
+				_getche();
+				throw;
+			}
 
 			//Values pulled from the map list to be compared with the variable t_winningDownLocation
 			const int t_columnOne = GetConstantFromList(columnOne);
@@ -490,7 +564,15 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	}
 	catch(Exception &e)
 	{
-		throw;
+		if(e.GetErrorType() == err.Invalid_Variable_Access)
+		{
+			cout<<e.what()<<"\n";
+			cout<<"Press any key to continue...\n";
+			_getche();
+			throw;
+		}
+		else
+			throw;
 	}
 	
 	return continueGame;
@@ -512,9 +594,4 @@ int Game::GetConstantFromList(string request)
 	int t_request = constListIter->second;
 
 	return t_request;
-}
-
-const bool Game::HasGameHadFatalError() const
-{
-	return gameFatalError_;
 }

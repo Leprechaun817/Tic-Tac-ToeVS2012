@@ -15,6 +15,7 @@ int main()
 {
 	srand((unsigned)time(0));
 	GamePtr game(new Game());
+	ErrorTypes err;
 
 	//Start the game
 	game->StartGame();
@@ -32,11 +33,23 @@ int main()
 		}
 		catch(Exception &e)
 		{
-			cout<<e.what()<<"\n";
-			cout<<"The program will now close...\n";
-			cout<<"Press any key to continue..."<<endl;
-			_getche();
-			exit(EXIT_FAILURE);
+			if(e.GetErrorType() != err.Invalid_Variable_Access)
+			{
+				system("cls");
+				cout<<e.what()<<"\n";
+				cout<<"The program will now close...\n";
+				cout<<"Press any key to continue..."<<endl;
+				_getche();
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				system("cls");
+				cout<<"Failed to initialize objects properly.\n";
+				cout<<"Press any key to continue..."<<endl;
+				_getche();
+				exit(EXIT_FAILURE);
+			}
 		}
 
 		if(gameRunning == false)
