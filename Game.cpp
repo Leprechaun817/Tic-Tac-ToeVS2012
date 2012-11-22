@@ -5,17 +5,6 @@
 const string Game::gameDrawMessage = "The game has ended in a draw.\nYou can now start a new round or end the game...\n";
 const string Game::playerOneWinMessage = "Player 1 has won this round!!\nCongratulations!!!^o^\n";
 const string Game::playerTwoWinMessage = "Player 2 has won this round!!\nCongratulations!!!^o^\n";
-//WinDrawPacket Related Messages
-const string Game::gameStateErrorMessage = "An error has occured with the winDraw variable in the packet.\nCheck packet code.\n";
-const string Game::playerPieceErrorMessage = "An error has occured with the playerPiece variable in the packet.\nCheck packet code.\n";
-const string Game::winTypeErrorMessage = "An error has occured with the winType variable in the packet.\nCheck packet code.\n";
-const string Game::diagonalTypeErrorMessage = "An error has occured with the diagonalType variable in the packet.\nCheck packet code.\n";
-const string Game::rowAcrossErrorMessage = "An error has occured with the rowAcross variable in the packet.\nCheck packet code.\n";
-const string Game::columnDownErrorMessage = "An error has occured with the columnDown variable in the packet.\nCheck packet code.\n";
-//Main Error Messages
-const string Game::fatalErrorMessage = "A fatal error has occurred.\nThe game will now close.\n";
-const string Game::minorErrorMessage = "A minor error has occurred.\nThe game will now close.\n";
-const string Game::unknownErrorMessage = "An unknown error has occurred.\nThe game will now close.\n";
 //Other Messages
 const string Game::anyKey = "Press any key to continue...\n";
 
@@ -119,10 +108,17 @@ void Game::StartGame()
 	//Clear screen, display first play board
 	system("cls");
 
-	//Display the empty starting board
-	board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-	//Get the first round of player moves
-	//Call GameLoop at this point
+	try
+	{
+		//Display the empty starting board
+		board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
+		//Get the first round of player moves
+		//Call GameLoop at this point
+	}
+	catch(Exception &e)
+	{
+		throw;
+	}
 }
 
 bool Game::GameLoop()
@@ -131,29 +127,46 @@ bool Game::GameLoop()
 	const int playerTwoTurn = 2;
 	bool continueGame = true;
 	
-	if(playOrder_ == 1)
+	try
 	{
-		continueGame = GetPlayerMove(playerOneTurn);
-		if(!continueGame)
-			return continueGame;
+		if(playOrder_ == 1)
+		{
+			continueGame = GetPlayerMove(playerOneTurn);
+			if(!continueGame)
+				return continueGame;
 		
-		continueGame = GetPlayerMove(playerTwoTurn);
-		if(!continueGame)
-			return continueGame;
+			continueGame = GetPlayerMove(playerTwoTurn);
+			if(!continueGame)
+				return continueGame;
+		}
+		else
+		{
+			continueGame = GetPlayerMove(playerTwoTurn);
+			if(!continueGame)
+				return continueGame;
+
+			continueGame = GetPlayerMove(playerOneTurn);
+			if(!continueGame)
+				return continueGame;
+		}
 	}
-	else
+	catch(Exception &e)
 	{
-		continueGame = GetPlayerMove(playerTwoTurn);
-		if(!continueGame)
-			return continueGame;
-
-		continueGame = GetPlayerMove(playerOneTurn);
-		if(!continueGame)
-			return continueGame;
+		//Throw the fatal exception one more time to the main function
+		throw;
 	}
 
-	if(board.GetTotalNumOfPiecesOnBoard() >= boundsLimit_)
-		continueGame = ProcessPacket(board.FindWinDraw());
+	try
+	{
+		if(board.GetTotalNumOfPiecesOnBoard() >= boundsLimit_)
+			continueGame = ProcessPacket(board.FindWinDraw());
+	}
+	catch(Exception &e)
+	{
+		//All errors coming from ProcessPacket will result in closure of the program
+		//Rethrowing exception to the main
+		throw;
+	}
 
 	return continueGame;
 }
@@ -228,37 +241,30 @@ bool Game::GetPlayerMove(int order)
 		int playerOneMove;
 		bool playerOneGood = false;
 		while(!playerOneGood)
-		{
-			system("cls");
-			board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-			playerOneMove = playerOne.MakeMove();
-			if(playerOneMove == quit)
+		{	
+			try
 			{
-				continuePlay = false;
-				return continuePlay;
-			}
-			
-			if(board.UpdateBoard(playerOne.GetPiece(), playerOneMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove()) == false)
-			{
-				if((board.GetFatalError()))
+				system("cls");
+				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
+				playerOneMove = playerOne.MakeMove();
+				if(playerOneMove == quit)
 				{
-					cout<<"Now exiting the program.\n";
-					cout<<"There has been a fatal error...\n";
-					cout<<"Press any key to continue...\n"<<endl;
-					_getche();
 					continuePlay = false;
-					gameFatalError_ = true;
 					return continuePlay;
 				}
+				
+				playerOneGood = board.UpdateBoard(playerOne.GetPiece(), playerOneMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
+			}
+			catch(Exception &e)
+			{
+				if(e.GetErrorType() == err.Fatal_Error)
+					throw;
 				else
 				{
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
-					_getche();
 				}
 			}
-			else
-				playerOneGood = true;
 		}
 	}
 	else
@@ -267,36 +273,29 @@ bool Game::GetPlayerMove(int order)
 		bool playerTwoGood = false;
 		while(playerTwoGood == false)
 		{
-			system("cls");
-			board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-			playerTwoMove = playerTwo.MakeMove();
-			if(playerTwoMove == quit)
+			try
 			{
-				continuePlay = false;
-				return continuePlay;
-			}
-			
-			if(board.UpdateBoard(playerTwo.GetPiece(), playerTwoMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove()) == false)
-			{
-				if((board.GetFatalError()))
+				system("cls");
+				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
+				playerTwoMove = playerTwo.MakeMove();
+				if(playerTwoMove == quit)
 				{
-					cout<<"Now exiting the program.\n";
-					cout<<"There has been a fatal error...\n";
-					cout<<"Press any key to continue...\n"<<endl;
-					_getche();
 					continuePlay = false;
-					gameFatalError_ = true;
 					return continuePlay;
 				}
+				
+				playerTwoGood = board.UpdateBoard(playerTwo.GetPiece(), playerTwoMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
+			}
+			catch(Exception &e)
+			{
+				if(e.GetErrorType() == err.Fatal_Error)
+					throw;
 				else
 				{
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
-					_getche();
 				}
 			}
-			else
-				playerTwoGood = true;
 		}
 	}
 
@@ -362,15 +361,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			_getche();
 		}
 		else
-		{
-			//Message saying there has been a fatal error in the packet
-			cout<<fatalErrorMessage;
-			cout<<playerPieceErrorMessage;
-			cout<<anyKey;
-			_getche();
-			continueGame = false;
-			return continueGame;
-		}
+			throw Exception(err.Bad_PlayerPiece_Variable_Fatal);
 
 		//Value pulled from packet to be compared, in this case the type of win that occurred
 		const int t_winType = packet->GetWinType();
@@ -400,41 +391,11 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			else //diagType didn't equal 1 or 2 even though the winning move was a diagonal, this is an error
 			{	
 				if(t_winningDiagLocation == t_nullConstant)
-				{
-					//Message stating a minor error has occurred and the code should be checked out
-					cout<<minorErrorMessage;
-					cout<<diagonalTypeErrorMessage;
-					//Special message because of the 2 errors that can occur here
-					cout<<"The diagonalType variable shouldn't be a -1 when the winType variable is equal to a diagonal.\nPlease check the diagonalType variable!!\n";
-					cout<<anyKey;
-					_getche();
-				}
+					throw Exception(err.Bad_DiagonalLocation_Minor);
 				else if(t_winningDiagLocation == t_fatalError)
-				{
-					//Message stating the a fatal error has occurred
-					cout<<fatalErrorMessage;
-					cout<<diagonalTypeErrorMessage;
-					cout<<"The diagonalType variable shouldn't be a -2 when winType variable is equal to a diagonal.\n";
-					cout<<"Please check both the winType and diagonalType variables.\n";
-					cout<<anyKey;
-					_getche();
-				}
+					throw Exception(err.Bad_DiagonalLocation_Fatal);
 				else
-				{
-					//Message stating that an unknown error has occured
-					cout<<unknownErrorMessage;
-					cout<<diagonalTypeErrorMessage;
-					cout<<"The diagonalType variable had an unexpected output.\n";
-					cout<<"The number associated with the variable was "<<t_winningDiagLocation<<".\n";
-					cout<<"Please look into this right away!\n";
-					cout<<anyKey;
-					_getche();
-				}
-
-				//Both errors will result in the game closing
-				continueGame = false;
-				gameFatalError_ = true;
-				return continueGame;
+					throw Exception(err.Bad_DiagonalLocation_Unknown);
 			}
 		}
 		else if(t_winType == t_acrossWinType)
@@ -465,40 +426,11 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			else //the row didn't match any of the row locations, an error has occurred
 			{
 				if(t_winningAcrossLocation == t_nullConstant)
-				{
-					//Message stating minor error has occurred
-					cout<<minorErrorMessage;
-					cout<<rowAcrossErrorMessage;
-					cout<<"The row variable shouldn't be a -1 when the winType variable is equal to an across.\nPlease check the row variable!!\n";
-					cout<<anyKey;
-					_getche();
-				}
+					throw Exception(err.Bad_AcrossLocation_Minor);
 				else if(t_winningAcrossLocation == t_fatalError) 
-				{
-					//Message stating fatal error has occurred
-					cout<<fatalErrorMessage;
-					cout<<rowAcrossErrorMessage;
-					cout<<"The row variable shouldn't be a -2 when the winType is equal to an across.\n";
-					cout<<"Please check both the winType and row variables.\n";
-					cout<<anyKey;
-					_getche();
-				}
+					throw Exception(err.Bad_AcrossLocation_Fatal);
 				else
-				{
-					//Message stating that an unknown error has occured
-					cout<<unknownErrorMessage;
-					cout<<rowAcrossErrorMessage;
-					cout<<"The row variable had an unexpected output.\n";
-					cout<<"The number associated with the variable was "<<t_winningAcrossLocation<<".\n";
-					cout<<"Please look into this right away!\n";
-					cout<<anyKey;
-					_getche();
-				}
-
-				//End the game
-				continueGame = false;
-				gameFatalError_ = true;
-				return continueGame;
+					throw Exception(err.Bad_AcrossLocation_Unknown);
 			}
 		}
 		else if(t_winType == t_downWinType)
@@ -529,115 +461,38 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			else   //column didn't match any column locations, an error has occured
 			{
 				if(t_winningDownLocation == t_nullConstant)
-				{
-					//Message stating minor error has occurred
-					cout<<minorErrorMessage;
-					cout<<columnDownErrorMessage;
-					cout<<"The column variable shouldn't be a -1 when the winType is equal to a down.\nPlease check the column variable!!\n";
-					cout<<anyKey;
-					_getche();
-				}
+					throw Exception(err.Bad_DownLocation_Minor);
 				else if(t_winningDownLocation == t_fatalError)
-				{
-					//Message stating a fatal error has occurred
-					cout<<fatalErrorMessage;
-					cout<<columnDownErrorMessage;
-					cout<<"The column variable shouldn't be a -2 when the winType is equal to a down.\n";
-					cout<<"Please check both the winType and column variables.\n";
-					cout<<anyKey;
-					_getche();
-				}
+					throw Exception(err.Bad_DownLocation_Fatal);
 				else
-				{
-					//Message stating that an unknown error has occured
-					cout<<unknownErrorMessage;
-					cout<<columnDownErrorMessage;
-					cout<<"The column variable had an unexpected output.\n";
-					cout<<"The number associated with the variable was "<<t_winningDownLocation<<".\n";
-					cout<<"Please look into this right away!\n";
-					cout<<anyKey;
-					_getche();
-				}
-
-				//End the game
-				continueGame = false;
-				gameFatalError_ = true;
-				return continueGame;
+					throw Exception(err.Bad_DownLocation_Unknown);
 			}
 		}
 		else //win type didn't equal 1, 2, or 3, an error has occured
 		{
 			if(t_winType == t_nullConstant)
-			{
-				//Message stating that minor error has occurred
-				//Can't have a win and a winType with a nullConstant
-				cout<<minorErrorMessage;
-				cout<<winTypeErrorMessage;
-				cout<<"The winType variable shouldn't be a -1 when a win exists.\nPlease check the winType variable!!\n";
-				cout<<anyKey;
-				_getche();
-			}
+				throw Exception(err.Bad_WinType_Variable_Minor);
 			else if(t_winType == t_fatalError)
-			{
-				//Message stating that fatal error has occurred
-				//Can't have a win and a winType with a fatal error
-				cout<<fatalErrorMessage;
-				cout<<winTypeErrorMessage;
-				cout<<"The winType variable shouldn't be a -2 when a win exists.\n";
-				cout<<"Please check both the win and winType variables.\n";
-				cout<<anyKey;
-				_getche();
-			}
+				throw Exception(err.Bad_WinType_Variable_Fatal);
 			else
-			{
-				//Message stating that unknown error has occurred
-				cout<<unknownErrorMessage;
-				cout<<winTypeErrorMessage;
-				cout<<"The winType definitly shouldn't be a unknown error.\nPlease double check code for serious errors!!\n";
-				cout<<anyKey;
-				_getche();
-			}
-
-			//End the game
-			continueGame = false;
-			gameFatalError_ = true;
-			return continueGame;
+				throw Exception(err.Bad_WinType_Variable_Unknown);
 		}
 	}
 	else if(t_gameState == t_fatalError)
-	{
-		cout<<fatalErrorMessage;
-		cout<<gameStateErrorMessage;
-		//Change winDraw in this sentence to gameState once all the other changes have been made
-		cout<<"The winDraw variable cannot equal -2. Double check the logic in the code, something isn't right!!!\n";
-		cout<<anyKey;
-		_getche();
-
-		//End the game
-		continueGame = false;
-		gameFatalError_ = true;
-		return continueGame;
-	}
+		throw Exception(err.Bad_GameState_Fatal);
 	else
+		throw Exception(err.Bad_GameState_Unknown);
+
+	try
 	{
-		cout<<unknownErrorMessage;
-		cout<<gameStateErrorMessage;
-		//Change winDraw in this sentence to gameState once all the other changes have been made
-		cout<<"The winDraw variable has an unknown error value.\nThere is a major problem in the code that needs attention!!\n";
-		cout<<"Check the functions related to the creation of the packet in the WinDrawPAcket class,\n";
-		cout<<"as well as the functions related to packet creation and finding the win, draw, or neither right a way.\n";
-		cout<<anyKey;
-		_getche();
-
-		//End the game
-		continueGame = false;
-		gameFatalError_ = true;
-		return continueGame;
+		if((playerOne.DidPlayerWin()) || (playerTwo.DidPlayerWin()))
+			board.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne, playerTwo);
 	}
-
-	if((playerOne.DidPlayerWin()) || (playerTwo.DidPlayerWin()))
-		board.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne, playerTwo);
-
+	catch(Exception &e)
+	{
+		throw;
+	}
+	
 	return continueGame;
 }
 

@@ -6,6 +6,8 @@
 #include <sstream>
 #include "WinDrawPacket.h"
 #include "ScreenColors.h"
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
 
 using namespace std;
 
@@ -64,11 +66,13 @@ private:
 	static const string noPlayerPiece;
 	static const string oPlayerPiece;
 	static const string xPlayerPiece;
+	static const string varError;
 
 //Container Variables
 private:
 	ScreenColors textColor;
 	ConstList constantsList;
+	ErrorTypes err;
 
 //Regular Variables
 private:

@@ -39,10 +39,6 @@ const int Board::pieceSpacing = 5;
 const int Board::A = 9;
 const int Board::B = 16;
 const int Board::C = 25;
-//Error value constants
-const int Board::error1 = 1;
-const int Board::error2 = 2;
-const int Board::error3 = 3;
 
 Board::Board()
 {
@@ -58,17 +54,6 @@ Board::Board()
 	for(int i = 0; i < sizeOfPieceArr; i++)
 	{
 		numToCharConversionList.insert(pair<const int, char>(pieceNumbersArr[i], pieceCharactersArr[i]));
-	}
-
-	//Enter values for error codes (Specific to the board object)
-	array<const int, sizeOfErrorArr> errorNumArr = {1, 2, 3};
-	array<string, sizeOfErrorArr> errorMsgArr = {"This location already has a piece on it\n",
-												 "This location doesn't exist on the board\n",
-												 "Fatal error, something is wrong with the code. (DEBUG MESSAGE)\n"};
-
-	for(unsigned int i = 0; i < sizeOfErrorArr; i++)
-	{
-		errorMsgList.insert(pair<const int, string>(errorNumArr[i], errorMsgArr[i]));
 	}
 
 	totalXsOnBoard_ = 0;
@@ -205,12 +190,7 @@ bool Board::ProcessSpaceList(int location, int playerPiece)
 			break;
 		}
 		else if((location + 1) == *spaceListIter || (location + 2) == *spaceListIter)
-		{
-			//location given already has a piece added into it, return error1
-			error = true;
-			//Error found, loop ending
-			break;
-		}
+			throw Exception(err.Piece_Exists_At_Location);
 	}
 
 	return error;
@@ -320,46 +300,53 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	//Winning player string
 	string winningPlayer;
 	
-	if(pOne.DidPlayerWin())
+	try
 	{
-		const int lineSize = 46;
-		system("cls");
-		winningPlayerPiece = XorO(pOne.GetPiece());
-		pOne.SetPlayerTextColor();
-		cout<<"^o^ ---- Player 1 has won the game!!! ---- ^o^"<<endl;
-		cout<<"-----------    Congratulations    ------------"<<endl;
-		for(int i = 1; i <= 46; i++)
+		if(pOne.DidPlayerWin())
 		{
-			cout<<winningPlayerPiece;
-			Sleep(50);
+			const int lineSize = 46;
+			system("cls");
+			winningPlayerPiece = XorO(pOne.GetPiece());
+			pOne.SetPlayerTextColor();
+			cout<<"^o^ ---- Player 1 has won the game!!! ---- ^o^"<<endl;
+			cout<<"-----------    Congratulations    ------------"<<endl;
+			for(int i = 1; i <= 46; i++)
+			{
+				cout<<winningPlayerPiece;
+				Sleep(50);
+			}
+			cout<<endl;
+			cout<<"Press any key to continue..."<<endl;
+			_getche();
+			ResetConsoleColor();
+			winningPlayer = "Player 1";
+			playerOneWon = true;
 		}
-		cout<<endl;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		ResetConsoleColor();
-		winningPlayer = "Player 1";
-		playerOneWon = true;
+		else
+		{
+			const int lineSize = 46;
+			system("cls");
+			winningPlayerPiece = XorO(pTwo.GetPiece());
+			pTwo.SetPlayerTextColor();
+			cout<<"^o^ ---- Player 2 has won the game!!! ---- ^o^"<<endl;
+			cout<<"-----------    Congratulations    ------------"<<endl;
+			for(int i = 1; i <= 46; i++)
+			{
+				cout<<winningPlayerPiece;
+				Sleep(50);
+			}
+			cout<<endl;
+			cout<<"Press any key to continue..."<<endl;
+			_getche();
+			ResetConsoleColor();
+			winningPlayer = "Player 2";
+		}
 	}
-	else
+	catch(Exception &e)
 	{
-		const int lineSize = 46;
-		system("cls");
-		winningPlayerPiece = XorO(pTwo.GetPiece());
-		pTwo.SetPlayerTextColor();
-		cout<<"^o^ ---- Player 2 has won the game!!! ---- ^o^"<<endl;
-		cout<<"-----------    Congratulations    ------------"<<endl;
-		for(int i = 1; i <= 46; i++)
-		{
-			cout<<winningPlayerPiece;
-			Sleep(50);
-		}
-		cout<<endl;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		ResetConsoleColor();
-		winningPlayer = "Player 2";
+		throw;
 	}
-
+	
 	//Figure out where the pieces on the board should be highlighted
 	if(type == GetConstantFromList(acrossWinType))
 		across = true;
@@ -977,8 +964,15 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 	int temp2 = 3;	//Used for piece spacing
 	int squareCount = 0;
 	
-	int p1Piece = pOne.GetPiece();
-	int p2Piece = pTwo.GetPiece();
+	try
+	{
+		int p1Piece = pOne.GetPiece();
+		int p2Piece = pTwo.GetPiece();
+	}
+	catch(Exception &e)
+	{
+		throw;
+	}
 
 	const char t_space = GetConstantFromList(GetConstantFromList(noPlayerPiece));
 
@@ -1351,39 +1345,32 @@ bool Board::CheckMoveLocation(int location)
 
 bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus)
 {
-	ISListIter_C errorListIter;
-	
 	if(!playerOneMoveStatus && !playerTwoMoveStatus)
 	{
-		//Fatal Error has occurred, take a look at the code
-		errorListIter = errorMsgList.find(error3);
-		cout<<(errorListIter->second);
-		boardFatalError_ = true;
-		return false;
+		throw Exception(err.Fatal_Error);
 	}
 	
 	if(!(CheckMoveLocation(location)))
 	{
-		errorListIter = errorMsgList.find(error2);
-		cout<<(errorListIter->second);
-		return false;
+		throw Exception(err.Move_Out_Of_Bounds);
 	}
 
-	if(!(ProcessSpaceList(location, playerPiece)))
+	try
 	{
-		errorListIter = errorMsgList.find(error1);
-		cout<<(errorListIter->second);
-		return false;
+		ProcessSpaceList(location, playerPiece);
 	}
+	catch(Exception &e)
+	{
+		e.what();
+		throw;
+	}
+	
+	const int t_xPlayerPiece = GetConstantFromList(xPlayerPiece);
+
+	if(playerPiece == t_xPlayerPiece)
+		totalXsOnBoard_++;
 	else
-	{
-		const int t_xPlayerPiece = GetConstantFromList(xPlayerPiece);
-
-		if(playerPiece == t_xPlayerPiece)
-			totalXsOnBoard_++;
-		else
-			totalOsOnBoard_++;
-	}
+		totalOsOnBoard_++;
 
 	ProcessSpaceList(location, playerPiece);
 	ProcessPiecePlacementList();

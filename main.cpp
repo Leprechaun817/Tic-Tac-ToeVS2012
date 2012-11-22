@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <iostream>
 #include <memory>
 #include <conio.h>
@@ -23,9 +24,20 @@ int main()
 	bool gameRunning = true;
 	while(gameRunning == true)
 	{
-		//continue the game
-		//This will get called every time the game loops
-		gameRunning = game->GameLoop();
+		try
+		{
+			//continue the game
+			//This will get called every time the game loops
+			gameRunning = game->GameLoop();
+		}
+		catch(Exception &e)
+		{
+			cout<<e.what()<<"\n";
+			cout<<"The program will now close...\n";
+			cout<<"Press any key to continue..."<<endl;
+			_getche();
+			exit(EXIT_FAILURE);
+		}
 
 		if(gameRunning == false)
 		{
@@ -36,13 +48,10 @@ int main()
 
 			if(end == false)	//No, player doesn't want to quit, wants to start a new round
 			{
-				if(game->HasGameHadFatalError() == false)
-				{
-					game->ResetGame();
-					game->StartGame();
-					//Reset gameRunning to true so that it continues to loop
-					gameRunning = true;
-				}
+				game->ResetGame();
+				game->StartGame();
+				//Reset gameRunning to true so that it continues to loop
+				gameRunning = true;
 			}
 			else				//Yes, player does want to quit. Doesn't want to start a new round
 			{
@@ -55,16 +64,9 @@ int main()
 
 	//TODO:
 	//Show final stats here right after the screen is cleared
-	if(game->HasGameHadFatalError() == false)
-	{
-		cout<<"Hope you enjoyed the game!!"<<endl;
-		cout<<"Thanks for playing... ^_^"<<endl;
-		_getche();
-	}
-	else
-	{
-		//Message here about what to do in the event of an error.
-	}
-
+	cout<<"Hope you enjoyed the game!!"<<endl;
+	cout<<"Thanks for playing... ^_^"<<endl;
+	_getche();
+	
 	return 0;
 }

@@ -9,7 +9,9 @@ struct ErrorTypes
 		Double_Function_Call,
 		Piece_Exists_At_Location,
 		Move_Out_Of_Bounds,
+		Minor_Error,
 		Fatal_Error,
+		Unknown_Error,
 		Bad_PlayerPiece_Variable_Fatal,
 		Bad_DiagonalLocation_Minor,
 		Bad_DiagonalLocation_Fatal,
@@ -25,6 +27,5 @@ struct ErrorTypes
 		Bad_WinType_Variable_Unknown,
 		Bad_GameState_Fatal,
 		Bad_GameState_Unknown,
-		Unknown_Error
 	};
 };

@@ -9,6 +9,8 @@
 #include "Board.h"
 #include "Player.h"
 #include "WinDrawPacket.h"
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
 
 using namespace std;
 
@@ -16,9 +18,6 @@ typedef auto_ptr<WinDrawPacket> WDPacketPtr;
 typedef map<const string, int> ConstList;
 typedef map<const string, int>::const_iterator ConstListIters_C;
 
-//TODO:
-//Create list of constants that can be used throughout the game.
-//It'll just get sent to where it is needed
 class Game
 {
 public:
@@ -28,7 +27,6 @@ public:
 	bool EndGame();			//functions here. These are called as is necessary through the game loop
 	void ResetGame();		//in the main.
 
-	const bool HasGameHadFatalError() const;
 	const bool HasWinOccurred() const;
 
 //----Message Constants----
@@ -37,17 +35,6 @@ private:
 	static const string gameDrawMessage;
 	static const string playerOneWinMessage;
 	static const string playerTwoWinMessage;
-	//WinDrawPacket Related Messages
-	static const string gameStateErrorMessage;
-	static const string playerPieceErrorMessage;
-	static const string winTypeErrorMessage;
-	static const string diagonalTypeErrorMessage;
-	static const string rowAcrossErrorMessage;
-	static const string columnDownErrorMessage;
-	//Main Error Messages
-	static const string fatalErrorMessage;
-	static const string minorErrorMessage;
-	static const string unknownErrorMessage;
 	//Other Messages
 	static const string anyKey;
 
@@ -87,6 +74,7 @@ private:
 //Container Variables
 private:
 	ConstList constantsList;
+	ErrorTypes err;
 
 //Regular Variables
 private:
@@ -96,7 +84,6 @@ private:
 	int gameDraws_;	//Used to keep track of how many times all of the rounds played closed with a draw
 	int playOrder_;	//Dictates which player goes first
 	int turnCounter_; //This gets incremented by 1 everytime both players have taken their turns. Resets after each new game... 
-	bool gameFatalError_;
 
 //Private Functions
 private:

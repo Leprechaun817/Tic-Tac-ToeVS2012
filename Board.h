@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include "Player.h"
 #include "WinDrawPacket.h"
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
 
 using namespace std;
 
@@ -21,8 +23,6 @@ typedef map<const string, int> ConstList;
 typedef map<const string, int>::const_iterator ConstListIters_C;
 typedef map<const int, char> PieceList;
 typedef map<const int, char>::const_iterator PieceListIters_C;
-typedef map<const int, string> IntStringList;
-typedef map<const int, string>::const_iterator ISListIter_C;
 
 //TODO:
 //-Use typedefs for spacelist and piecePlacement
@@ -93,18 +93,13 @@ private:
 	static const int B;
 	static const int C;
 
-	//Board related error codes
-	static const int error1;
-	static const int error2;
-	static const int error3;
-
 //Container Variables
 private:
 	IntList spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
 	IntList piecePlacement;  //Keeps track of just the piece types, their location on the board is figured out by their location within the vector
 	ConstList constantsList;
 	PieceList numToCharConversionList;
-	IntStringList errorMsgList;
+	ErrorTypes err;
 
 //Regular Variables
 private:

@@ -7,6 +7,7 @@ const int Player::answerSize = 3;
 const string Player::noPlayerPiece = "noPlayerPiece";
 const string Player::oPlayerPiece = "oPlayerPiece";
 const string Player::xPlayerPiece = "xPlayerPiece";
+const string Player::varError = "Player has not been initialized yet,\nplease run initialization function before use.";
 
 Player::Player()
 	: textColor()
@@ -97,10 +98,7 @@ void Player::ResetPlayerPiece()
 	}
 	else
 	{
-		cout<<"This function has already been called,\n";
-		cout<<"You can't call this again...\n";
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
+		throw Exception(err.Double_Function_Call);
 	}
 }
 
@@ -184,24 +182,19 @@ int Player::MakeMove()
 
 bool Player::CheckMoveFormat(string choice)
 {
+	const string toManyCharacters = "Your entry has to many characters, please try again...";
+	const string toFewCharacters = "Your entry has to few characters, please try again...";
+	const string noComma = "Your entry must have a comma in it, please try again...";
+	
 	const unsigned int sizeOfMove = 3;
 	const char middleCharacter = ',';
 
 	if(choice.size() > sizeOfMove)
-	{
-		cout<<"Your entry has to many characters, please try again...\n";
-		return false;
-	}
+		throw Exception(err.Move_Format_Invalid, toManyCharacters);
 	else if(choice.size() < sizeOfMove)
-	{
-		cout<<"Your entry has to few characters, please try again...\n";
-		return false;
-	}
+		throw Exception(err.Move_Format_Invalid, toFewCharacters);
 	else if(choice[1] != middleCharacter)
-	{
-		cout<<"Your entry must have a comma in it, please try again...\n";
-		return false;
-	}
+		throw Exception(err.Move_Format_Invalid, noComma);
 	else
 		//Move format is good, return true
 		return true;
@@ -261,13 +254,7 @@ const int Player::GetID() const
 	if(playerInitialized_)
 		return id_;
 	else
-	{
-		cout<<"This Player has not been initialized yet,\n";
-		cout<<"Please run the initialization function...\n";
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Fatal_Error, varError); 
 }
 
 const int Player::GetPiece() const
@@ -275,13 +262,7 @@ const int Player::GetPiece() const
 	if(playerInitialized_)
 		return playerPiece_;
 	else
-	{
-		cout<<"This Player has not been initialized yet,\n";
-		cout<<"Please run the initialization function...\n";
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Fatal_Error, varError);
 }
 
 const string Player::GetName() const
@@ -289,13 +270,7 @@ const string Player::GetName() const
 	if(playerInitialized_)
 		return name_;
 	else
-	{
-		cout<<"This player has not been initialized yet,\n";
-		cout<<"Please run the initialization function...\n";
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
-		return "666";
-	}
+		throw Exception(err.Fatal_Error, varError);
 }
 
 const int Player::GetScore() const
@@ -303,13 +278,7 @@ const int Player::GetScore() const
 	if(playerInitialized_)
 		return score_;
 	else
-	{
-		cout<<"This player has not been initialized yet,\n";
-		cout<<"Please run the initialization function...\n";
-		cout<<"Press any key to continue...\n";
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Fatal_Error, varError);
 }
 
 const int Player::GetMove() const
@@ -317,13 +286,7 @@ const int Player::GetMove() const
 	if(playerInitialized_)
 		return move_;
 	else
-	{
-		cout<<"This player has not been initialized yet,\n";
-		cout<<"Please run the initialization function...\n";
-		cout<<"Press any key to continue...\n";
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Fatal_Error, varError);
 }
 
 const bool Player::DidPlayerWin() const
@@ -331,13 +294,7 @@ const bool Player::DidPlayerWin() const
 	if(playerInitialized_)
 		return win_;
 	else
-	{
-		cout<<"This player has not been initialized yet,\n";
-		cout<<"Please run the initialization function...\n";
-		cout<<"Press any key to continue...\n";
-		_getche();
-		return 666;
-	}
+		throw Exception(err.Fatal_Error, varError);
 }
 
 void Player::SetPlayerWon()
