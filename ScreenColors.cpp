@@ -19,10 +19,9 @@ const int ScreenColors::white = 15 % 16;
 int ScreenColors::otherPlayerColor_ = 0;
 
 ScreenColors::ScreenColors()
+	: hConsole_(GetStdHandle(STD_OUTPUT_HANDLE)), colorAttribute_(0)
 {
-	hConsole_ = GetStdHandle(STD_OUTPUT_HANDLE);
 	otherPlayerColor_ = -1;
-	colorAttribute_ = 0;
 }
 
 void ScreenColors::DecidePlayerScreenColor()

@@ -34,21 +34,13 @@ const string Game::nullConstant = "nullConstant";
 const string Game::fatalError = "fatalError";
 
 Game::Game()
-	: playerOne(), playerTwo(), board()
+	: playerOne(), playerTwo(), board(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
 {
-	//C++11 standard -- New array implamentation using the STL
-	//Provides more information about the array
 	array<const string, 23> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
 							   noPlayerPiece, oPlayerPiece, xPlayerPiece, columnOne, columnTwo, columnThree, columnFour, columnFive, rowOne, rowTwo, 
 							   rowThree, rowFour, rowFive, nullConstant, fatalError};
 	array<int, 23> constantsValues = {0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, -1, -2};
-	//Zero gamesPlayed
-	roundsPlayed_ = 0;
-	//Zero draws as no games have been played yet...
-	gameDraws_ = 0;
-	//Turn counter set to zero
-	turnCounter_ = 0;
-
+	
 	//constantsList must be created before board and the 2 players are initialized becuase otherwise I'd be sending them a empty map container
 	for(unsigned int i = 0; i < constantsValues.size(); i++)
 	{
@@ -57,16 +49,15 @@ Game::Game()
 	
 	//Setup board
 	board.SetupBoard(constantsList);
+	
 	//set bounds limit, basically players shouldn't be able to enter in values past this number
 	//It's also the number used to determine if somebody won the game
 	//The value is pulled from the board object
 	boundsLimit_ = board.GetMultiplier();
+	
 	//Initializing each player
 	playerOne.InitializePlayer(boundsLimit_, constantsList);
 	playerTwo.InitializePlayer(boundsLimit_, constantsList);
-
-	//First time game is starting so firstPlay is true
-	firstPlay_ = true;
 
 	DecidePlayOrder();
 }

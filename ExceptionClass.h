@@ -13,7 +13,7 @@ public:
 	const char* what() const throw();
 	const int GetErrorType() const;
 private:
-	string errorMsg;
-	int errorType;
+	string errorMsg_;
+	int errorType_;
 	ErrorTypes err;
 };

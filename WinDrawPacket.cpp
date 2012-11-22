@@ -28,22 +28,9 @@ const string WinDrawPacket::fatalError = "fatalError";
 const string WinDrawPacket::packetUnreadable = "Packet has not been created yet...\nPlease run CreatePacket before sending the WinDrawPacket\nback to the Game object\n"; 
 
 WinDrawPacket::WinDrawPacket(const ConstList &cList)
+	: winDraw_(-2), playerPiece_(-2), winType_(-2), diagonalType_(-2), rowAcross_(-2), columnDown_(-2), packetCreated_(false)
 {
-	(*this).constantsList = cList;
-	
-	ConstListIters_C cListIter;
-	cListIter = cList.find(fatalError);
-	int fatalErrorConst = cListIter->second;
-	
-	//Fill all variables with the initial value above
-	winDraw_ = fatalErrorConst;
-	playerPiece_ = fatalErrorConst;
-	winType_ = fatalErrorConst;
-	diagonalType_ = fatalErrorConst;
-	rowAcross_ = fatalErrorConst;
-	columnDown_ = fatalErrorConst;
-
-	packetCreated_ = false;
+	constantsList = cList;
 }
 
 void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, const int winLocation, const int winDiagonalLocation, const int winRowLocation, const int winColumnLocation)

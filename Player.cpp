@@ -10,7 +10,7 @@ const string Player::xPlayerPiece = "xPlayerPiece";
 const string Player::varError = "Player has not been initialized yet,\nplease run initialization function before use.";
 
 Player::Player()
-	: textColor()
+	: textColor(), score_(0), madeMove_(false), playerInitialized_(false), win_(false), resetPlayerFunctionCalled_(false)
 {
 	//if...else... here is used becuase of the fact that numOfPlayers is a static variable so if this class has been
 	//instantiated once this variable will already have a value. So the constructor has to check for that and account for it.
@@ -22,14 +22,7 @@ Player::Player()
 	//ID will equal the current number of players, which normally won't be more than 2 anyways.
 	//Might as well code for expansion anyways though
 	id_ = numOfPlayers_;
-	score_ = 0;
 	AssignPlayerPiece();	
-
-	madeMove_ = false;
-	playerInitialized_ = false;
-	win_ = false;
-
-	resetPlayerFunctionCalled_ = false;
 }
 
 Player::~Player()

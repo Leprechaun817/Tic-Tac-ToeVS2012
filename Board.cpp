@@ -40,11 +40,11 @@ const int Board::A = 9;
 const int Board::B = 16;
 const int Board::C = 25;
 
-Board::Board()
+Board::Board() throw ()
+	: hConsoleWindow_(GetStdHandle(STD_OUTPUT_HANDLE)), totalXsOnBoard_(0), totalOsOnBoard_(0), boardFatalError_(false)
 {
 	const int sizeOfPieceArr = 3;
 	const int sizeOfErrorArr = 3;
-	hConsoleWindow_ = GetStdHandle(STD_OUTPUT_HANDLE);
 	system("cls");
 
 	//Enter values into the numToCharConversionList
@@ -55,11 +55,6 @@ Board::Board()
 	{
 		numToCharConversionList.insert(pair<const int, char>(pieceNumbersArr[i], pieceCharactersArr[i]));
 	}
-
-	totalXsOnBoard_ = 0;
-	totalOsOnBoard_ = 0;
-
-	boardFatalError_ = false;
 }	
 
 Board::~Board()
