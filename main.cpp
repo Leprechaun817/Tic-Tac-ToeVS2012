@@ -2,6 +2,8 @@
 #include <memory>
 #include <conio.h>
 #include <ctime>
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
 #include "Game.h"
 
 using namespace std;
