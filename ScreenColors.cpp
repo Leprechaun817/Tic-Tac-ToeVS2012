@@ -26,6 +26,7 @@ ScreenColors::ScreenColors()
 
 void ScreenColors::DecidePlayerScreenColor()
 {
+	system("cls");
 	char selection;
 	cout<<"What color do you want your piece to be?"<<endl;
 	SetConsoleTextAttribute(hConsole_, dark_blue);

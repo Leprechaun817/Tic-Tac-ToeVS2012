@@ -68,6 +68,7 @@ void Game::StartGame()
 	//to do is to give the player some instructions
 	if(firstPlay_)
 	{
+		system("cls");
 		cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<endl;
 		cout<<"Get "<<boundsLimit_<<" in a row to win."<<endl;
 		cout<<"Each player will enter his/her choice into the prompt,\n";
@@ -234,7 +235,7 @@ bool Game::GetPlayerMove(int order)
 
 	if(order == 1)
 	{
-		int playerOneMove;
+		bool playerOneContinueGame;
 		bool playerOneGood = false;
 		while(!playerOneGood)
 		{	
@@ -242,14 +243,14 @@ bool Game::GetPlayerMove(int order)
 			{
 				system("cls");
 				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-				playerOneMove = playerOne.MakeMove();
-				if(playerOneMove == quit)
+				playerOneContinueGame = playerOne.MakeMove();
+				if(!playerOneContinueGame)
 				{
 					continuePlay = false;
-					return continuePlay;
+					playerOneGood = true;
 				}
-				
-				playerOneGood = board.UpdateBoard(playerOne.GetPiece(), playerOneMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
+				else
+					playerOneGood = board.UpdateBoard(playerOne.GetPiece(), playerOne.GetMove(), playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
 			}
 			catch(Exception &e)
 			{
@@ -266,28 +267,29 @@ bool Game::GetPlayerMove(int order)
 				{
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
+					_getche();
 				}
 			}
 		}
 	}
 	else
 	{
-		int playerTwoMove;
+		bool playerTwoContinueGame;
 		bool playerTwoGood = false;
-		while(playerTwoGood == false)
+		while(!playerTwoGood)
 		{
 			try
 			{
 				system("cls");
 				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-				playerTwoMove = playerTwo.MakeMove();
-				if(playerTwoMove == quit)
+				playerTwoContinueGame = playerTwo.MakeMove();
+				if(!playerTwoContinueGame)
 				{
 					continuePlay = false;
-					return continuePlay;
+					playerTwoGood = true;
 				}
-				
-				playerTwoGood = board.UpdateBoard(playerTwo.GetPiece(), playerTwoMove, playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
+				else
+					playerTwoGood = board.UpdateBoard(playerTwo.GetPiece(), playerTwo.GetMove(), playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
 			}
 			catch(Exception &e)
 			{
@@ -304,6 +306,7 @@ bool Game::GetPlayerMove(int order)
 				{
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
+					_getche();
 				}
 			}
 		}
@@ -315,9 +318,9 @@ bool Game::GetPlayerMove(int order)
 bool Game::ProcessPacket(WDPacketPtr packet)
 {
 	bool continueGame = true;
-	int tempType;
-	int tempDiagonalLocation;
-	int tempAcrossDownLocation;
+	int tempType = GetConstantFromList(fatalError);
+	int tempDiagonalLocation = GetConstantFromList(fatalError);
+	int tempAcrossDownLocation = GetConstantFromList(fatalError);
 
 	//Value from packet
 	int t_gameState;

@@ -33,6 +33,8 @@ void Player::InitializePlayer(int boundsLimit, const ConstList &cList)
 	(*this).boundsLimit_ = boundsLimit;
 	(*this).constantsList = cList;
 
+	//Clear the screen
+	system("cls");
 	//Ask player for name
 	//Had to put it here because I need the ID for the prompt...
 	string n;
@@ -127,11 +129,8 @@ void Player::UpdateScore()
 	//Quite simple really...
 }
 
-int Player::MakeMove()
+bool Player::MakeMove()
 {
-	int answer;
-	const int quit = 0;
-	
 	DisplayName();
 	string choice;
 	cout<<endl;
@@ -149,9 +148,9 @@ int Player::MakeMove()
 		{
 			if(choice[i] == 'q' || choice[i] == 'Q')	//Searching the whole string looking for an instance of q or Q
 			{
-				answer = quit;
+				move_ = -1;
 				loop = true; //Just in case
-				return answer;
+				return false;
 			}
 		}
 
@@ -163,14 +162,14 @@ int Player::MakeMove()
 		}
 		else
 		{
-			answer = ReformatMove(choice);
+			move_ = ReformatMove(choice);
 			loop = true;
 		}
 	}
 
 	madeMove_ = true;
 
-	return answer;
+	return true;
 }
 
 bool Player::CheckMoveFormat(string choice)
@@ -228,6 +227,7 @@ const void Player::SetPlayerTextColor() const
 bool Player::HasPlayerMadeMove()
 {
 	bool returnValue;
+	//Only reset the madeMove_ value if it has already been made true
 	if(madeMove_)
 	{
 		returnValue = true;
@@ -236,7 +236,6 @@ bool Player::HasPlayerMadeMove()
 	else
 	{
 		returnValue = false;
-		madeMove_ = true;
 	}
 
 	return returnValue;

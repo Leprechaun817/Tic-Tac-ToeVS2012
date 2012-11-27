@@ -23,7 +23,7 @@ public:
 	void DisplayName();
 	void DisplayScore();
 	void UpdateScore();
-	int MakeMove();
+	bool MakeMove();
 	void ResetPlayer(int boundsLimit);
 	void ResetPlayerPiece(); //Call this function before ResetPlayer is called. Very Important!!!
 	void InitializePlayer(int boundsLimit, const ConstList &cList);
