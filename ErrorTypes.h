@@ -50,6 +50,7 @@ struct ErrorTypes
 		Bad_WinType_Variable_Fatal,
 		Bad_WinType_Variable_Unknown,
 		Bad_GameState_Fatal,
-		Bad_GameState_Unknown
+		Bad_GameState_Unknown,
+		NonAcceptance_Of_Notices
 	};
 };

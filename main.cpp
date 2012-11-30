@@ -81,20 +81,28 @@ int main()
 	}
 	catch(Exception &e)
 	{
-		if(e.GetErrorType() != err.Invalid_Variable_Access)
+		if(e.GetErrorType() == err.Invalid_Variable_Access)
 		{
 			system("cls");
 			cout<<e.what()<<"\n";
-			cout<<"The program will now close...\n";
+			cout<<"Failed to initialize objects properly.\n";
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
-			exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);	
+		}
+		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices)
+		{
+			system("cls");
+			cout<<e.what()<<"\n";
+			cout<<"Press any key to continue..."<<endl;
+			_getche();
+			exit(EXIT_SUCCESS);
 		}
 		else
 		{
 			system("cls");
 			cout<<e.what()<<"\n";
-			cout<<"Failed to initialize objects properly.\n";
+			cout<<"The program will now close...\n";
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
 			exit(EXIT_FAILURE);

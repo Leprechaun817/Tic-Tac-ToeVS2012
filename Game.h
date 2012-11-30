@@ -24,6 +24,8 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #pragma once
 #include <iostream>
+#include <fstream>
+#include <stdlib.h>
 #include <conio.h>
 #include <string>
 #include <memory>
@@ -95,4 +97,7 @@ private:
 	bool ProcessPacket(WDPacketPtr packet);
 	int GetConstantFromList(string request);
 	void DecidePlayOrder();
+	void DisplayNotices();
+	void DisplayWarranty(ifstream &w);
+	void DisplayCopyrightLicense(ifstream &c);
 };

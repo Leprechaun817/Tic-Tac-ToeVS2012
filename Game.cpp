@@ -71,20 +71,6 @@ Game::Game()
 	{
 		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
 	}
-	
-	//Setup board
-	board.SetupBoard(constantsList);
-	
-	//set bounds limit, basically players shouldn't be able to enter in values past this number
-	//It's also the number used to determine if somebody won the game
-	//The value is pulled from the board object
-	boundsLimit_ = board.GetMultiplier();
-	
-	//Initializing each player
-	playerOne.InitializePlayer(boundsLimit_, constantsList);
-	playerTwo.InitializePlayer(boundsLimit_, constantsList);
-
-	DecidePlayOrder();
 }
 
 //TODO:
@@ -96,6 +82,22 @@ void Game::StartGame()
 	//to do is to give the player some instructions
 	if(firstPlay_)
 	{
+		DisplayNotices();
+
+		//Setup board
+		board.SetupBoard(constantsList);
+	
+		//set bounds limit, basically players shouldn't be able to enter in values past this number
+		//It's also the number used to determine if somebody won the game
+		//The value is pulled from the board object
+		boundsLimit_ = board.GetMultiplier();
+	
+		//Initializing each player
+		playerOne.InitializePlayer(boundsLimit_, constantsList);
+		playerTwo.InitializePlayer(boundsLimit_, constantsList);
+
+		DecidePlayOrder();
+		
 		system("cls");
 		cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<endl;
 		cout<<"Get "<<boundsLimit_<<" in a row to win."<<endl;
@@ -507,4 +509,142 @@ int Game::GetConstantFromList(string request)
 	int t_request = constListIter->second;
 
 	return t_request;
+}
+
+void Game::DisplayNotices()
+{
+	const string acceptance = "I AGREE";
+	const string nonacceptance = "I DISAGREE";
+	const string showWarranty = "SHOW W";
+	const string showCopyright = "SHOW C";
+	
+	ifstream warrantyFile;
+	ifstream copyrightFile;
+
+	//Check to make sure both the WARRANTY and COPYING files exist, if not end the program with a fatal error
+	warrantyFile.open("WARRANTY.txt", ifstream::in);
+	copyrightFile.open("COPYING.txt", ifstream::in);
+	if(!warrantyFile.is_open() || !warrantyFile.good())
+		throw Exception(err.Fatal_Error, "Could not find WARRANTY.txt or bad file");
+	if(!copyrightFile.is_open() || !copyrightFile.good())
+		throw Exception(err.Fatal_Error, "Could not find COPYING.txt or bad file");
+	
+	bool loop = true;
+	while(loop)
+	{
+		string choice;
+		system("cls");
+		cout<<"Aaron's Tic-Tac-Toe Clone\t-\tCOPYRIGHT 2012 Aaron Gagern\n";
+		cout<<"This program comes with ABSOLUTELY NO WARRANTY\n";
+		cout<<"This is free software, and you are welcome to redistribute it\n";
+		cout<<"under certain conditions\n\n";
+		cout<<"For more details on the warranty, type SHOW W\n";
+		cout<<"To see the GPLv3 license, type SHOW C\n";
+		cout<<"If you accept this license, please type I AGREE\n";
+		cout<<"If you don't wish to do this type, I DISAGREE\n";
+		cout<<"The program will then exit.\n";
+		cout<<"Please type your choice below."<<endl;
+		getline(cin, choice);
+
+		if(choice == acceptance)
+			loop = false;
+		else if(choice == nonacceptance)
+			throw Exception(err.NonAcceptance_Of_Notices);
+		else if(choice == showWarranty)
+			DisplayWarranty(warrantyFile);
+		else if(choice == showCopyright)
+			DisplayCopyrightLicense(copyrightFile);
+		else
+		{
+			cout<<"You choice didn't match any of the available choices.\n";
+			cout<<"Please try again.\n";
+			cout<<"Press any key to continue..."<<endl;
+			_getche();
+		}
+	}
+
+	warrantyFile.close();
+	copyrightFile.close();
+}
+
+void Game::DisplayWarranty(ifstream &w)
+{
+	string line;
+	
+	int lineCount = 0;
+	while(!w.eof())
+	{
+		getline(w, line);
+		cout<<line;
+		lineCount++;
+
+		if((lineCount % 10) == 0)
+		{
+			bool loop = true;
+			while(loop)
+			{
+				char choice;
+				cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
+				cout<<"To stop reading this and go back, type q and press enter.\n";
+				cin>>choice;
+
+				if(choice == 'c' || choice == 'C')
+				{
+					loop = false;
+					cout<<"\n\n";
+				}
+				else if(choice == 'q' || choice == 'Q')
+				{
+					loop = false;
+					w.seekg(ios::end);
+				}
+				else
+					cout<<"\n\nPlease enter in your choice again.\n";
+			}
+		}
+	}
+
+	cout<<"Press any key to continue..."<<endl;
+	_getche();
+}
+
+void Game::DisplayCopyrightLicense(ifstream &c)
+{
+	string line;
+
+	int lineCount = 0;
+	while(!c.eof())
+	{
+		getline(c, line);
+		cout<<line;
+		lineCount++;
+
+		if((lineCount % 20) == 0)
+		{
+			bool loop = true;
+			while(loop)
+			{
+				char choice;
+				cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
+				cout<<"To stop reading this and go back, type q and press enter.\n";
+				cin>>choice;
+
+				if(choice == 'c' || choice == 'C')
+				{
+					loop = false;
+					cout<<"\n\n";
+				}
+				else if(choice == 'q' || choice == 'Q')
+				{
+					loop = false;
+					c.seekg(ios::end);
+				}
+				else
+					cout<<"\n\nPlease enter your choice again.\n";
+			}
+		}
+	}
+
+	cout<<"Press any key to continue..."<<endl;
+	_getche();
 }

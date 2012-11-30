@@ -112,6 +112,8 @@ Exception::Exception(int type, string extraMsg1)
 			errorMsg_ = "A unknown error has occured with the gameState variable in the packet.\n";
 			errorMsg_ += "The winDraw variable has an unknown error value.";
 			break;
+		case err.NonAcceptance_Of_Notices:
+			errorMsg_ = "Did not accept the license.\nThis program will now close";
 	}
 	
 	if(extraMsg1 != " ")
