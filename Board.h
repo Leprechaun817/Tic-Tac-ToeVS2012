@@ -115,11 +115,12 @@ private:
 private:
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
 	char XorO(int num);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
-	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing);
+	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pieceHasColor);
 	bool ProcessSpaceList(int location, int playerPiece);
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();
 	bool CheckMoveLocation(int location);
 	int GetConstantFromList(string request);
 	char GetConstantFromList(int request);
+	void SetWinningPlayersTextColor(bool p, const Player &p1, const Player &p2);
 };
