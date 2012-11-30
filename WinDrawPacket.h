@@ -2,8 +2,6 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <sstream>
-#include <conio.h>
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 

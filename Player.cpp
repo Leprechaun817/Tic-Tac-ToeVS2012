@@ -52,9 +52,7 @@ void Player::AssignPlayerPiece()
 	//1 = O
 	//2 = X
 	if(otherPlayerPiece_ == 0) //if otherPlayerPiece hasn't been filled yet, which means that player 1 hasn't been assigned a piece
-	{
-		playerPiece_ = otherPlayerPiece_ = PieceGen();
-	}
+		PieceGen();
 	else
 	{
 		if(otherPlayerPiece_ == 1)
@@ -89,15 +87,15 @@ void Player::ResetPlayerPiece()
 		throw Exception(err.Double_Function_Call);
 }
 
-int Player::PieceGen()
+void Player::PieceGen()
 {
-	int temp = (rand()%40)+1;	//Simple random number generator, nothing special
+	int temp = (rand()%40)+1;
 
 	if(temp >= 1 && temp <= 20)
-		return 1;
+		playerPiece_ = otherPlayerPiece_ = 1;
 
 	if(temp >= 21 && temp <= 40)
-		return 2;
+		playerPiece_ = otherPlayerPiece_ = 2;
 }
 
 void Player::DisplayName()

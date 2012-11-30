@@ -4,7 +4,6 @@
 #include <string>
 #include <memory>
 #include <map>
-#include <sstream>
 #include <array>
 #include "Board.h"
 #include "Player.h"
@@ -26,8 +25,8 @@ public:
 	bool GameLoop();		//All the different states that the game could be in are listed as
 	bool EndGame();			//functions here. These are called as is necessary through the game loop
 	void ResetGame();		//in the main.
-
-	const bool HasWinOccurred() const;
+	void DisplayFinalStats();
+	void DisplayLastRoundStats();
 
 //----Message Constants----
 private:

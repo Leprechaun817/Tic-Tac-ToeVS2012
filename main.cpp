@@ -1,3 +1,4 @@
+#pragma warning( disable : 4101 )	//Disables warning about unreferenced local variable. There doesn't seem to be a way to reference it without using it...
 #include <stdlib.h>
 #include <iostream>
 #include <memory>
@@ -76,9 +77,8 @@ int main()
 		}
 	}
 
-	//TODO:
-	//Show final stats here right after the screen is cleared
-	cout<<"Hope you enjoyed the game!!"<<endl;
+	game->DisplayFinalStats();
+	cout<<"Hope you enjoyed the game!!\n";
 	cout<<"Thanks for playing... ^_^"<<endl;
 	_getche();
 	

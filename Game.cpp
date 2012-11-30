@@ -63,6 +63,9 @@ Game::Game()
 	DecidePlayOrder();
 }
 
+//TODO:
+//Rewrite the introduction in this function to include a diagram of the board and coordinates to make
+//it a little easier to undertand for people...
 void Game::StartGame()
 {
 	//First board was layed out when the board object was instantiated so all that's left
@@ -141,8 +144,9 @@ bool Game::EndGame()
 
 	//Clear the screen
 	system("cls");
-	//Show results of the last round played ----> STILL NEED TO WRITE THIS FUNCTION!!!
+	DisplayLastRoundStats();
 	//Ask player/s whether they want to play another round
+	bool quitGame;
 	bool loop = false;
 	while(!loop)
 	{
@@ -151,16 +155,16 @@ bool Game::EndGame()
 
 		if(answer == 'Y' || answer == 'y')
 		{
-			//Player doesn't want to end the game. Wants to go for another round
+			//Player wants to go for another round
 			loop = true;
-			return false; //-----> May change back to variables here, generating warnings from the compiler
-		}				  //Not all control paths return a value
+			quitGame = false;
+		}				  
 		else if(answer == 'N' || answer == 'n')
 		{
-			//Player does want to end the game. Doesn't want to keep playing
+			//Player does want to go for another round
 			loop = true;
-			return true; //-----> Same thing here, this is also generating warnings from the compiler
-		}				 //Not all control paths return a value
+			quitGame = true;
+		}				 
 		else
 		{
 			cout<<"Please enter y or n"<<endl;
@@ -169,6 +173,8 @@ bool Game::EndGame()
 			system("cls");
 		}
 	}
+
+	return quitGame;
 }
 
 void Game::ResetGame()
@@ -447,6 +453,27 @@ void Game::DecidePlayOrder()
 		playOrder_ = 1;
 	else
 		playOrder_ = 2;
+}
+
+void Game::DisplayFinalStats()
+{
+	cout<<"Player 1's name: "<<playerOne.GetName()<<"\n";
+	cout<<playerOne.GetName()<<"\'s final score is: "<<playerOne.GetScore()<<"\n\n";
+	cout<<"Player 2's name: "<<playerTwo.GetName()<<"\n";
+	cout<<playerTwo.GetName()<<"\'s final score is: "<<playerTwo.GetScore()<<"\n\n";
+	cout<<"There were a total of "<<roundsPlayed_<<" round\\s played and\n";
+	cout<<"there were a total of "<<gameDraws_<<" draws during the game."<<endl;
+}
+
+void Game::DisplayLastRoundStats()
+{
+	cout<<"Player 1's name: "<<playerOne.GetName()<<"\n";
+	cout<<playerOne.GetName()<<"\'s final score is: "<<playerOne.GetScore()<<"\n\n";
+	cout<<"Player 2's name: "<<playerTwo.GetName()<<"\n";
+	cout<<playerTwo.GetName()<<"\'s final score is: "<<playerTwo.GetScore()<<"\n\n";
+	cout<<"There were a total of "<<turnCounter_<<" turns taken last round\n";
+	cout<<"You have both played "<<roundsPlayed_<<" round\\s so far in this game\n";
+	cout<<"and there have been a total of "<<gameDraws_<<" draw\\s so far in this game"<<endl;
 }
 
 int Game::GetConstantFromList(string request)

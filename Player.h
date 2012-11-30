@@ -1,10 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <memory>
 #include <map>
 #include <sstream>
-#include "WinDrawPacket.h"
 #include "ScreenColors.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
@@ -49,7 +47,7 @@ public:
 //Other changes coming soon...
 protected:
 	void AssignPlayerPiece();  //Assign either an X or an O to a player
-	int PieceGen();	//Used to generate the first players piece, X or O. Generates numbers 1 or 2 randomly and is sent back to calling function
+	void PieceGen();	//Used to generate the first players piece, X or O.
 	bool CheckMoveFormat(string choice);
 	int ReformatMove(string choice);
 
