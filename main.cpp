@@ -68,6 +68,7 @@ int main()
 		else
 		{
 			system("cls");
+			cout<<e.what()<<"\n";
 			cout<<"Failed to initialize objects properly.\n";
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
