@@ -32,43 +32,24 @@ public:
 //----Message Constants----
 private:
 	//Win/Draw Messages
-	static const string gameDrawMessage;
-	static const string playerOneWinMessage;
-	static const string playerTwoWinMessage;
+	static const string gameDrawMessage, playerOneWinMessage, playerTwoWinMessage;
 	//Other Messages
 	static const string anyKey;
 
 //----Constants Strings----
 private:
 	//These are used while creating the constantsList
-	static const string noWinDrawState;
-	static const string winState;
-	static const string drawState;
-	static const string acrossWinType;
-	static const string downWinType;
-	static const string diagonalWinType;
-	static const string diagonalLeftSubType;
-	static const string diagonalRightSubType;
-	static const string noPlayerPiece;
-	static const string oPlayerPiece;
-	static const string xPlayerPiece;
-	static const string columnOne;
-	static const string columnTwo;
-	static const string columnThree;
-	static const string columnFour;
-	static const string columnFive;
-	static const string rowOne;
-	static const string rowTwo;
-	static const string rowThree;
-	static const string rowFour;
-	static const string rowFive;
+	static const string noWinDrawState, winState, drawState;
+	static const string acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType;
+	static const string noPlayerPiece, oPlayerPiece, xPlayerPiece;
+	static const string columnOne, columnTwo, columnThree, columnFour, columnFive;
+	static const string rowOne, rowTwo, rowThree, rowFour, rowFive;
 	static const string nullConstant;
 	static const string fatalError;
 
 //Object Variables
 private:
-	Player playerOne;
-	Player playerTwo;
+	Player playerOne, playerTwo;
 	Board board;
 
 //Container Variables

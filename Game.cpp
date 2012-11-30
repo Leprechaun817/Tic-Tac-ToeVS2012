@@ -100,14 +100,11 @@ void Game::StartGame()
 
 	//Display the empty starting board
 	board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-	//Get the first round of player moves
-	//Call GameLoop at this point
 }
 
 bool Game::GameLoop()
 {
-	const int playerOneTurn = 1;
-	const int playerTwoTurn = 2;
+	const int playerOneTurn = 1, playerTwoTurn = 2;
 	bool continueGame = true;
 	
 	if(playOrder_ == 1)
@@ -139,12 +136,11 @@ bool Game::GameLoop()
 
 bool Game::EndGame()
 {
-	bool endSession;
 	char answer;
 
 	//Clear the screen
 	system("cls");
-	//Show results of the last round played
+	//Show results of the last round played ----> STILL NEED TO WRITE THIS FUNCTION!!!
 	//Ask player/s whether they want to play another round
 	bool loop = false;
 	while(!loop)
@@ -154,13 +150,15 @@ bool Game::EndGame()
 
 		if(answer == 'Y' || answer == 'y')
 		{
-			endSession = false;		//Player doesn't want to end the game. Wants to go for another round
+			//Player doesn't want to end the game. Wants to go for another round
 			loop = true;
+			return false;
 		}
 		else if(answer == 'N' || answer == 'n')
 		{
-			endSession = true;		//Player does want to end the game. Doesn't want to keep playing
+			//Player does want to end the game. Doesn't want to keep playing
 			loop = true;
+			return true;
 		}
 		else
 		{
@@ -170,16 +168,13 @@ bool Game::EndGame()
 			system("cls");
 		}
 	}
-
-	return endSession;
 }
 
 void Game::ResetGame()
 {
 	//Game object specific stuff
-	turnCounter_ = 0;
+	turnCounter_ = playOrder_ = 0;
 	firstPlay_ = false;
-	playOrder_ = 0;
 	//Reset the board first
 	board.ResetBoard();
 	
@@ -209,7 +204,6 @@ void Game::ResetGame()
 
 bool Game::GetPlayerMove(int order)
 {
-	const int quit = 0;
 	bool continuePlay = true;
 
 	if(order == 1)
@@ -285,18 +279,14 @@ bool Game::GetPlayerMove(int order)
 bool Game::ProcessPacket(WDPacketPtr packet)
 {
 	bool continueGame = true;
-	int tempType = GetConstantFromList(fatalError);
-	int tempDiagonalLocation = GetConstantFromList(fatalError);
-	int tempAcrossDownLocation = GetConstantFromList(fatalError);
+	int tempType = GetConstantFromList(fatalError), tempDiagonalLocation = GetConstantFromList(fatalError), tempAcrossDownLocation = GetConstantFromList(fatalError);
 
 	//Error Values
 	const int t_nullConstant = GetConstantFromList(nullConstant);
 	const int t_fatalError = GetConstantFromList(fatalError);
 	
 	//Values from the map list to be compared against t_gameState
-	const int t_noWinDrawState = GetConstantFromList(noWinDrawState);
-	const int t_drawState = GetConstantFromList(drawState);
-	const int t_winState = GetConstantFromList(winState);
+	const int t_noWinDrawState = GetConstantFromList(noWinDrawState), t_drawState = GetConstantFromList(drawState), t_winState = GetConstantFromList(winState);
 
 	int t_gameState = packet->GetWinDraw();
 	if(t_gameState == t_noWinDrawState || t_gameState == t_drawState)
@@ -342,9 +332,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			throw Exception(err.Bad_PlayerPiece_Variable_Fatal);
 
 		//Values pulled from map list that will be compared against the winType to figure out what it is
-		const int t_diagonalWinType = GetConstantFromList(diagonalWinType);
-		const int t_acrossWinType = GetConstantFromList(acrossWinType);
-		const int t_downWinType = GetConstantFromList(downWinType);
+		const int t_diagonalWinType = GetConstantFromList(diagonalWinType), t_acrossWinType = GetConstantFromList(acrossWinType), t_downWinType = GetConstantFromList(downWinType);
 		
 		int t_winType = packet->GetWinType();
 		//Find out where player won, store values in temp variables and send to DisplayBoard function
@@ -354,8 +342,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			tempType = t_diagonalWinType;
 			
 			//Values pulled from the map list to be compared to the t_winningDiagLocation
-			const int t_diagonalLeftSubType = GetConstantFromList(diagonalLeftSubType);
-			const int t_diagonalRightSubType = GetConstantFromList(diagonalRightSubType);
+			const int t_diagonalLeftSubType = GetConstantFromList(diagonalLeftSubType), t_diagonalRightSubType = GetConstantFromList(diagonalRightSubType);
 
 			int t_winningDiagLocation = packet->GetDiagType();
 			if(t_winningDiagLocation == t_diagonalLeftSubType)
@@ -378,11 +365,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			tempDiagonalLocation = t_nullConstant;
 
 			//Values pulled from the map list to be compared with the variable t_winningRowLocation
-			const int t_rowOne = GetConstantFromList(rowOne);
-			const int t_rowTwo = GetConstantFromList(rowTwo);
-			const int t_rowThree = GetConstantFromList(rowThree);
-			const int t_rowFour = GetConstantFromList(rowFour);
-			const int t_rowFive = GetConstantFromList(rowFive);
+			const int t_rowOne = GetConstantFromList(rowOne), t_rowTwo = GetConstantFromList(rowTwo), t_rowThree = GetConstantFromList(rowThree), t_rowFour = GetConstantFromList(rowFour),
+					  t_rowFive = GetConstantFromList(rowFive);
 
 			int t_winningAcrossLocation = packet->GetRow();
 			if(t_winningAcrossLocation == t_rowOne)
@@ -411,11 +395,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			tempDiagonalLocation = t_nullConstant;
 
 			//Values pulled from the map list to be compared with the variable t_winningDownLocation
-			const int t_columnOne = GetConstantFromList(columnOne);
-			const int t_columnTwo = GetConstantFromList(columnTwo);
-			const int t_columnThree = GetConstantFromList(columnThree);
-			const int t_columnFour = GetConstantFromList(columnFour);
-			const int t_columnFive = GetConstantFromList(columnFive);
+			const int t_columnOne = GetConstantFromList(columnOne), t_columnTwo = GetConstantFromList(columnTwo), t_columnThree = GetConstantFromList(columnThree), 
+					  t_columnFour = GetConstantFromList(columnFour), t_columnFive = GetConstantFromList(columnFive);
 
 			int t_winningDownLocation = packet->GetColumn();
 			if(t_winningDownLocation == t_columnOne)
@@ -461,7 +442,6 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 
 void Game::DecidePlayOrder()
 {
-	//Figure out play order
 	if(playerOne.GetPiece() == 2)
 		playOrder_ = 1;
 	else

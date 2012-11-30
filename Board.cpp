@@ -275,7 +275,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 
 	const char t_space = GetConstantFromList(GetConstantFromList(noPlayerPiece));
 
-	bool playerOneWon = false;
+	bool playerOneWon;
 	
 	//Bool values to decide what pieces get highlighted on the board
 	bool across, down, diagonal, diagonalLeft, diagonalRight;
@@ -302,6 +302,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 		winningPlayerPiece = DisplayWinMessage(pTwo);
 		ResetConsoleColor();
 		winningPlayer = "Player 2";
+		playerOneWon = false;
 	}
 		
 	//Figure out where the pieces on the board should be highlighted

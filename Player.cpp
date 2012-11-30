@@ -25,9 +25,6 @@ Player::Player()
 	AssignPlayerPiece();	
 }
 
-Player::~Player()
-{}
-
 void Player::InitializePlayer(int boundsLimit, const ConstList &cList)
 {
 	(*this).boundsLimit_ = boundsLimit;
@@ -57,9 +54,7 @@ void Player::AssignPlayerPiece()
 	//2 = X
 	if(otherPlayerPiece_ == 0) //if otherPlayerPiece hasn't been filled yet, which means that player 1 hasn't been assigned a piece
 	{
-		int piece = PieceGen();
-		playerPiece_ = piece;
-		otherPlayerPiece_ = piece;
+		playerPiece_ = otherPlayerPiece_ = PieceGen();
 	}
 	else
 	{
@@ -92,23 +87,18 @@ void Player::ResetPlayerPiece()
 		resetPlayerFunctionCalled_ = true;
 	}
 	else
-	{
 		throw Exception(err.Double_Function_Call);
-	}
 }
 
 int Player::PieceGen()
 {
 	int temp = (rand()%40)+1;	//Simple random number generator, nothing special
-	int num;
 
 	if(temp >= 1 && temp <= 20)
-		num = 1;
+		return 1;
 
 	if(temp >= 21 && temp <= 40)
-		num = 2;
-
-	return num;
+		return 2;
 }
 
 void Player::DisplayName()
@@ -123,10 +113,7 @@ void Player::DisplayScore()
 
 void Player::UpdateScore()
 {
-	//This function only incrememnts the score by 1.
-	//This way there's no way to change the score by adding more than one at the same time
 	score_++;
-	//Quite simple really...
 }
 
 bool Player::MakeMove()
@@ -174,9 +161,8 @@ bool Player::MakeMove()
 
 bool Player::CheckMoveFormat(string choice)
 {
-	const string toManyCharacters = "Your entry has to many characters, please try again...";
-	const string toFewCharacters = "Your entry has to few characters, please try again...";
-	const string noComma = "Your entry must have a comma in it, please try again...";
+	const string toManyCharacters = "Your entry has to many characters, please try again...", toFewCharacters = "Your entry has to few characters, please try again...",
+				 noComma = "Your entry must have a comma in it, please try again...";
 	
 	const unsigned int sizeOfMove = 3;
 	const char middleCharacter = ',';
@@ -194,15 +180,12 @@ bool Player::CheckMoveFormat(string choice)
 
 int Player::ReformatMove(string choice)
 {
-	const int hundred = 100;
-	const int ten = 10;
+	const int hundred = 100, ten = 10;
 	
 	stringstream ss;
 	ss.clear();
 
-	int firstNumber;
-	int secondNumber;
-	int returnNumber;
+	int firstNumber, secondNumber;
 
 	ss<<choice[0];
 	ss>>firstNumber;
@@ -214,9 +197,8 @@ int Player::ReformatMove(string choice)
 
 	firstNumber *= hundred;
 	secondNumber *= ten;
-	returnNumber = firstNumber + secondNumber;
-
-	return returnNumber;
+	
+	return (firstNumber + secondNumber);
 }
 
 const void Player::SetPlayerTextColor() const
@@ -226,19 +208,14 @@ const void Player::SetPlayerTextColor() const
 
 bool Player::HasPlayerMadeMove()
 {
-	bool returnValue;
 	//Only reset the madeMove_ value if it has already been made true
 	if(madeMove_)
 	{
-		returnValue = true;
 		madeMove_ = false;
+		return true;
 	}
 	else
-	{
-		returnValue = false;
-	}
-
-	return returnValue;
+		return false;
 }
 
 const int Player::GetID() const

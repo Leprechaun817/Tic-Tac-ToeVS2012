@@ -18,7 +18,6 @@ class Player
 {
 public:
 	Player();
-	~Player();
 	//DisplayName and DisplayScore may be removed at some point. I don't think they will be needed
 	void DisplayName();
 	void DisplayScore();
@@ -63,10 +62,7 @@ protected:
 
 //Constants
 private:
-	static const string noPlayerPiece;
-	static const string oPlayerPiece;
-	static const string xPlayerPiece;
-	static const string varError;
+	static const string noPlayerPiece, oPlayerPiece, xPlayerPiece, varError;
 
 //Container Variables
 private:
