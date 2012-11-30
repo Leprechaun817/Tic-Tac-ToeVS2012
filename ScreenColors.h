@@ -1,8 +1,15 @@
 #include <iostream>
 #include <conio.h>
+#include <array>
+#include <map>
 #include <Windows.h>
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
 
 using namespace std;
+
+typedef map<const int, int> ScreenColorLists;
+typedef map<const int, int>::const_iterator ScreenColorListsIters_C;
 
 class ScreenColors
 {
@@ -15,32 +22,30 @@ public:
 
 //Color constants
 private:
-	static const int black;
-	static const int dark_blue;
-	static const int dark_green;
-	static const int dark_cyan;
-	static const int dark_red;
-	static const int dark_purple;
-	static const int dark_yellow;
-	static const int dark_white;
-	static const int gray;
-	static const int blue;
-	static const int green;
-	static const int cyan;
-	static const int red;
-	static const int purple;
-	static const int yellow;
-	static const int white;
+	static const int black = 0, dark_blue = 1, dark_green = 2, dark_cyan = 3, dark_red = 4, dark_purple = 5, dark_yellow = 6, dark_white = 7, gray = 8, blue = 9, green = 10, cyan = 11, 
+					 red = 12, purple = 13, yellow = 14, white = 15;
 	
+//Local Class Constants
+private:
+	static const int constListSize = 16;
+
+//Container variables
+private:
+	ScreenColorLists colorList;
+	array<string, 16> colorNames;
+	ErrorTypes err;
+
 //Regular Variables
 private:
 	HANDLE hConsole_;
 	//Actual player color, shows what will appear on screen
 	int colorAttribute_;
+	bool screenColorInitialized;
 	static int otherPlayerColor_;
 
 //Private Functions
 private:
 	void SetPlayerTextColor(int color);
-	char ChangeErrorTextColor(int color);
+	void ChangeErrorTextColor(int color);
+	void SetTextColor(int color);
 };

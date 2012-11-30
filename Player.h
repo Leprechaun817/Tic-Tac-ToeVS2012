@@ -63,6 +63,10 @@ private:
 	ConstList constantsList;
 	ErrorTypes err;
 
+//Local Class Constants
+private:
+	static const int answerSize = 3;
+	
 //Regular Variables
 private:
 	int id_;
@@ -76,7 +80,6 @@ private:
 	bool win_;
 	int boundsLimit_;
 	bool playerInitialized_;
-	static int numOfPlayers_;
-	static const int answerSize;
 	bool resetPlayerFunctionCalled_;
+	static int numOfPlayers_;
 };

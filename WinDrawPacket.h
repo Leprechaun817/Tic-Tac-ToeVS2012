@@ -41,7 +41,7 @@ private:
 	static const string nullConstant;
 	static const string fatalError;
 
-//Local constants
+//Local Class Constants
 private:
 	//Local Error String -- Unique to the WinDrawPacket object
 	static const string packetUnreadable;

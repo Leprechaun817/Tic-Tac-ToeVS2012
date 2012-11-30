@@ -26,19 +26,6 @@ const string Board::rowFive = "rowFive";
 const string Board::nullConstant = "nullConstant";
 const string Board::fatalError = "fatalError";
 
-//These constants are the characters/strings that make up the board
-const char Board::horizontalLine2 = '-';
-const char Board::verticalLine = '|';
-
-//Constants for character measurements of board
-const int Board::sizeOfSquareAcross = 5;
-const int Board::sizeOfSquareDown = 4;
-const int Board::pieceSpacing = 5;
-//These next 3 are the total number of squares that can make up a board at once
-const int Board::A = 9;
-const int Board::B = 16;
-const int Board::C = 25;
-
 Board::Board() throw ()
 	: hConsoleWindow_(GetStdHandle(STD_OUTPUT_HANDLE)), totalXsOnBoard_(0), totalOsOnBoard_(0)
 {

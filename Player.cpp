@@ -2,7 +2,6 @@
 
 int Player::numOfPlayers_ = 0;
 int Player::otherPlayerPiece_ = 0;
-const int Player::answerSize = 3;
 
 const string Player::noPlayerPiece = "noPlayerPiece";
 const string Player::oPlayerPiece = "oPlayerPiece";

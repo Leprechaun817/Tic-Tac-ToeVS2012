@@ -5,7 +5,8 @@
 const string Game::gameDrawMessage = "The game has ended in a draw.\nYou can now start a new round or end the game...\n";
 const string Game::playerOneWinMessage = "Player 1 has won this round!!\nCongratulations!!!^o^\n";
 const string Game::playerTwoWinMessage = "Player 2 has won this round!!\nCongratulations!!!^o^\n";
-//Other Messages
+
+//----Other Messages----
 const string Game::anyKey = "Press any key to continue...\n";
 
 //----Constants Strings----
@@ -152,14 +153,14 @@ bool Game::EndGame()
 		{
 			//Player doesn't want to end the game. Wants to go for another round
 			loop = true;
-			return false;
-		}
+			return false; //-----> May change back to variables here, generating warnings from the compiler
+		}				  //Not all control paths return a value
 		else if(answer == 'N' || answer == 'n')
 		{
 			//Player does want to end the game. Doesn't want to keep playing
 			loop = true;
-			return true;
-		}
+			return true; //-----> Same thing here, this is also generating warnings from the compiler
+		}				 //Not all control paths return a value
 		else
 		{
 			cout<<"Please enter y or n"<<endl;

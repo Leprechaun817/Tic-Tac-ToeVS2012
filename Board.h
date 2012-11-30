@@ -56,14 +56,14 @@ private:
 	static const string fatalError;
 	
 	//The characters that make up the board
-	static const char horizontalLine2, verticalLine;
+	static const char horizontalLine2 = '-', verticalLine = '|';
 	
 	//Character measurements of board
-	static const int sizeOfSquareAcross, sizeOfSquareDown, pieceSpacing;
+	static const int sizeOfSquareAcross = 5, sizeOfSquareDown = 4, pieceSpacing = 5;
 	
 	//The integers that represent the total number of squares on the board
 	//There are 3 possible combinations
-	static const int A, B, C;
+	static const int A = 9, B = 16, C = 25;
 
 //Container Variables
 private:
