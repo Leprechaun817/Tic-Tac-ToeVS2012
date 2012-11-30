@@ -87,7 +87,7 @@ private:
 	void InitiateBoard();	//Function lays out board in terms of the numbers used to keep track of each spot and stores them in the spaceList vector.
 	char XorO(int num);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
 	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pieceHasColor);
-	char DisplayWinMessage(const Player &p);
+	char DisplayWinMessage(int playerID, int playerPiece, int playerTextColor);
 	bool ProcessSpaceList(int location, int playerPiece);
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();

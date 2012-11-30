@@ -394,3 +394,8 @@ void ScreenColors::ResetConsoleColor()
 {
 	SetConsoleTextAttribute(hConsole_, dark_white);
 }
+
+const int ScreenColors::GetTextColor() const
+{
+	return colorAttribute_;
+}

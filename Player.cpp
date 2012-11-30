@@ -208,6 +208,9 @@ const void Player::SetPlayerTextColor() const
 
 bool Player::HasPlayerMadeMove()
 {
+	//Checks if player has made their move or not returns whatever that value is
+	//and then toggles madeMove to the opposite of what it was.
+	//So if it was true after running this it will be false and visa versa...
 	//Only reset the madeMove_ value if it has already been made true
 	if(madeMove_)
 	{
@@ -262,6 +265,14 @@ const bool Player::DidPlayerWin() const
 {
 	if(playerInitialized_)
 		return win_;
+	else
+		throw Exception(err.Invalid_Variable_Access, varError);
+}
+
+const int Player::GetPlayerTextColor() const
+{
+	if(playerInitialized_)
+		return (textColor.GetTextColor());
 	else
 		throw Exception(err.Invalid_Variable_Access, varError);
 }

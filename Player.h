@@ -30,24 +30,17 @@ public:
 	//These return the id and the number representing the playerPiece respectively
 	const int GetID() const;
 	const int GetPiece() const;
-
-	//Get functions for name and score -- Only used when just the name or score is needed without all the other dialoge
 	const string GetName() const;
 	const int GetScore() const;
-
-	//Get/Set functions for move
 	const int GetMove() const;
+	const int GetPlayerTextColor() const;
+	const bool DidPlayerWin() const;
+
 	void ResetMove();
 
 	//Only sets win to true
 	void SetPlayerWon();
 
-	//Get for win variable
-	const bool DidPlayerWin() const;
-	
-	//Checks if player has made their move or not returns whatever that value is
-	//and then toggles madeMove to the opposite of what it was.
-	//So if it was true after running this it will be false and visa versa...
 	bool HasPlayerMadeMove();
 
 //Protected Functions

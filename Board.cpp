@@ -168,17 +168,16 @@ void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pi
 //TODO:
 //To be re-written, instead of it getting a player object, it will get the neccessary play information sent to it only
 //Will beed to add function to player so that the text color of the player can be accessed
-char Board::DisplayWinMessage(const Player &p)
+char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor)
 {
 	const int lineSize = 46;
-	char winningPiece = XorO(p.GetPiece());
 	system("cls");
-	p.SetPlayerTextColor();
-	cout<<"^o^ ---- Player "<<p.GetID()<<" has won the game!!! ---- ^o^"<<"\n";
+	SetConsoleTextAttribute(hConsoleWindow_, playerTextColor);
+	cout<<"^o^ ---- Player "<<playerID<<" has won the game!!! ---- ^o^"<<"\n";
 	cout<<"-----------    Congratulations    ------------"<<"\n";
 	for(int i = 1; i <= 46; i++)
 	{
-		cout<<winningPiece;
+		cout<<playerPiece;
 		Sleep(50);
 	}
 	ResetConsoleColor();
@@ -186,7 +185,7 @@ char Board::DisplayWinMessage(const Player &p)
 	cout<<"Press any key to continue..."<<endl;
 	_getche();
 
-	return winningPiece;
+	return (XorO(playerPiece));
 }
 
 bool Board::ProcessSpaceList(int location, int playerPiece)
@@ -293,14 +292,13 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	
 	if(pOne.DidPlayerWin())
 	{
-		winningPlayerPiece = DisplayWinMessage(pOne);
+		winningPlayerPiece = DisplayWinMessage(pOne.GetID(), pOne.GetPiece(), pOne.GetPlayerTextColor());
 		winningPlayer = "Player 1";
 		playerOneWon = true;
 	}
 	else
 	{
-		winningPlayerPiece = DisplayWinMessage(pTwo);
-		ResetConsoleColor();
+		winningPlayerPiece = DisplayWinMessage(pTwo.GetID(), pTwo.GetPiece(), pTwo.GetPlayerTextColor());
 		winningPlayer = "Player 2";
 		playerOneWon = false;
 	}
@@ -325,7 +323,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	for(int i = 1; i <= sizeOfBoardDown; i++)
 	{
 		temp1 += sizeOfSquareAcross;
-		for(int j = 1; i <= sizeOfBoardAcross; i++)
+		for(int j = 1; j <= sizeOfBoardAcross; j++)
 		{
 			switch(i)
 			{
@@ -410,6 +408,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						if(squareCount == startOfColumnFive)
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					}
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowOne)
 				{
@@ -438,6 +437,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					else if(numOfSpaces_ == C && squareCount == (startOfRowTwoC + 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && diagonal && diagonalRight)
 				{
@@ -448,6 +448,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					else if(numOfSpaces_ == C && squareCount == (endOfRowTwoC - 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && down && !across && !diagonal)
 				{
@@ -477,6 +478,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						if(squareCount == (startOfColumnFive + multiplier_))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					}
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowTwo)
 				{
@@ -505,6 +507,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					else if(numOfSpaces_ == C && squareCount == (startOfRowThreeC + 2))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && diagonal && diagonalRight)
 				{
@@ -515,6 +518,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					else if(numOfSpaces_ == C && squareCount == (endOfRowThreeC - 2))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && down && !across && !diagonal)
 				{
@@ -545,6 +549,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						if(squareCount == (startOfColumnFive + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					}
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowThree)
 				{
@@ -571,6 +576,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					else if(numOfSpaces_ == C && squareCount == (startOfRowFourC + 3))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && diagonal && diagonalRight)
 				{
@@ -579,6 +585,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					else if(numOfSpaces_ == C && squareCount == (endOfRowFourC - 3))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && down && !across && !diagonal)
 				{
@@ -609,6 +616,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						if(squareCount == (startOfColumnFour + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					}
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFour)
 				{
@@ -667,6 +675,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						if(squareCount == (startOfColumnFive + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					}
+					ResetConsoleColor();
 				}
 				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFive)
 				{

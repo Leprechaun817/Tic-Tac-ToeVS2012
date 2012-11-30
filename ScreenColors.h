@@ -11,6 +11,7 @@ public:
 	void DecidePlayerScreenColor();
 	void SetTextToPlayerColor() const;
 	void ResetConsoleColor();
+	const int GetTextColor() const;
 
 //Color constants
 private:
