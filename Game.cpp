@@ -78,8 +78,6 @@ Game::Game()
 //it a little easier to undertand for people...
 void Game::StartGame()
 {
-	//First board was layed out when the board object was instantiated so all that's left
-	//to do is to give the player some instructions
 	if(firstPlay_)
 	{
 		DisplayNotices();
@@ -99,22 +97,8 @@ void Game::StartGame()
 		DecidePlayOrder();
 		
 		system("cls");
-		cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<endl;
-		cout<<"Get "<<boundsLimit_<<" in a row to win."<<endl;
-		cout<<"Each player will enter his/her choice into the prompt,\n";
-		cout<<"your choice will then appear on the board and you will get a chance to\n";
-		cout<<"enter in another choice."<<endl;
-		cout<<"When somebody wins the game or the game is a draw, you can play another\n";
-		cout<<"or, you can quit. The number of wins or draws that you rack up will be\n";
-		cout<<"displayed as you play."<<endl;
-		cout<<"Remember columns go down and are numbered 1 - "<<boundsLimit_<<" going from\n";
-		cout<<"left to right. Rows go across and are number 1 - "<<boundsLimit_<<" going from\n";
-		cout<<"top to bottom. So to put an X or O on the first square you would type in\n";
-		cout<<"\"1,1\". Don't forget the comma you have to have that."<<endl;
-		cout<<"The player who got Xs will go first, this is picked randomly each time a new game is played"<<endl;
-		cout<<"Whenever you're ready we can start..."<<endl;
-		cout<<"Press any key to continue..."<<endl;
-		_getche();
+		DisplayGameInstructions();
+
 		firstPlay_ = false;
 	}
 	
@@ -509,6 +493,24 @@ int Game::GetConstantFromList(string request)
 	int t_request = constListIter->second;
 
 	return t_request;
+}
+
+void Game::DisplayGameInstructions()
+{
+	cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<endl;
+	cout<<"Get "<<boundsLimit_<<" in a row going across, down or diagonally to win."<<endl;
+	cout<<"When somebody wins the game or the game is a draw, you can play another round\n";
+	cout<<"or, you can quit.\n\n";
+	cout<<"The board looks something like this:\n";
+	board.DisplaySampleBoard();
+	cout<<"The columns going across are numbered 1 to "<<boundsLimit_<<" going from left to right and\n";
+	cout<<"The rows going down are numbered 1 to "<<boundsLimit_<<" going from top to bottom.\n";
+	cout<<"To enter in a choice just type the number of the row first and then the column number seperated by a comma.\n";
+	cout<<"Ex: 1,1\n\n";
+	cout<<"The player who got Xs will go first and this is picked randomly each time a new game is played"<<endl;
+	cout<<"Whenever you're ready we can start..."<<endl;
+	cout<<"Press any key to continue..."<<endl;
+	_getche();
 }
 
 void Game::DisplayNotices()

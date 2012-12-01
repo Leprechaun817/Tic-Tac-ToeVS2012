@@ -97,6 +97,7 @@ private:
 	bool ProcessPacket(WDPacketPtr packet);
 	int GetConstantFromList(string request);
 	void DecidePlayOrder();
+	void DisplayGameInstructions();
 	void DisplayNotices();
 	void DisplayWarranty(ifstream &w);
 	void DisplayCopyrightLicense(ifstream &c);

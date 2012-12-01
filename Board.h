@@ -54,10 +54,9 @@ public:
 	Board();	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
 	~Board();
 	void SetupBoard(const ConstList &cList);		//Asks user for number of spaces on board, figures out the multiplier
-	//DisplayBoard - Takes the spaceList vector and using that makes a new display of the board accordingly. Kind of like the Blit function in a graphical sense.
-	//All graphical or informative data to be displayed on screen is processed by this function.
+	//Displays board during a round
 	void DisplayBoard(int numRounds, int numTies, const Player &pOne, const Player &pTwo);
-	//This display function is only used when there was a win
+	void DisplaySampleBoard();
 	//Displays the winning move on the board
 	void DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLocation, const Player &pOne, const Player &pTwo);
 	void ResetBoard();  //Resets board and sets it up for another play-through
