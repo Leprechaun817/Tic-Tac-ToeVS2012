@@ -99,6 +99,5 @@ private:
 	void DecidePlayOrder();
 	void DisplayGameInstructions();
 	void DisplayNotices();
-	void DisplayWarranty(ifstream &w);
-	void DisplayCopyrightLicense(ifstream &c);
+	void DisplayNoticeFile(char noticeType);
 };

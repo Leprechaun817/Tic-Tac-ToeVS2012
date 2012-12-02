@@ -520,16 +520,8 @@ void Game::DisplayNotices()
 	const string showWarranty = "SHOW W";
 	const string showCopyright = "SHOW C";
 	
-	ifstream warrantyFile;
-	ifstream copyrightFile;
-
-	//Check to make sure both the WARRANTY and COPYING files exist, if not end the program with a fatal error
-	warrantyFile.open("WARRANTY.txt", ifstream::in);
-	copyrightFile.open("COPYING.txt", ifstream::in);
-	if(!warrantyFile.is_open() || !warrantyFile.good())
-		throw Exception(err.Fatal_Error, "Could not find WARRANTY.txt or bad file");
-	if(!copyrightFile.is_open() || !copyrightFile.good())
-		throw Exception(err.Fatal_Error, "Could not find COPYING.txt or bad file");
+	char warrantyNotice = 'w';
+	char copyrightNotice = 'c';
 	
 	bool loop = true;
 	while(loop)
@@ -553,9 +545,9 @@ void Game::DisplayNotices()
 		else if(choice == nonacceptance)
 			throw Exception(err.NonAcceptance_Of_Notices);
 		else if(choice == showWarranty)
-			DisplayWarranty(warrantyFile);
+			DisplayNoticeFile(warrantyNotice);
 		else if(choice == showCopyright)
-			DisplayCopyrightLicense(copyrightFile);
+			DisplayNoticeFile(copyrightNotice);
 		else
 		{
 			cout<<"You choice didn't match any of the available choices.\n";
@@ -563,26 +555,44 @@ void Game::DisplayNotices()
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
 		}
+		
+		//Remove any remaining junk from cin stream
+		cin.clear();
+		cin.ignore(1000, '\n');
 	}
-
-	warrantyFile.close();
-	copyrightFile.close();
 }
 
-void Game::DisplayWarranty(ifstream &w)
+void Game::DisplayNoticeFile(char noticeType)
 {
 	string line;
+	int lineStop = 0;
 	
-	int lineCount = 0;
-	while(!w.eof())
+	ifstream f;
+	if(noticeType == 'w')
 	{
-		getline(w, line);
+		f.open("WARRANTY.txt", ios::in);
+		lineStop = 10;
+	}
+	if(noticeType == 'c')
+	{
+		f.open("COPYING.txt", ios::in);
+		lineStop = 20;
+	}
+
+	if((!f.is_open()) || (!f.good()))
+		throw Exception(err.Fatal_Error, "Could not find the notice,\nor notice files have been corrupted.");
+
+	int lineCount = 0;
+	while(!f.eof())
+	{
+		getline(f, line);
 		cout<<line;
 		lineCount++;
 
-		if((lineCount % 10) == 0)
+		bool loop = true;
+		bool quit = false;
+		if((lineCount % lineStop) == 0)
 		{
-			bool loop = true;
 			while(loop)
 			{
 				char choice;
@@ -598,54 +608,19 @@ void Game::DisplayWarranty(ifstream &w)
 				else if(choice == 'q' || choice == 'Q')
 				{
 					loop = false;
-					w.seekg(ios::end);
+					quit = true;
 				}
 				else
 					cout<<"\n\nPlease enter in your choice again.\n";
 			}
 		}
+
+		if(!loop && quit)
+			break;
 	}
 
-	cout<<"Press any key to continue..."<<endl;
-	_getche();
-}
-
-void Game::DisplayCopyrightLicense(ifstream &c)
-{
-	string line;
-
-	int lineCount = 0;
-	while(!c.eof())
-	{
-		getline(c, line);
-		cout<<line;
-		lineCount++;
-
-		if((lineCount % 20) == 0)
-		{
-			bool loop = true;
-			while(loop)
-			{
-				char choice;
-				cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
-				cout<<"To stop reading this and go back, type q and press enter.\n";
-				cin>>choice;
-
-				if(choice == 'c' || choice == 'C')
-				{
-					loop = false;
-					cout<<"\n\n";
-				}
-				else if(choice == 'q' || choice == 'Q')
-				{
-					loop = false;
-					c.seekg(ios::end);
-				}
-				else
-					cout<<"\n\nPlease enter your choice again.\n";
-			}
-		}
-	}
+	//Close the file
+	f.close();
 
 	cout<<"Press any key to continue..."<<endl;
 	_getche();
