@@ -32,7 +32,7 @@ const string Player::oPlayerPiece = "oPlayerPiece";
 const string Player::xPlayerPiece = "xPlayerPiece";
 const string Player::varError = "Player has not been initialized yet,\nplease run initialization function before use.";
 
-Player::Player()
+Player::Player() throw()
 	: textColor(), score_(0), madeMove_(false), playerInitialized_(false), win_(false), resetPlayerFunctionCalled_(false)
 {
 	//if...else... here is used becuase of the fact that numOfPlayers is a static variable so if this class has been

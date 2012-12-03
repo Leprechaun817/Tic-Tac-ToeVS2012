@@ -33,7 +33,7 @@ using namespace std;
 class Exception : public exception
 {
 public:
-	Exception(int type, string extraMsg1 = " ");
+	Exception(int type, string extraMsg1 = " ") throw();
 	const char* what() const throw();
 	const int GetErrorType() const;
 private:

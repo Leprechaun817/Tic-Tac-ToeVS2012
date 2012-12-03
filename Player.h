@@ -39,7 +39,7 @@ typedef map<const string, int>::const_iterator ConstListIters_C;
 class Player
 {
 public:
-	Player();
+	Player() throw();
 	//DisplayName and DisplayScore may be removed at some point. I don't think they will be needed
 	void DisplayName();
 	void DisplayScore();

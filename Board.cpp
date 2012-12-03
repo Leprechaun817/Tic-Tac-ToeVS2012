@@ -973,19 +973,31 @@ void Board::ResetConsoleColor()
 
 int Board::GetConstantFromList(string request)
 {
-	int returnValue = 0;
+	int returnValue = -5;
 	for(auto &i : constantsList)
-		if((i.first) == request)
+		if((i.first) == request) {
 			returnValue = (i.second);
+			break;
+		}
+
+	if(returnValue == -5)
+		throw Exception(err.Unknown_Constant_Error);
+
 	return returnValue;
 }
 
 char Board::GetConstantFromList(int request)
 {
-	int returnValue = 0;
+	int returnValue = -5;
 	for(auto &i : numToCharConversionList)
-		if((i.first) == request)
+		if((i.first) == request) {
 			return (i.second);
+			break;
+		}
+
+	if(returnValue == -5)
+		throw Exception(err.Unknown_Constant_Error);
+
 	return returnValue;
 }
 

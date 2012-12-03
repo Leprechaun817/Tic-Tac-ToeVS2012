@@ -26,7 +26,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 int ScreenColors::otherPlayerColor_ = 0;
 
-ScreenColors::ScreenColors()
+ScreenColors::ScreenColors() throw()
 	: hConsole_(GetStdHandle(STD_OUTPUT_HANDLE)), colorAttribute_(0)
 {
 	otherPlayerColor_ = -1;

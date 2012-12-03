@@ -51,8 +51,8 @@ const string WinDrawPacket::fatalError = "fatalError";
 
 const string WinDrawPacket::packetUnreadable = "Packet has not been created yet...\nPlease run CreatePacket before sending the WinDrawPacket\nback to the Game object\n"; 
 
-WinDrawPacket::WinDrawPacket(const ConstList &cList)
-	: winDraw_(-2), playerPiece_(-2), winType_(-2), diagonalType_(-2), rowAcross_(-2), columnDown_(-2), packetCreated_(false)
+WinDrawPacket::WinDrawPacket(const ConstList &cList) throw()
+	: gameState_(-2), playerPiece_(-2), winType_(-2), diagonalType_(-2), rowAcross_(-2), columnDown_(-2), packetCreated_(false)
 {
 	constantsList = cList;
 }
@@ -68,12 +68,12 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 	const int t_noWinDrawState = GetConstantFromList(noWinDrawState), t_drawState = GetConstantFromList(drawState), t_winState = GetConstantFromList(winState);
 
 	if((gameOutcome == t_noWinDrawState) || (gameOutcome == t_drawState)) {
-		winDraw_ = gameOutcome;
+		gameState_ = gameOutcome;
 		//Adding nullConstants here so if parser code in ProcessPacket goes to far it will pop up with a minor error
 		playerPiece_ = winType_= diagonalType_ = rowAcross_ = columnDown_ = t_nullConstant;
 	}
 	else if(gameOutcome == t_winState) {
-		winDraw_ = gameOutcome;
+		gameState_ = gameOutcome;
 		playerPiece_ = winningPiece;
 		winType_ = winLocation;
 		diagonalType_ = winDiagonalLocation;
@@ -82,30 +82,36 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 	}
 	else if(gameOutcome == t_nullConstant)
 		//Minor error, list all variables with minor errors regardless of what they were before
-		winDraw_ = playerPiece_ = winType_ = diagonalType_ = rowAcross_ = columnDown_ = t_nullConstant;
+		gameState_ = playerPiece_ = winType_ = diagonalType_ = rowAcross_ = columnDown_ = t_nullConstant;
 	else if(gameOutcome == t_fatalError)
 		//Major Error, list all variables with major errors regardless of what they were before
-		winDraw_ = playerPiece_ = winType_ = diagonalType_ = rowAcross_ = columnDown_ = t_fatalError;
+		gameState_ = playerPiece_ = winType_ = diagonalType_ = rowAcross_ = columnDown_ = t_fatalError;
 	else
 		//If gameOutcome has an unknown value treat as major error//
 		//winDraw and all the other variables will equal whatever the weird number was in gameOutcome
-		winDraw_ = playerPiece_ = winType_ = diagonalType_ = rowAcross_ = columnDown_ = gameOutcome;
+		gameState_ = playerPiece_ = winType_ = diagonalType_ = rowAcross_ = columnDown_ = gameOutcome;
 
 }
 
 int WinDrawPacket::GetConstantFromList(string request)
 {
-	int returnValue = 0;
+	int returnValue = -5;
 	for(auto &i : constantsList)
-		if((i.first) == request)
+		if((i.first) == request) {
 			returnValue = (i.second);
+			break;
+		}
+
+	if(returnValue == -5)
+		throw Exception(err.Unknown_Constant_Error);
+
 	return returnValue;
 }
 
-const int WinDrawPacket::GetWinDraw() const
+const int WinDrawPacket::GetGameState() const
 {
 	if(packetCreated_)
-		return winDraw_;
+		return gameState_;
 	else
 		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
 }

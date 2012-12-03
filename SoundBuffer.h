@@ -21,3 +21,42 @@ You should have received a copy of the GNU General Public License
 along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************************
 ********************************************************************************************/
+
+#pragma once
+#pragma warning(disable : 4244)
+#include <Windows.h>
+#include <xaudio2.h>
+#include <fstream>
+#include <memory>
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
+
+using namespace std;
+
+typedef unique_ptr<BYTE> bytePtr;
+typedef unique_ptr<char> charPtr;
+typedef unique_ptr<XAUDIO2_BUFFER> xa2BufferPtr;
+typedef unique_ptr<WAVEFORMATEX> wFormatPtr;
+
+class SoundBuffer
+{
+public:
+	SoundBuffer(const charPtr file) throw();
+	SoundBuffer(const SoundBuffer &sb) throw();
+	~SoundBuffer();
+	const xa2BufferPtr GetXA2Buffer() const;
+	const wFormatPtr GetWFormat() const;
+	bool LoadFile(const charPtr soundFile);
+	void InitializeSoundBuffer();
+
+//Container Variables
+private:
+	ErrorTypes err;
+
+//Regular Variables
+private:
+	WAVEFORMATEX format_;
+	XAUDIO2_BUFFER buffer_;
+	bytePtr soundData_;
+	bool isSoundBufferInitialized_;
+};

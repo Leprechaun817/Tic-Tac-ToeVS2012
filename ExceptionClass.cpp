@@ -24,7 +24,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "ExceptionClass.h"
 
-Exception::Exception(int type, string extraMsg1)
+Exception::Exception(int type, string extraMsg1) throw()
 	: errorType_(type), errorMsg_(extraMsg1)
 {
 	switch(type) {
@@ -112,7 +112,17 @@ Exception::Exception(int type, string extraMsg1)
 			errorMsg_ += "The winDraw variable has an unknown error value.";
 			break;
 		case err.NonAcceptance_Of_Notices:
-			errorMsg_ = "Did not accept the license.\nThis program will now close";
+			errorMsg_ = "Did not accept the license.\nThis program will now close.";
+			break;
+		case err.Unknown_Constant_Error:
+			errorMsg_ = "Constant that was searched for does not exist.";
+			break;
+		case err.SoundBuffer_Fatal_Error:
+			errorMsg_ = "A fatal error has occurred with the sound buffer.";
+			break;
+		case err.SoundEngine_Fatal_Error:
+			errorMsg_ = "A fatal error has occurred with the sound engine.";
+			break;
 	}
 	
 	if(extraMsg1 != " ") {

@@ -21,3 +21,5 @@ You should have received a copy of the GNU General Public License
 along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************************
 ********************************************************************************************/
+
+#include "SoundEngine.h"

@@ -34,19 +34,20 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "Board.h"
 #include "Player.h"
 #include "WinDrawPacket.h"
+#include "SoundEngine.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
 using namespace std;
 
-typedef auto_ptr<WinDrawPacket> WDPacketPtr;
+typedef unique_ptr<WinDrawPacket> WDPacketPtr;
 typedef map<const string, int> ConstList;
 typedef map<const string, int>::const_iterator ConstListIters_C;
 
 class Game
 {
 public:
-	Game();
+	Game() throw();
 	void StartGame();
 	bool GameLoop();		//All the different states that the game could be in are listed as
 	bool EndGame();			//functions here. These are called as is necessary through the game loop

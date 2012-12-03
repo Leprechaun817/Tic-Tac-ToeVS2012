@@ -58,7 +58,7 @@ const string Game::rowFive = "rowFive";
 const string Game::nullConstant = "nullConstant";
 const string Game::fatalError = "fatalError";
 
-Game::Game()
+Game::Game() throw()
 	: playerOne(), playerTwo(), board(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
 {
 	array<const string, 23> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
@@ -285,7 +285,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	//Values from the map list to be compared against t_gameState
 	const int t_noWinDrawState = GetConstantFromList(noWinDrawState), t_drawState = GetConstantFromList(drawState), t_winState = GetConstantFromList(winState);
 
-	int t_gameState = packet->GetWinDraw();
+	int t_gameState = packet->GetGameState();
 	if(t_gameState == t_noWinDrawState || t_gameState == t_drawState) {
 		if(t_gameState == t_drawState) {
 			gameDraws_++;
@@ -460,10 +460,15 @@ void Game::DisplayLastRoundStats()
 
 int Game::GetConstantFromList(string request)
 {
-	int returnValue = 0;
+	int returnValue = -5;
 	for(auto &i : constantsList)
-		if((i.first) == request)
-			return (i.second);
+		if((i.first) == request) {
+			returnValue = (i.second);
+			break;
+		}
+
+	if(returnValue == -5)
+		throw Exception(err.Unknown_Constant_Error);
 	return returnValue;
 }
 

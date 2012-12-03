@@ -40,7 +40,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 using namespace std;
 
-typedef auto_ptr<WinDrawPacket> WDPacketPtr;
+typedef unique_ptr<WinDrawPacket> WDPacketPtr;
 typedef vector<int> IntList;
 typedef vector<int>::iterator IntIter;
 typedef map<const string, int> ConstList;
@@ -51,7 +51,7 @@ typedef map<const int, char>::const_iterator PieceListIters_C;
 class Board
 {
 public:
-	Board();	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
+	Board() throw();	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
 	void SetupBoard(const ConstList &cList);		//Asks user for number of spaces on board, figures out the multiplier
 	//Displays board during a round
 	void DisplayBoard(int numRounds, int numTies, const Player &pOne, const Player &pTwo);

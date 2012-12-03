@@ -50,6 +50,9 @@ struct ErrorTypes
 		Bad_WinType_Variable_Unknown,
 		Bad_GameState_Fatal,
 		Bad_GameState_Unknown,
-		NonAcceptance_Of_Notices
+		NonAcceptance_Of_Notices,
+		Unknown_Constant_Error,
+		SoundBuffer_Fatal_Error,
+		SoundEngine_Fatal_Error
 	};
 };

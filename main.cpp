@@ -34,7 +34,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 using namespace std;
 
-typedef auto_ptr<Game> GamePtr;
+typedef unique_ptr<Game> GamePtr;
 
 int main()
 {
@@ -89,6 +89,13 @@ int main()
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
 			exit(EXIT_SUCCESS);
+		}
+		else if(e.GetErrorType() == err.Unknown_Constant_Error) {
+			system("cls");
+			cout<<e.what()<<"\n";
+			cout<<"DEBUG MESSAGE - Check the call in the code, probably a misspelled argument or something..."<<endl;
+			_getche();
+			exit(EXIT_FAILURE);
 		}
 		else {
 			system("cls");

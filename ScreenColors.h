@@ -22,6 +22,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 *********************************************************************************************
 ********************************************************************************************/
 
+#pragma once
 #include <iostream>
 #include <conio.h>
 #include <array>
@@ -39,7 +40,7 @@ typedef map<const int, int>::const_iterator ScreenColorListsIters_C;
 class ScreenColors
 {
 public:
-	ScreenColors();
+	ScreenColors() throw();
 	void DecidePlayerScreenColor();
 	void SetTextToPlayerColor() const;
 	void ResetConsoleColor();

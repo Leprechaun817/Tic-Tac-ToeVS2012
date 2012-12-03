@@ -37,7 +37,7 @@ typedef map<const string, int>::const_iterator ConstListIters_C;
 class WinDrawPacket
 {
 public:
-	WinDrawPacket(const ConstList &cList);
+	WinDrawPacket(const ConstList &cList) throw();
 	
 	//This used to create the packet that will get sent from the board object to the game object
 	void CreatePacket(const int gameOutcome, const int winningPiece, const int winLocation, const int winDiagonalLocation, const int winRowLocation, const int winColumnLocation);
@@ -46,7 +46,7 @@ public:
 	//Adding const before a function makes the compiler catch assignment errors in things like if statements
 	//Adding const after the function is basically guaranteeing the compiler that it is a inspector function and not a mutator function
 	//Get variables
-	const int GetWinDraw() const;
+	const int GetGameState() const;
 	const int GetPlayerPiece() const;
 	const int GetWinType() const;
 	const int GetDiagType() const;
@@ -75,8 +75,7 @@ private:
 
 //Regular variables
 private:
-	int winDraw_;		//Change this to gameState instead of winDraw, it's much more descriptive.
-						//Make these changes code wide. Any references to winDraw or anything like it are to be changed to gameState.
+	int gameState_;
 	int playerPiece_;
 	int winType_;
 	int diagonalType_;

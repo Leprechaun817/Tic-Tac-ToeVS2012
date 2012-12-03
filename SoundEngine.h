@@ -21,3 +21,13 @@ You should have received a copy of the GNU General Public License
 along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************************
 ********************************************************************************************/
+
+#pragma once
+#include <Windows.h>
+#include <xaudio2.h>
+#include <memory>
+#include "SoundBuffer.h"
+#include "ExceptionClass.h"
+#include "ErrorTypes.h"
+
+using namespace std;
