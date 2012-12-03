@@ -555,10 +555,6 @@ void Game::DisplayNotices()
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
 		}
-		
-		//Remove any remaining junk from cin stream
-		cin.clear();
-		cin.ignore(1000, '\n');
 	}
 }
 
@@ -624,4 +620,8 @@ void Game::DisplayNoticeFile(char noticeType)
 
 	cout<<"Press any key to continue..."<<endl;
 	_getche();
+
+	//Remove any remaining junk from cin stream
+	cin.clear();
+	cin.ignore(1000, '\n');
 }

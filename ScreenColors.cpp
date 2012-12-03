@@ -61,7 +61,7 @@ void ScreenColors::DecidePlayerScreenColor()
 	for(unsigned int i = 1; i < constListSize; i++)
 	{
 		colorListIter = colorList.find(i);
-		SetTextColor((colorListIter->second));
+		SetConsoleTextAttribute(hConsole_, (colorListIter->second));
 		cout<<space<<choiceLoop++<<dash<<colorNames[i];
 
 		if((i + 1) == constListSize)
@@ -74,7 +74,7 @@ void ScreenColors::DecidePlayerScreenColor()
 	char selection;
 	cout<<"Please enter the letter which represents your choice.\n";
 	cout<<"Ex. a\n";
-	cin>>selection;
+	selection = GetSelection();
 	bool checkForOtherPlayer = false;
 	while(!checkForOtherPlayer)
 	{
@@ -101,9 +101,9 @@ void ScreenColors::DecidePlayerScreenColor()
 			if(!selectionGood)
 			{
 				ResetConsoleColor();
-				cout<<"That wasn't one of your choices.\n";
+				cout<<"\nThat wasn't one of your choices.\n";
 				cout<<"Please re-enter your choice.\n";
-				cin>>selection;
+				selection = GetSelection();
 			}
 		}
 		else
@@ -140,9 +140,9 @@ void ScreenColors::DecidePlayerScreenColor()
 			if(!selectionGood && !reCheck)
 			{
 				ResetConsoleColor();
-				cout<<"That wasn't one of your choices.\n";
+				cout<<"\nThat wasn't one of your choices.\n";
 				cout<<"Please re-enter your choice.\n";
-				cin>>selection;
+				selection = GetSelection();
 			}
 		}
 	}
@@ -158,7 +158,7 @@ void ScreenColors::SetPlayerTextColor(int color)
 
 void ScreenColors::ChangeErrorTextColor(int color)
 {
-	SetTextColor(color);
+	SetConsoleTextAttribute(hConsole_, color);
 	ScreenColorListsIters_C colorListIter;
 	for(unsigned int i = 1; i < colorNames.size(); i++)
 	{
@@ -177,11 +177,6 @@ void ScreenColors::ResetConsoleColor()
 	SetConsoleTextAttribute(hConsole_, dark_white);
 }
 
-void ScreenColors::SetTextColor(int color)
-{
-	SetConsoleTextAttribute(hConsole_, color);
-}
-
 void ScreenColors::SetTextToPlayerColor() const
 {
 	if(screenColorInitialized)
@@ -196,4 +191,121 @@ const int ScreenColors::GetTextColor() const
 		return colorAttribute_;
 	else
 		throw Exception(err.Invalid_Variable_Access);
+}
+
+void ScreenColors::OutputCharacterWithColor(char c, int color)
+{
+	SetConsoleTextAttribute(hConsole_, color);
+	putchar(c);
+	ResetConsoleColor();
+}
+
+char ScreenColors::GetSelection()
+{
+	COORD curPosition;
+	curPosition.X = 0;
+	curPosition.Y = 11;
+
+	char ans;
+	char output;
+	bool getLoop = true;
+	while(getLoop)
+	{
+		if(_kbhit())
+		{
+			ans = _getch();
+			if(ans == 'A' || ans == 'a')
+			{
+				OutputCharacterWithColor(ans, dark_blue);
+				output = ans;
+			}
+			else if(ans == 'B' || ans == 'b')
+			{
+				OutputCharacterWithColor(ans, dark_green);
+				output = ans;
+			}
+			else if(ans == 'C' || ans == 'c')
+			{
+				OutputCharacterWithColor(ans, dark_cyan);
+				output = ans;
+			}
+			else if(ans == 'D' || ans == 'd')
+			{
+				OutputCharacterWithColor(ans, dark_red);
+				output = ans;
+			}
+			else if(ans == 'E' || ans == 'e')
+			{
+				OutputCharacterWithColor(ans, dark_purple);
+				output = ans;
+			}
+			else if(ans == 'F' || ans == 'f')
+			{
+				OutputCharacterWithColor(ans, dark_yellow);
+				output = ans;
+			}
+			else if(ans == 'G' || ans == 'g')
+			{
+				OutputCharacterWithColor(ans, dark_white);
+				output = ans;
+			}
+			else if(ans == 'H' || ans == 'h')
+			{
+				OutputCharacterWithColor(ans, gray);
+				output = ans;
+			}
+			else if(ans == 'I' || ans == 'i')
+			{
+				OutputCharacterWithColor(ans, blue);
+				output = ans;
+			}
+			else if(ans == 'J' || ans == 'j')
+			{
+				OutputCharacterWithColor(ans, green);
+				output = ans;
+			}
+			else if(ans == 'K' || ans == 'k')
+			{
+				OutputCharacterWithColor(ans, cyan);
+				output = ans;
+			}
+			else if(ans == 'L' || ans == 'l')
+			{
+				OutputCharacterWithColor(ans, red);
+				output = ans;
+			}
+			else if(ans == 'M' || ans == 'm')
+			{
+				OutputCharacterWithColor(ans, purple);
+				output = ans;
+			}
+			else if(ans == 'N' || ans == 'n')
+			{
+				OutputCharacterWithColor(ans, yellow);
+				output = ans;
+			}
+			else if(ans == 'O' || ans == 'o')
+			{
+				OutputCharacterWithColor(ans, white);
+				output = ans;
+			}
+			else if(ans == '\b')
+			{
+				ans = ' ';
+				SetConsoleCursorPosition(hConsole_, curPosition);
+				putchar(ans);
+				SetConsoleCursorPosition(hConsole_, curPosition);
+				output = ans;
+			}
+			else if(ans == '\r')
+				getLoop = false;
+			else
+			{
+				OutputCharacterWithColor(ans, dark_white);
+				output = ans;
+			}
+		}
+	}
+
+	return output;
 }

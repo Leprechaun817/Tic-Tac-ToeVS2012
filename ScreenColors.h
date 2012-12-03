@@ -23,6 +23,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 ********************************************************************************************/
 
 #include <iostream>
+#include <conio.h>
 #include <array>
 #include <map>
 #include <Windows.h>
@@ -70,5 +71,6 @@ private:
 private:
 	void SetPlayerTextColor(int color);
 	void ChangeErrorTextColor(int color);
-	void SetTextColor(int color);
+	char GetSelection();
+	void OutputCharacterWithColor(char c, int color);
 };
