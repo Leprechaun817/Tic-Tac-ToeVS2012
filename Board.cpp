@@ -973,16 +973,20 @@ void Board::ResetConsoleColor()
 
 int Board::GetConstantFromList(string request)
 {
+	int returnValue = 0;
 	for(auto &i : constantsList)
 		if((i.first) == request)
-			return (i.second);
+			returnValue = (i.second);
+	return returnValue;
 }
 
 char Board::GetConstantFromList(int request)
 {
+	int returnValue = 0;
 	for(auto &i : numToCharConversionList)
 		if((i.first) == request)
 			return (i.second);
+	return returnValue;
 }
 
 const int Board::GetMultiplier() const

@@ -460,9 +460,11 @@ void Game::DisplayLastRoundStats()
 
 int Game::GetConstantFromList(string request)
 {
+	int returnValue = 0;
 	for(auto &i : constantsList)
 		if((i.first) == request)
 			return (i.second);
+	return returnValue;
 }
 
 void Game::DisplayGameInstructions()

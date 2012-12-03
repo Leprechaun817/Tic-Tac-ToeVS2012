@@ -95,9 +95,11 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 
 int WinDrawPacket::GetConstantFromList(string request)
 {
+	int returnValue = 0;
 	for(auto &i : constantsList)
 		if((i.first) == request)
-			return (i.second);
+			returnValue = (i.second);
+	return returnValue;
 }
 
 const int WinDrawPacket::GetWinDraw() const

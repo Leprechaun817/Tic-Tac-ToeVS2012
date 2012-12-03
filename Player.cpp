@@ -148,13 +148,12 @@ bool Player::MakeMove()
 	while(!loop) {
 		//Used unsigned int here because move.size is also an unsigned integer.
 		//Keeps warning messages about type mismatches from showing up in the compiler window...
-		for(unsigned int i = 0; i < choice.size(); i++) {
+		for(unsigned int i = 0; i < choice.size(); i++)
 			if(choice[i] == 'q' || choice[i] == 'Q') {
 				move_ = -1;
 				loop = true; //Just in case
 				return false;
 			}
-		}
 
 		checkMove = CheckMoveFormat(choice);
 		if(!checkMove) {
