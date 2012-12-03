@@ -82,6 +82,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScreenColors.cpp" />
+    <ClCompile Include="SoundBuffer.cpp" />
+    <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="WinDrawPacket.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +93,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ScreenColors.h" />
+    <ClInclude Include="SoundBuffer.h" />
+    <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="WinDrawPacket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
