@@ -26,8 +26,41 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <Windows.h>
 #include <xaudio2.h>
 #include <memory>
+#include <vector>
 #include "SoundBuffer.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
 using namespace std;
+
+typedef unique_ptr<IXAudio2*> ixAudioPtr;
+typedef unique_ptr<IXAudio2SourceVoice*> ixSourceVoicePtr;
+typedef unique_ptr<IXAudio2MasteringVoice*> ixMasterVoicePtr;
+typedef vector<SoundBuffer> wBufferVectors;
+typedef vector<ixSourceVoicePtr> svVector;
+
+class SoundEngine
+{
+public:
+	SoundEngine() throw();
+	~SoundEngine();
+	void InitializeSoundEngine();
+	void PlaySoundQueue(int sound);
+
+//Container Variables
+private:
+	wBufferVectors soundBufferList;
+	svVector soundSourceList;
+	ErrorTypes err;
+
+//Regular Variables
+private:
+	ixAudioPtr soundEng;
+	ixSourceVoicePtr soundSource;
+	ixMasterVoicePtr soundMaster;
+	bool isSoundEngineInitialized;
+
+//Private Functions
+private:
+	void LoadSound(const string filename);
+};

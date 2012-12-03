@@ -28,25 +28,25 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <xaudio2.h>
 #include <fstream>
 #include <memory>
+#include <string>
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
 using namespace std;
 
 typedef unique_ptr<BYTE> bytePtr;
-typedef unique_ptr<char> charPtr;
 typedef unique_ptr<XAUDIO2_BUFFER> xa2BufferPtr;
 typedef unique_ptr<WAVEFORMATEX> wFormatPtr;
 
 class SoundBuffer
 {
 public:
-	SoundBuffer(const charPtr file) throw();
+	SoundBuffer() throw();
 	SoundBuffer(const SoundBuffer &sb) throw();
 	~SoundBuffer();
 	const xa2BufferPtr GetXA2Buffer() const;
 	const wFormatPtr GetWFormat() const;
-	bool LoadFile(const charPtr soundFile);
+	bool LoadFile(const string soundFile);
 	void InitializeSoundBuffer();
 
 //Container Variables

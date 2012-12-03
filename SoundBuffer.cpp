@@ -24,7 +24,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "SoundBuffer.h"
 
-SoundBuffer::SoundBuffer(const charPtr file) throw()
+SoundBuffer::SoundBuffer() throw()
 	: isSoundBufferInitialized_(false)
 {}
 
@@ -55,12 +55,13 @@ void SoundBuffer::InitializeSoundBuffer()
 	isSoundBufferInitialized_ = true;
 }
 
-bool SoundBuffer::LoadFile(const charPtr soundFile)
+bool SoundBuffer::LoadFile(const string soundFile)
 {
-	if(soundFile)
-		throw Exception(err.SoundBuffer_Fatal_Error, "Unable to read sound file.");
+	if(soundFile.empty())
+		throw Exception(err.SoundBuffer_Fatal_Error, "Cannot find sound file,\nname doesn't match any file");
 
-	ifstream inputSoundFile(soundFile.get(), ios::binary | ios::in);
+	ifstream inputSoundFile;
+	inputSoundFile.open(soundFile, ios::binary | ios::in);
 	if(inputSoundFile.bad())
 		throw Exception(err.SoundBuffer_Fatal_Error, "Sound file is bad or corrupted.");
 
