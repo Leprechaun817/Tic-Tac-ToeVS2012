@@ -27,8 +27,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 Exception::Exception(int type, string extraMsg1)
 	: errorType_(type), errorMsg_(extraMsg1)
 {
-	switch(type)
-	{
+	switch(type) {
 		case err.Invalid_Variable_Access:
 			errorMsg_ = "Cannot access the variable, object uninitialized";
 			break;
@@ -116,8 +115,7 @@ Exception::Exception(int type, string extraMsg1)
 			errorMsg_ = "Did not accept the license.\nThis program will now close";
 	}
 	
-	if(extraMsg1 != " ")
-	{
+	if(extraMsg1 != " ") {
 		errorMsg_ += "\n";
 		errorMsg_ += extraMsg1;
 	}

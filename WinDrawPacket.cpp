@@ -67,14 +67,12 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 	//Other values needed for testing
 	const int t_noWinDrawState = GetConstantFromList(noWinDrawState), t_drawState = GetConstantFromList(drawState), t_winState = GetConstantFromList(winState);
 
-	if((gameOutcome == t_noWinDrawState) || (gameOutcome == t_drawState))
-	{
+	if((gameOutcome == t_noWinDrawState) || (gameOutcome == t_drawState)) {
 		winDraw_ = gameOutcome;
 		//Adding nullConstants here so if parser code in ProcessPacket goes to far it will pop up with a minor error
 		playerPiece_ = winType_= diagonalType_ = rowAcross_ = columnDown_ = t_nullConstant;
 	}
-	else if(gameOutcome == t_winState)
-	{
+	else if(gameOutcome == t_winState) {
 		winDraw_ = gameOutcome;
 		playerPiece_ = winningPiece;
 		winType_ = winLocation;
@@ -97,9 +95,9 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 
 int WinDrawPacket::GetConstantFromList(string request)
 {
-	ConstListIters_C constListIter;
-	constListIter = constantsList.find(request);
-	return (constListIter->second);
+	for(auto &i : constantsList)
+		if((i.first) == request)
+			return (i.second);
 }
 
 const int WinDrawPacket::GetWinDraw() const

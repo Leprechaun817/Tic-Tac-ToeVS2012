@@ -78,14 +78,12 @@ void Player::AssignPlayerPiece()
 	if(otherPlayerPiece_ == 0) //if otherPlayerPiece hasn't been filled yet, which means that player 1 hasn't been assigned a piece
 		PieceGen();
 	else
-	{
 		if(otherPlayerPiece_ == 1)
 			playerPiece_ = 2;
 		else
 			playerPiece_ = 1;
 
 		resetPlayerFunctionCalled_ = false;
-	}
 }
 
 //Make sure to call this after AssignPlayerPiece is called. This is very important!!!
@@ -102,8 +100,7 @@ void Player::ResetPlayer(int boundsLimit)
 //This must be called before ResetPlayer has been called in order for this to work correctly
 void Player::ResetPlayerPiece()
 {
-	if(!resetPlayerFunctionCalled_)
-	{
+	if(!resetPlayerFunctionCalled_) {
 		otherPlayerPiece_ = 0;
 		resetPlayerFunctionCalled_ = true;
 	}
@@ -148,14 +145,11 @@ bool Player::MakeMove()
 
 	bool checkMove = true;
 	bool loop = false;
-	while(!loop)
-	{
+	while(!loop) {
 		//Used unsigned int here because move.size is also an unsigned integer.
 		//Keeps warning messages about type mismatches from showing up in the compiler window...
-		for(unsigned int i = 0; i < choice.size(); i++)	//Don't know size of string at this time.
-		{
-			if(choice[i] == 'q' || choice[i] == 'Q')	//Searching the whole string looking for an instance of q or Q
-			{
+		for(unsigned int i = 0; i < choice.size(); i++) {
+			if(choice[i] == 'q' || choice[i] == 'Q') {
 				move_ = -1;
 				loop = true; //Just in case
 				return false;
@@ -163,13 +157,11 @@ bool Player::MakeMove()
 		}
 
 		checkMove = CheckMoveFormat(choice);
-		if(!checkMove)
-		{
+		if(!checkMove) {
 			cout<<"Please re-enter your choice\n";
 			cin>>choice;
 		}
-		else
-		{
+		else {
 			move_ = ReformatMove(choice);
 			loop = true;
 		}
@@ -233,8 +225,7 @@ bool Player::HasPlayerMadeMove()
 	//and then toggles madeMove to the opposite of what it was.
 	//So if it was true after running this it will be false and visa versa...
 	//Only reset the madeMove_ value if it has already been made true
-	if(madeMove_)
-	{
+	if(madeMove_) {
 		madeMove_ = false;
 		return true;
 	}

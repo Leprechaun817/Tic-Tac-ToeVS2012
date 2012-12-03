@@ -33,8 +33,7 @@ ScreenColors::ScreenColors()
 
 	//Initialize colorList with values
 	int color;
-	for(int i = 0; i < constListSize; i++)
-	{
+	for(int i = 0; i < constListSize; i++) {
 		color = i % constListSize;
 		colorList.insert(pair<const int, int>(i, color));
 	}
@@ -54,20 +53,22 @@ void ScreenColors::DecidePlayerScreenColor()
 	const string space = "\t";
 	const string dash = " - ";
 	char choiceLoop = 'a';
-	ScreenColorListsIters_C colorListIter;
 
 	system("cls");
 	cout<<"What color do you want your piece to be?\n";
-	for(unsigned int i = 1; i < constListSize; i++)
-	{
-		colorListIter = colorList.find(i);
-		SetConsoleTextAttribute(hConsole_, (colorListIter->second));
-		cout<<space<<choiceLoop++<<dash<<colorNames[i];
+	int x = 1;
+	for(auto &i : colorList) {
+		if((i.second) == 0)
+			continue;
+		
+		SetConsoleTextAttribute(hConsole_, (i.second));
+		cout<<space<<choiceLoop++<<dash<<colorNames[x];
 
-		if((i + 1) == constListSize)
+		if((x + 1) == constListSize)
 			cout<<"\n";
-		else if((i % 2) == 0)
+		else if((x % 2) == 0)
 			cout<<"\n";
+		x++;
 	}
 	ResetConsoleColor();
 	
@@ -76,18 +77,15 @@ void ScreenColors::DecidePlayerScreenColor()
 	cout<<"Ex. a\n";
 	selection = GetSelection();
 	bool checkForOtherPlayer = false;
-	while(!checkForOtherPlayer)
-	{
+	while(!checkForOtherPlayer) {
+		ScreenColorListsIters_C colorListIter;
 		//Reset choiceLoop back to the letter a
 		choiceLoop = 'a';
-		if(otherPlayerColor_ == -1)
-		{
+		if(otherPlayerColor_ == -1) {
 			int x = 1;
 			bool selectionGood = false;
 			for(char i = 'a'; i <= 'o'; i++)
-			{
-				if(selection == i || selection == (i - 32))
-				{
+				if(selection == i || selection == (i - 32)) {
 					colorListIter = colorList.find(x++);
 					SetPlayerTextColor(colorListIter->second);
 					checkForOtherPlayer = true;
@@ -96,37 +94,31 @@ void ScreenColors::DecidePlayerScreenColor()
 				}
 				else
 					x++;
-			}
 
-			if(!selectionGood)
-			{
+			if(!selectionGood) {
 				ResetConsoleColor();
 				cout<<"\nThat wasn't one of your choices.\n";
 				cout<<"Please re-enter your choice.\n";
 				selection = GetSelection();
 			}
 		}
-		else
-		{
+		else {
 			int x = 1;
 			bool selectionGood = false;
 			bool reCheck = false;
 			for(char i = 'a'; i <= 'o'; i++)
-			{
 				if(selection == i || selection == (i - 32))
 				{
 					colorListIter = colorList.find(x++);
-					if(otherPlayerColor_ == (colorListIter->second))
-					{
+					if(otherPlayerColor_ == (colorListIter->second)) {
 						ChangeErrorTextColor((colorListIter->second));
 						cout<<" has already been chosen by the other player.\n";
 						cout<<"Please make another choice.\n";
-						cin>>selection;
+						selection = GetSelection();
 						reCheck = true;
 						break;
 					}
-					else
-					{
+					else {
 						colorAttribute_ = colorListIter->second;
 						checkForOtherPlayer = true;
 						selectionGood = true;
@@ -135,10 +127,8 @@ void ScreenColors::DecidePlayerScreenColor()
 				}
 				else
 					x++;
-			}
 
-			if(!selectionGood && !reCheck)
-			{
+			if(!selectionGood && !reCheck) {
 				ResetConsoleColor();
 				cout<<"\nThat wasn't one of your choices.\n";
 				cout<<"Please re-enter your choice.\n";
@@ -159,15 +149,13 @@ void ScreenColors::SetPlayerTextColor(int color)
 void ScreenColors::ChangeErrorTextColor(int color)
 {
 	SetConsoleTextAttribute(hConsole_, color);
-	ScreenColorListsIters_C colorListIter;
-	for(unsigned int i = 1; i < colorNames.size(); i++)
-	{
-		colorListIter = colorList.find(i);
-		if((colorListIter->second) == color)
-		{
-			cout<<colorNames[i];
+	int x = 0;
+	for(auto &i : colorList) {
+		if((i.second) == color) {
+			cout<<"\n"<<colorNames[x];
 			break;
 		}
+		x++;
 	}
 	ResetConsoleColor();
 }
@@ -207,90 +195,72 @@ char ScreenColors::GetSelection()
 	curPosition.Y = 11;
 
 	char ans;
-	char output;
+	char output = ' ';
 	bool getLoop = true;
-	while(getLoop)
-	{
-		if(_kbhit())
-		{
+	while(getLoop) {
+		if(_kbhit()) {
 			ans = _getch();
-			if(ans == 'A' || ans == 'a')
-			{
+			if(ans == 'A' || ans == 'a') {
 				OutputCharacterWithColor(ans, dark_blue);
 				output = ans;
 			}
-			else if(ans == 'B' || ans == 'b')
-			{
+			else if(ans == 'B' || ans == 'b') {
 				OutputCharacterWithColor(ans, dark_green);
 				output = ans;
 			}
-			else if(ans == 'C' || ans == 'c')
-			{
+			else if(ans == 'C' || ans == 'c') {
 				OutputCharacterWithColor(ans, dark_cyan);
 				output = ans;
 			}
-			else if(ans == 'D' || ans == 'd')
-			{
+			else if(ans == 'D' || ans == 'd') {
 				OutputCharacterWithColor(ans, dark_red);
 				output = ans;
 			}
-			else if(ans == 'E' || ans == 'e')
-			{
+			else if(ans == 'E' || ans == 'e') {
 				OutputCharacterWithColor(ans, dark_purple);
 				output = ans;
 			}
-			else if(ans == 'F' || ans == 'f')
-			{
+			else if(ans == 'F' || ans == 'f') {
 				OutputCharacterWithColor(ans, dark_yellow);
 				output = ans;
 			}
-			else if(ans == 'G' || ans == 'g')
-			{
+			else if(ans == 'G' || ans == 'g') {
 				OutputCharacterWithColor(ans, dark_white);
 				output = ans;
 			}
-			else if(ans == 'H' || ans == 'h')
-			{
+			else if(ans == 'H' || ans == 'h') {
 				OutputCharacterWithColor(ans, gray);
 				output = ans;
 			}
-			else if(ans == 'I' || ans == 'i')
-			{
+			else if(ans == 'I' || ans == 'i') {
 				OutputCharacterWithColor(ans, blue);
 				output = ans;
 			}
-			else if(ans == 'J' || ans == 'j')
-			{
+			else if(ans == 'J' || ans == 'j') {
 				OutputCharacterWithColor(ans, green);
 				output = ans;
 			}
-			else if(ans == 'K' || ans == 'k')
-			{
+			else if(ans == 'K' || ans == 'k') {
 				OutputCharacterWithColor(ans, cyan);
 				output = ans;
 			}
-			else if(ans == 'L' || ans == 'l')
-			{
+			else if(ans == 'L' || ans == 'l') {
 				OutputCharacterWithColor(ans, red);
 				output = ans;
 			}
-			else if(ans == 'M' || ans == 'm')
-			{
+			else if(ans == 'M' || ans == 'm') {
 				OutputCharacterWithColor(ans, purple);
 				output = ans;
 			}
-			else if(ans == 'N' || ans == 'n')
-			{
+			else if(ans == 'N' || ans == 'n') {
 				OutputCharacterWithColor(ans, yellow);
 				output = ans;
 			}
-			else if(ans == 'O' || ans == 'o')
-			{
+			else if(ans == 'O' || ans == 'o') {
 				OutputCharacterWithColor(ans, white);
 				output = ans;
 			}
-			else if(ans == '\b')
-			{
+			else if(ans == '\b') {
 				ans = ' ';
 				SetConsoleCursorPosition(hConsole_, curPosition);
 				putchar(ans);
@@ -299,8 +269,7 @@ char ScreenColors::GetSelection()
 			}
 			else if(ans == '\r')
 				getLoop = false;
-			else
-			{
+			else {
 				OutputCharacterWithColor(ans, dark_white);
 				output = ans;
 			}

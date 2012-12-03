@@ -67,8 +67,7 @@ Game::Game()
 	array<int, 23> constantsValues = {0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, -1, -2};
 	
 	//constantsList must be created before board and the 2 players are initialized becuase otherwise I'd be sending them a empty map container
-	for(unsigned int i = 0; i < constantsValues.size(); i++)
-	{
+	for(unsigned int i = 0; i < constantsValues.size(); i++) {
 		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
 	}
 }
@@ -78,8 +77,7 @@ Game::Game()
 //it a little easier to undertand for people...
 void Game::StartGame()
 {
-	if(firstPlay_)
-	{
+	if(firstPlay_) {
 		DisplayNotices();
 
 		//Setup board
@@ -121,8 +119,7 @@ bool Game::GameLoop()
 	const int playerOneTurn = 1, playerTwoTurn = 2;
 	bool continueGame = true;
 	
-	if(playOrder_ == 1)
-	{
+	if(playOrder_ == 1) {
 		continueGame = GetPlayerMove(playerOneTurn);
 		if(!continueGame)
 			return continueGame;
@@ -131,8 +128,7 @@ bool Game::GameLoop()
 		if(!continueGame)
 			return continueGame;
 	}
-	else
-	{
+	else {
 		continueGame = GetPlayerMove(playerTwoTurn);
 		if(!continueGame)
 			return continueGame;
@@ -158,25 +154,21 @@ bool Game::EndGame()
 	//Ask player/s whether they want to play another round
 	bool quitGame;
 	bool loop = false;
-	while(!loop)
-	{
+	while(!loop) {
 		cout<<"Would you like to play for another round? y or n"<<endl;
 		cin>>answer;
 
-		if(answer == 'Y' || answer == 'y')
-		{
+		if(answer == 'Y' || answer == 'y') {
 			//Player wants to go for another round
 			loop = true;
 			quitGame = false;
 		}				  
-		else if(answer == 'N' || answer == 'n')
-		{
+		else if(answer == 'N' || answer == 'n') {
 			//Player does want to go for another round
 			loop = true;
 			quitGame = true;
 		}				 
-		else
-		{
+		else {
 			cout<<"Please enter y or n"<<endl;
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
@@ -199,13 +191,11 @@ void Game::ResetGame()
 	//This keeps problems with bounds issues popping up
 	boundsLimit_ = board.GetMultiplier();
 
-	try
-	{
+	try {
 		//Call this before ResetPlayer or bad things will happen
 		playerOne.ResetPlayerPiece();
 	}
-	catch(Exception &e)
-	{
+	catch(Exception &e) {
 		cout<<e.what()<<"\n";
 		cout<<"DEBUG ERROR - If you see this something is wrong with the code!!!\n";
 		cout<<"Press any key to continue..."<<endl;
@@ -227,25 +217,20 @@ bool Game::GetPlayerMove(int order)
 	{
 		bool playerOneContinueGame;
 		bool playerOneGood = false;
-		while(!playerOneGood)
-		{	
-			try
-			{
+		while(!playerOneGood) {	
+			try {
 				system("cls");
 				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
 				playerOneContinueGame = playerOne.MakeMove();
-				if(!playerOneContinueGame)
-				{
+				if(!playerOneContinueGame) {
 					continuePlay = false;
 					playerOneGood = true;
 				}
 				else
 					playerOneGood = board.UpdateBoard(playerOne.GetPiece(), playerOne.GetMove(), playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
 			}
-			catch(Exception &e)
-			{
-				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location)
-				{
+			catch(Exception &e) {
+				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
 					cout<<e.what()<<"\n";
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
@@ -260,25 +245,20 @@ bool Game::GetPlayerMove(int order)
 	{
 		bool playerTwoContinueGame;
 		bool playerTwoGood = false;
-		while(!playerTwoGood)
-		{
-			try
-			{
+		while(!playerTwoGood) {
+			try {
 				system("cls");
 				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
 				playerTwoContinueGame = playerTwo.MakeMove();
-				if(!playerTwoContinueGame)
-				{
+				if(!playerTwoContinueGame) {
 					continuePlay = false;
 					playerTwoGood = true;
 				}
 				else
 					playerTwoGood = board.UpdateBoard(playerTwo.GetPiece(), playerTwo.GetMove(), playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
 			}
-			catch(Exception &e)
-			{
-				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location)
-				{
+			catch(Exception &e) {
+				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
 					cout<<e.what()<<"\n";
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
@@ -306,10 +286,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	const int t_noWinDrawState = GetConstantFromList(noWinDrawState), t_drawState = GetConstantFromList(drawState), t_winState = GetConstantFromList(winState);
 
 	int t_gameState = packet->GetWinDraw();
-	if(t_gameState == t_noWinDrawState || t_gameState == t_drawState)
-	{
-		if(t_gameState == t_drawState)
-		{
+	if(t_gameState == t_noWinDrawState || t_gameState == t_drawState) {
+		if(t_gameState == t_drawState) {
 			gameDraws_++;
 			//put message indicating that a draw has occurred and a new game is starting
 			cout<<gameDrawMessage;
@@ -321,12 +299,10 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		else
 			return continueGame;
 	}
-	else if(t_gameState == t_winState)
-	{
+	else if(t_gameState == t_winState) {
 		continueGame = false;
 		//Get player piece and compare, update their winCounter
-		if(packet->GetPlayerPiece() == playerOne.GetPiece())
-		{
+		if(packet->GetPlayerPiece() == playerOne.GetPiece()) {
 			playerOne.UpdateScore();
 			playerOne.SetPlayerWon();
 			//Message telling that player 1 has won the game
@@ -335,8 +311,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			cout<<anyKey;
 			_getche();
 		}
-		else if(packet->GetPlayerPiece() == playerTwo.GetPiece())
-		{
+		else if(packet->GetPlayerPiece() == playerTwo.GetPiece()) {
 			playerTwo.UpdateScore();
 			playerTwo.SetPlayerWon();
 			//Message telling that player 2 has won the game
@@ -353,8 +328,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		
 		int t_winType = packet->GetWinType();
 		//Find out where player won, store values in temp variables and send to DisplayBoard function
-		if(t_winType == t_diagonalWinType)
-		{
+		if(t_winType == t_diagonalWinType) {
 			//The type of win is a diagonal type, entering that into the tempType variable here
 			tempType = t_diagonalWinType;
 			
@@ -366,8 +340,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 				tempDiagonalLocation = t_diagonalLeftSubType;
 			else if(t_winningDiagLocation == t_diagonalRightSubType)
 				tempDiagonalLocation = t_diagonalRightSubType;
-			else //diagType didn't equal 1 or 2 even though the winning move was a diagonal, this is an error
-			{	
+			//diagType didn't equal 1 or 2 even though the winning move was a diagonal, this is an error
+			else {	
 				if(t_winningDiagLocation == t_nullConstant)
 					throw Exception(err.Bad_DiagonalLocation_Minor);
 				else if(t_winningDiagLocation == t_fatalError)
@@ -376,8 +350,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					throw Exception(err.Bad_DiagonalLocation_Unknown);
 			}
 		}
-		else if(t_winType == t_acrossWinType)
-		{
+		else if(t_winType == t_acrossWinType) {
 			tempType = t_acrossWinType;
 			tempDiagonalLocation = t_nullConstant;
 
@@ -396,8 +369,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 				tempAcrossDownLocation = t_rowFour;
 			else if(t_winningAcrossLocation == t_rowFive)
 				tempAcrossDownLocation = t_rowFive;
-			else //the row didn't match any of the row locations, an error has occurred
-			{
+			//the row didn't match any of the row locations, an error has occurred
+			else {
 				if(t_winningAcrossLocation == t_nullConstant)
 					throw Exception(err.Bad_AcrossLocation_Minor);
 				else if(t_winningAcrossLocation == t_fatalError) 
@@ -406,8 +379,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					throw Exception(err.Bad_AcrossLocation_Unknown);
 			}
 		}
-		else if(t_winType == t_downWinType)
-		{
+		else if(t_winType == t_downWinType) {
 			tempType = t_downWinType;
 			tempDiagonalLocation = t_nullConstant;
 
@@ -426,8 +398,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 				tempAcrossDownLocation = t_columnFour;
 			else if(t_winningDownLocation == t_columnFive)
 				tempAcrossDownLocation = t_columnFive;
-			else   //column didn't match any column locations, an error has occured
-			{
+			//column didn't match any column locations, an error has occured
+			else {
 				if(t_winningDownLocation == t_nullConstant)
 					throw Exception(err.Bad_DownLocation_Minor);
 				else if(t_winningDownLocation == t_fatalError)
@@ -436,8 +408,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					throw Exception(err.Bad_DownLocation_Unknown);
 			}
 		}
-		else //win type didn't equal 1, 2, or 3, an error has occured
-		{
+		//win type didn't equal 1, 2, or 3, an error has occured
+		else {
 			if(t_winType == t_nullConstant)
 				throw Exception(err.Bad_WinType_Variable_Minor);
 			else if(t_winType == t_fatalError)
@@ -488,11 +460,9 @@ void Game::DisplayLastRoundStats()
 
 int Game::GetConstantFromList(string request)
 {
-	ConstListIters_C constListIter;
-	constListIter = constantsList.find(request);
-	int t_request = constListIter->second;
-
-	return t_request;
+	for(auto &i : constantsList)
+		if((i.first) == request)
+			return (i.second);
 }
 
 void Game::DisplayGameInstructions()
@@ -524,8 +494,7 @@ void Game::DisplayNotices()
 	char copyrightNotice = 'c';
 	
 	bool loop = true;
-	while(loop)
-	{
+	while(loop) {
 		string choice;
 		system("cls");
 		cout<<"Aaron's Tic-Tac-Toe Clone\t-\tCOPYRIGHT 2012 Aaron Gagern\n";
@@ -548,8 +517,7 @@ void Game::DisplayNotices()
 			DisplayNoticeFile(warrantyNotice);
 		else if(choice == showCopyright)
 			DisplayNoticeFile(copyrightNotice);
-		else
-		{
+		else {
 			cout<<"You choice didn't match any of the available choices.\n";
 			cout<<"Please try again.\n";
 			cout<<"Press any key to continue..."<<endl;
@@ -564,13 +532,11 @@ void Game::DisplayNoticeFile(char noticeType)
 	int lineStop = 0;
 	
 	ifstream f;
-	if(noticeType == 'w')
-	{
+	if(noticeType == 'w') {
 		f.open("WARRANTY.txt", ios::in);
 		lineStop = 10;
 	}
-	if(noticeType == 'c')
-	{
+	if(noticeType == 'c') {
 		f.open("COPYING.txt", ios::in);
 		lineStop = 20;
 	}
@@ -579,30 +545,25 @@ void Game::DisplayNoticeFile(char noticeType)
 		throw Exception(err.Fatal_Error, "Could not find the notice,\nor notice files have been corrupted.");
 
 	int lineCount = 0;
-	while(!f.eof())
-	{
+	while(!f.eof()) {
 		getline(f, line);
 		cout<<line;
 		lineCount++;
 
 		bool loop = true;
 		bool quit = false;
-		if((lineCount % lineStop) == 0)
-		{
-			while(loop)
-			{
+		if((lineCount % lineStop) == 0) {
+			while(loop) {
 				char choice;
 				cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
 				cout<<"To stop reading this and go back, type q and press enter.\n";
 				cin>>choice;
 
-				if(choice == 'c' || choice == 'C')
-				{
+				if(choice == 'c' || choice == 'C') {
 					loop = false;
 					cout<<"\n\n";
 				}
-				else if(choice == 'q' || choice == 'Q')
-				{
+				else if(choice == 'q' || choice == 'Q') {
 					loop = false;
 					quit = true;
 				}

@@ -26,8 +26,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 struct ErrorTypes
 {
-	enum types
-	{
+	enum types {
 		Invalid_Variable_Access = 0,
 		Move_Format_Invalid,
 		Double_Function_Call,

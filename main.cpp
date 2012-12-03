@@ -42,36 +42,31 @@ int main()
 	GamePtr game(new Game());
 	ErrorTypes err;
 
-	try
-	{
+	try {
 		//Start the game
 		game->StartGame();
 	
 		//Declare game control variable and set to true
 		//This will be set to false by the GameLoop when either player wishes to quit or the game is over
 		bool gameRunning = true;
-		while(gameRunning == true)
-		{
+		while(gameRunning == true) {
 			//continue the game
 			//This will get called every time the game loops
 			gameRunning = game->GameLoop();
 
-			if(gameRunning == false)
-			{
+			if(gameRunning == false) {
 				bool end;
 				//gameRunning came back false call EndGame
 				//So player can start a new round or quit the game entirely
 				end = game->EndGame();
 
-				if(end == false)	//No, player doesn't want to quit, wants to start a new round
-				{
+				if(end == false) {	//No, player doesn't want to quit, wants to start a new round
 					game->ResetGame();
 					game->StartGame();
 					//Reset gameRunning to true so that it continues to loop
 					gameRunning = true;
 				}
-				else				//Yes, player does want to quit. Doesn't want to start a new round
-				{
+				else {				//Yes, player does want to quit. Doesn't want to start a new round
 					//gameRunning already set to false, no need to reassign it
 					//Clear the screen
 					system("cls");
@@ -79,10 +74,8 @@ int main()
 			}
 		}
 	}
-	catch(Exception &e)
-	{
-		if(e.GetErrorType() == err.Invalid_Variable_Access)
-		{
+	catch(Exception &e) {
+		if(e.GetErrorType() == err.Invalid_Variable_Access) {
 			system("cls");
 			cout<<e.what()<<"\n";
 			cout<<"Failed to initialize objects properly.\n";
@@ -90,16 +83,14 @@ int main()
 			_getche();
 			exit(EXIT_FAILURE);	
 		}
-		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices)
-		{
+		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices) {
 			system("cls");
 			cout<<e.what()<<"\n";
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
 			exit(EXIT_SUCCESS);
 		}
-		else
-		{
+		else {
 			system("cls");
 			cout<<e.what()<<"\n";
 			cout<<"The program will now close...\n";

@@ -52,7 +52,6 @@ class Board
 {
 public:
 	Board();	//Constructor, Asks user for size of board and then calls InitiateBoard and DisplayBoard to setup the playing board and displays the empty board.
-	~Board();
 	void SetupBoard(const ConstList &cList);		//Asks user for number of spaces on board, figures out the multiplier
 	//Displays board during a round
 	void DisplayBoard(int numRounds, int numTies, const Player &pOne, const Player &pTwo);

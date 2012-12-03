@@ -26,6 +26,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <conio.h>
 #include <array>
 #include <map>
+#include <algorithm>
 #include <Windows.h>
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"

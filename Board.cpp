@@ -60,25 +60,17 @@ Board::Board() throw ()
 	array<const int, sizeOfPieceArr> pieceNumbersArr = {0, 1, 2};
 	array<char, sizeOfPieceArr> pieceCharactersArr = {' ', 'O', 'X'};
 
-	for(int i = 0; i < sizeOfPieceArr; i++)
-	{
+	for(int i = 0; i < sizeOfPieceArr; i++) {
 		numToCharConversionList.insert(pair<const int, char>(pieceNumbersArr[i], pieceCharactersArr[i]));
 	}
 }	
-
-Board::~Board()
-{
-	//Clean up
-	spaceList.clear();
-}
 
 void Board::SetupBoard(const ConstList &cList)
 {
 	char input;
 	bool answer = false;
 	const int DIVIDER = 3;
-	while(!answer)	//Makes sure user enter in either a,b or c and not something else. It also alerts the user when this happens...
-	{
+	while(!answer) {	//Makes sure user enter in either a,b or c and not something else. It also alerts the user when this happens...
 		//Give user chance to select how big the board should. This also dictates the length of the game.
 		//Bigger board = Longer game
 		system("cls");
@@ -90,26 +82,22 @@ void Board::SetupBoard(const ConstList &cList)
 		cout<<"Please enter the letter representing your choice below.\n";
 		cin>>input;
 
-		if(input == 'a' || input == 'A')
-		{
+		if(input == 'a' || input == 'A') {
 			multiplier_ = A / DIVIDER;
 			numOfSpaces_ = A;
 			answer = true;
 		}
-		else if(input == 'b' || input == 'B')
-		{
+		else if(input == 'b' || input == 'B') {
 			multiplier_ = B / (DIVIDER + 1);
 			numOfSpaces_ = B;
 			answer = true;
 		}
-		else if(input == 'c' || input == 'C')
-		{
+		else if(input == 'c' || input == 'C') {
 			multiplier_ = C / (DIVIDER + 2);
 			numOfSpaces_ = C;
 			answer = true;
 		}
-		else
-		{
+		else {
 			cout<<"Please enter a choice as listed above."<<endl;
 			cout<<"Try again..."<<endl;
 			_getche();
@@ -139,8 +127,7 @@ void Board::InitiateBoard()
 	IntIter spaceListIter;
 	spaceListIter = spaceList.begin();
 	for(int i = 100; i <= ROW_CONST; i += 100)
-		for(int j = 10; j <= COLMN_CONST; j += 10)
-		{
+		for(int j = 10; j <= COLMN_CONST; j += 10) {
 			int space = i + j + t_noPlayerPiece;	//adds i,j, and the nopiece variable together to get us the number for the designated space
 			*spaceListIter = space;			//adds number to the vector
 			spaceListIter++;				//increments the vector							
@@ -186,8 +173,7 @@ char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor
 	SetConsoleTextAttribute(hConsoleWindow_, playerTextColor);
 	cout<<"^o^ ---- Player "<<playerID<<" has won the game!!! ---- ^o^"<<"\n";
 	cout<<"-----------    Congratulations    ------------"<<"\n";
-	for(int i = 1; i <= 46; i++)
-	{
+	for(int i = 1; i <= 46; i++) {
 		cout<<playerPiece;
 		Sleep(50);
 	}
@@ -205,39 +191,29 @@ bool Board::ProcessSpaceList(int location, int playerPiece)
 	//Only error that can be produced here is where the piece already exists at the
 	//specified spot in the spaceList at which point error would become true
 	
-	//Process spaceList adding the new values
-	IntIter spaceListIter;
-	for(spaceListIter = spaceList.begin(); spaceListIter != spaceList.end(); spaceListIter++)
-	{
-		if(location == *spaceListIter)
+	//Process spaceList adding the new values	
+	for(auto &i : spaceList)
+		if(location == i)
 		{
 			//location matched location on grid exactly. No piece already exists here. Add in piece, return noError
-			*spaceListIter += playerPiece;
+			i += playerPiece;
 			//If location gets matched, the loop ends.
 			break;
 		}
-		else if((location + 1) == *spaceListIter || (location + 2) == *spaceListIter)
+		else if((location + 1) == i || (location + 2) == i)
 			throw Exception(err.Piece_Exists_At_Location);
-	}
 
 	return error;
 }
 
 void Board::ProcessPiecePlacementList()
 {
-	IntIter piecePlaceIter;
-	//Iterator for spaceList
 	IntIter spaceListIter;
 	spaceListIter = spaceList.begin();
 
-	//TODO:
-	//Need to find a way to use an array of piece values instead of a vector which is computationally expensive.
-	//It won't matter much right now, but later if graphics are added on things like this will make all the difference
-	//in the refresh rate of the graphics
 	string sTemp;
 	stringstream ssTemp;
-	for(piecePlaceIter = piecePlacement.begin(); piecePlaceIter != piecePlacement.end(); piecePlaceIter++)
-	{	
+	for(auto &i : piecePlacement) {	
 		//Convert number from spaceList to a string
 		sTemp.clear();
 		ssTemp.clear();
@@ -247,7 +223,7 @@ void Board::ProcessPiecePlacementList()
 		//Take last character of string and convert it into a integer and dump into piecePlacement
 		ssTemp.clear();
 		ssTemp<<sTemp[2];
-		ssTemp>>*piecePlaceIter;
+		ssTemp>>i;
 		
 		//Increment spaceListIter
 		spaceListIter++;
@@ -274,13 +250,10 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 	bool hasColor = true;
 	bool noColor = false;
 	//Going down then across
-	for(int i = 1; i <= sizeOfBoardDown; i++) //Starting by going down 1
-	{
+	for(int i = 1; i <= sizeOfBoardDown; i++) {
 		temp1 += sizeOfSquareAcross;
-		for(int j = 1; j <= sizeOfBoardAcross; j++) //Then we go across, one character at a time. May get incremented further in for loop
-		{
-			switch (i)
-			{
+		for(int j = 1; j <= sizeOfBoardAcross; j++) {
+			switch (i) {
 			case 1:
 			case 13:
 			case 17:
@@ -295,8 +268,7 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 					cout<<verticalLine;
 				else if(j == sizeOfBoardAcross)
 					cout<<verticalLine<<"          Round: "<<numRounds;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
@@ -308,27 +280,22 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 					cout<<verticalLine;
 				else if(j == sizeOfBoardAcross)
 					cout<<verticalLine<<"          Ties: "<<numTies;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2)
-				{
-					if(piecePlacement[squareCount] == p1Piece)
-					{
+				else if(j == temp2) {
+					if(piecePlacement[squareCount] == p1Piece) {
 						pOne.SetPlayerTextColor();
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else if(piecePlacement[squareCount] == p2Piece)
-					{
+					else if(piecePlacement[squareCount] == p2Piece) {
 						pTwo.SetPlayerTextColor();
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else
-					{
+					else {
 						ResetConsoleColor();
 						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
 					}
@@ -345,8 +312,7 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 			case 20:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
@@ -366,8 +332,7 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 					cout<<verticalLine;
 				else if(j == sizeOfBoardAcross)
 					cout<<verticalLine<<"          Player 1's Score: "<<pOne.GetScore();
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
@@ -380,27 +345,22 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 			case 19:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2)
-				{
-					if(piecePlacement[squareCount] == p1Piece)
-					{
+				else if(j == temp2) {
+					if(piecePlacement[squareCount] == p1Piece) {
 						pOne.SetPlayerTextColor();
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else if(piecePlacement[squareCount] == p2Piece)
-					{
+					else if(piecePlacement[squareCount] == p2Piece) {
 						pTwo.SetPlayerTextColor();
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else
-					{
+					else {
 						ResetConsoleColor();
 						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
 					}
@@ -413,8 +373,7 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 					cout<<verticalLine;
 				else if(j == sizeOfBoardAcross)
 					cout<<verticalLine<<"          Player 2: "<<pTwo.GetName();
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
@@ -452,13 +411,10 @@ void Board::DisplaySampleBoard()
 	const char t_space = GetConstantFromList(GetConstantFromList(noPlayerPiece));
 
 	//Going down then across
-	for(int i = 1; i <= sizeOfBoardDown; i++)
-	{
+	for(int i = 1; i <= sizeOfBoardDown; i++) {
 		temp1 += sizeOfSquareAcross;
-		for(int j = 1; j <= sizeOfBoardAcross; j++)
-		{
-			switch(i)
-			{
+		for(int j = 1; j <= sizeOfBoardAcross; j++) {
+			switch(i) {
 			case 1:
 			case 5:
 			case 9:
@@ -487,8 +443,7 @@ void Board::DisplaySampleBoard()
 			case 20:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
@@ -551,14 +506,12 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	//Winning player string
 	string winningPlayer;
 	
-	if(pOne.DidPlayerWin())
-	{
+	if(pOne.DidPlayerWin()) {
 		winningPlayerPiece = DisplayWinMessage(pOne.GetID(), pOne.GetPiece(), pOne.GetPlayerTextColor());
 		winningPlayer = "Player 1";
 		playerOneWon = true;
 	}
-	else
-	{
+	else {
 		winningPlayerPiece = DisplayWinMessage(pTwo.GetID(), pTwo.GetPiece(), pTwo.GetPlayerTextColor());
 		winningPlayer = "Player 2";
 		playerOneWon = false;
@@ -569,8 +522,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 		across = true;
 	else if(type == GetConstantFromList(downWinType))
 		down = true;
-	else if(type == GetConstantFromList(diagonalWinType))
-	{
+	else if(type == GetConstantFromList(diagonalWinType)) {
 		diagonal = true;
 		if(diagonalLocation == GetConstantFromList(diagonalLeftSubType))
 			diagonalLeft = true;
@@ -581,13 +533,10 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	bool hasColor = true;
 	bool noColor = false;
 	//Now iterate through and display the board with the proper highlights applied to the winning pieces
-	for(int i = 1; i <= sizeOfBoardDown; i++)
-	{
+	for(int i = 1; i <= sizeOfBoardDown; i++) {
 		temp1 += sizeOfSquareAcross;
-		for(int j = 1; j <= sizeOfBoardAcross; j++)
-		{
-			switch(i)
-			{
+		for(int j = 1; j <= sizeOfBoardAcross; j++) {
+			switch(i) {
 			case 1:
 			case 5:
 			case 9:
@@ -610,8 +559,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 			case 18:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
@@ -621,18 +569,15 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 			case 3:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal && diagonalLeft && squareCount == boardStart)
-				{
+				else if(j == temp2 && diagonal && diagonalLeft && squareCount == boardStart) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
-				else if(j == temp2 && diagonal && diagonalRight)
-				{
+				else if(j == temp2 && diagonal && diagonalRight) {
 					if((numOfSpaces_ == A && squareCount == endOfRowOneA) ||
 					   (numOfSpaces_ == B && squareCount == endOfRowOneB) ||
 					   (numOfSpaces_ == C && squareCount == endOfRowOneC))
@@ -641,38 +586,27 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					}
 				}		 
-				else if(j == temp2 && down && !across && !diagonal)
-				{
+				else if(j == temp2 && down && !across && !diagonal) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(acrossDownLocation == t_columnOne)
-					{
 						if(squareCount == boardStart)
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnTwo)
-					{
 						if(squareCount == startOfColumnTwo)
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnThree)
-					{
 						if(squareCount == startOfColumnThree)
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
-					{
 						if(squareCount == startOfColumnFour)
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
-					{
 						if(squareCount == startOfColumnFive)
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
+
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowOne)
-				{
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowOne) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
@@ -684,13 +618,11 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 			case 7:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal && diagonalLeft)
-				{
+				else if(j == temp2 && diagonal && diagonalLeft) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(numOfSpaces_ == A && squareCount == (startOfRowTwoA + 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
@@ -700,8 +632,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && diagonal && diagonalRight)
-				{
+				else if(j == temp2 && diagonal && diagonalRight) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(numOfSpaces_ == A && squareCount == (endOfRowTwoA - 1))
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
@@ -711,38 +642,27 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && down && !across && !diagonal)
-				{
+				else if(j == temp2 && down && !across && !diagonal) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(acrossDownLocation == t_columnOne)
-					{
 						if(squareCount == (boardStart + multiplier_))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnTwo)
-					{
 						if(squareCount == (startOfColumnTwo + multiplier_))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnThree)
-					{
 						if(squareCount == (startOfColumnThree + multiplier_))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
-					{
 						if(squareCount == (startOfColumnFour + multiplier_))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
-					{
 						if(squareCount == (startOfColumnFive + multiplier_))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
+					
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowTwo)
-				{
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowTwo) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
@@ -754,13 +674,11 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 			case 11:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal && diagonalLeft)
-				{
+				else if(j == temp2 && diagonal && diagonalLeft) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(numOfSpaces_ == A && squareCount == endOfRowThreeA)
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
@@ -770,8 +688,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && diagonal && diagonalRight)
-				{
+				else if(j == temp2 && diagonal && diagonalRight) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(numOfSpaces_ == A && squareCount == startOfRowThreeA)
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
@@ -781,39 +698,28 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && down && !across && !diagonal)
-				{
+				else if(j == temp2 && down && !across && !diagonal) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					int addMultiplier = multiplier_ * 2;
 					if(acrossDownLocation == t_columnOne)
-					{
 						if(squareCount == (boardStart + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnTwo)
-					{
 						if(squareCount == (startOfColumnTwo + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnThree)
-					{
 						if(squareCount == (startOfColumnThree + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
-					{
 						if(squareCount == (startOfColumnFour + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
-					{
 						if(squareCount == (startOfColumnFive + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
+
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowThree)
-				{
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowThree) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
@@ -825,13 +731,11 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 			case 15:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal && diagonalLeft)
-				{
+				else if(j == temp2 && diagonal && diagonalLeft) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(numOfSpaces_ == B && squareCount == endOfRowFourB)
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
@@ -839,8 +743,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && diagonal && diagonalRight)
-				{
+				else if(j == temp2 && diagonal && diagonalRight) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					if(numOfSpaces_ == B && squareCount == startOfRowFourB)
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
@@ -848,39 +751,28 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && down && !across && !diagonal)
-				{
+				else if(j == temp2 && down && !across && !diagonal) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					int addMultiplier = multiplier_ * 3;
 					if(acrossDownLocation == t_columnOne)
-					{
 						if(squareCount == (boardStart + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnTwo)
-					{
 						if(squareCount == (startOfColumnTwo + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnThree)
-					{
 						if(squareCount == (startOfColumnThree + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFour && (numOfSpaces_ == B || numOfSpaces_ == C))
-					{
 						if(squareCount == (startOfColumnFour + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
-					{
 						if(squareCount == (startOfColumnFour + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
+
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFour)
-				{
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFour) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
@@ -892,54 +784,40 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 			case 19:
 				if(j == 1)
 					cout<<verticalLine;
-				else if(j == temp1)
-				{
+				else if(j == temp1) {
 					cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
-				else if(j == temp2 && diagonal && diagonalLeft && squareCount == endOfRowFiveC)
-				{
+				else if(j == temp2 && diagonal && diagonalLeft && squareCount == endOfRowFiveC) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
-				else if(j == temp2 && diagonal && diagonalRight && squareCount == startOfRowFiveC)
-				{
+				else if(j == temp2 && diagonal && diagonalRight && squareCount == startOfRowFiveC) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
-				else if(j == temp2 && down && !across && !diagonal)
-				{
+				else if(j == temp2 && down && !across && !diagonal) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					int addMultiplier = multiplier_ * 4;
 					if(acrossDownLocation == t_columnOne)
-					{
 						if(squareCount == (boardStart + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnTwo)
-					{
 						if(squareCount == (startOfColumnTwo + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnThree)
-					{
 						if(squareCount == (startOfColumnThree + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFour)
-					{
 						if(squareCount == (startOfColumnFour + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
 					else if(acrossDownLocation == t_columnFive)
-					{
 						if(squareCount == (startOfColumnFive + addMultiplier))
 							DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-					}
+
 					ResetConsoleColor();
 				}
-				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFive)
-				{
+				else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFive) {
 					SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 					DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 				}
@@ -964,15 +842,13 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 
 	//Tell how the player won
-	if(diagonal && !across && !down)
-	{
+	if(diagonal && !across && !down) {
 		if(diagonalLeft)
 			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from left to right"<<endl;
-		if(diagonalRight)
+		else if(diagonalRight)
 			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from right to left"<<endl;
 	}
-	else if(across && !down && !diagonal)
-	{
+	else if(across && !down && !diagonal) {
 		if(acrossDownLocation == t_rowOne)
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 1"<<endl;
 		else if(acrossDownLocation == t_rowTwo)
@@ -984,8 +860,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 		else if(acrossDownLocation == t_rowFive)
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 5"<<endl;
 	}
-	else if(down && !across && !diagonal)
-	{
+	else if(down && !across && !diagonal) {
 		if(acrossDownLocation == t_columnOne)
 			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going down on column 1"<<endl;
 		else if(acrossDownLocation == t_columnTwo)
@@ -1011,8 +886,7 @@ bool Board::CheckMoveLocation(int location)
 
 	if(location > locationCheckDown)
 		checkOK = false;
-	else
-	{
+	else {
 		int locationCheckAcross = locationCheckDown - (hundreds * multiplier_);
 		int boundsCheck = location - ((location / hundreds) * hundreds);
 		if(boundsCheck > locationCheckAcross)
@@ -1025,14 +899,10 @@ bool Board::CheckMoveLocation(int location)
 bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus)
 {
 	if(!playerOneMoveStatus && !playerTwoMoveStatus)
-	{
 		throw Exception(err.Fatal_Error);
-	}
 	
 	if(!(CheckMoveLocation(location)))
-	{
 		throw Exception(err.Move_Out_Of_Bounds);
-	}
 
 	ProcessSpaceList(location, playerPiece);
 	
@@ -1062,8 +932,7 @@ char Board::XorO(int num)
 		return (GetConstantFromList(t_oPlayerPiece));
 	else if(num == t_xPlayerPiece)
 		return GetConstantFromList(t_xPlayerPiece);
-	else
-	{
+	else {
 		string errorMsg = "DEBUG MESSAGE - If you're seeing this check the calls for the XorO function\n";
 		throw Exception(err.Fatal_Error, errorMsg);
 	}
@@ -1104,18 +973,16 @@ void Board::ResetConsoleColor()
 
 int Board::GetConstantFromList(string request)
 {
-	ConstListIters_C constListIter;
-	constListIter = constantsList.find(request);
-
-	return (constListIter->second);
+	for(auto &i : constantsList)
+		if((i.first) == request)
+			return (i.second);
 }
 
 char Board::GetConstantFromList(int request)
 {
-	PieceListIters_C charConvListIter;
-	charConvListIter = numToCharConversionList.find(request);
-
-	return (charConvListIter->second);
+	for(auto &i : numToCharConversionList)
+		if((i.first) == request)
+			return (i.second);
 }
 
 const int Board::GetMultiplier() const
