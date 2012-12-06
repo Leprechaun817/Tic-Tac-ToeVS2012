@@ -74,14 +74,13 @@ bool SoundBuffer::LoadFile(const string soundFile)
 {
 	if(soundFile.empty())
 		throw Exception(err.SoundBuffer_Fatal_Error, "Cannot find sound file,\nname doesn't match any file");
-
-	ifstream inputSoundFile;
+	
+	fstream inputSoundFile;
 	inputSoundFile.open(soundFile, ios::binary | ios::in);
-	if(inputSoundFile.bad())
+	if(inputSoundFile.bad() || inputSoundFile.is_open())
 		throw Exception(err.SoundBuffer_Fatal_Error, "Sound file is bad or corrupted.");
 
 	DWORD dwChunkID = 0, dwFileSize = 0, dwChunkSize = 0, dwExtra = 0;
-
 	//find RIFF chunk identifier
 	inputSoundFile.seekg(0, ios::beg);
 	inputSoundFile.read(reinterpret_cast<char*>(&dwChunkID), sizeof(dwChunkID));

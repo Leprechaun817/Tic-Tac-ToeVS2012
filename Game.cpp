@@ -58,8 +58,16 @@ const string Game::rowFive = "rowFive";
 const string Game::nullConstant = "nullConstant";
 const string Game::fatalError = "fatalError";
 
+//Constants for sounds
+const string Game::playerOneWinSound = "playerOneWinSound";
+const string Game::playerTwoWinSound = "playerTwoWinSound";
+const string Game::gameOverSound = "gameOverSound";
+const string Game::pieceClickSound = "pieceClickSound";
+const string Game::badMoveErrorSound = "badMoveErrorSound";
+const string Game::fatalErrorSound = "fatalErrorSound";
+
 Game::Game() throw()
-	: playerOne(), playerTwo(), board(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
+	: playerOne_(), playerTwo_(), board_(), soundEng_(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
 {
 	array<const string, 23> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
 							   noPlayerPiece, oPlayerPiece, xPlayerPiece, columnOne, columnTwo, columnThree, columnFour, columnFive, rowOne, rowTwo, 
@@ -77,19 +85,22 @@ Game::Game() throw()
 void Game::StartGame()
 {
 	if(firstPlay_) {
+		//Initialize the sound first before anything else is done
+		soundEng_.InitializeSoundEngine();
+		
 		DisplayNotices();
 
 		//Setup board
-		board.SetupBoard(constantsList);
+		board_.SetupBoard(constantsList);
 	
 		//set bounds limit, basically players shouldn't be able to enter in values past this number
 		//It's also the number used to determine if somebody won the game
 		//The value is pulled from the board object
-		boundsLimit_ = board.GetMultiplier();
+		boundsLimit_ = board_.GetMultiplier();
 	
 		//Initializing each player
-		playerOne.InitializePlayer(boundsLimit_, constantsList);
-		playerTwo.InitializePlayer(boundsLimit_, constantsList);
+		playerOne_.InitializePlayer(boundsLimit_, constantsList);
+		playerTwo_.InitializePlayer(boundsLimit_, constantsList);
 
 		DecidePlayOrder();
 		
@@ -110,7 +121,7 @@ void Game::StartGame()
 	system("cls");
 
 	//Display the empty starting board
-	board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
+	board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
 }
 
 bool Game::GameLoop()
@@ -137,8 +148,8 @@ bool Game::GameLoop()
 			return continueGame;
 	}
 	
-	if(board.GetTotalNumOfPiecesOnBoard() >= boundsLimit_)
-		continueGame = ProcessPacket(board.FindWinDraw());
+	if(board_.GetTotalNumOfPiecesOnBoard() >= boundsLimit_)
+		continueGame = ProcessPacket(board_.FindWinDraw());
 	
 	return continueGame;
 }
@@ -186,15 +197,15 @@ void Game::ResetGame()
 	turnCounter_ = playOrder_ = 0;
 	firstPlay_ = false;
 	//Reset the board first
-	board.ResetBoard();
+	board_.ResetBoard();
 	
 	//Then get multiplier from the board
 	//This keeps problems with bounds issues popping up
-	boundsLimit_ = board.GetMultiplier();
+	boundsLimit_ = board_.GetMultiplier();
 
 	try {
 		//Call this before ResetPlayer or bad things will happen
-		playerOne.ResetPlayerPiece();
+		playerOne_.ResetPlayerPiece();
 	}
 	catch(Exception &e) {
 		cout<<e.what()<<"\n";
@@ -204,8 +215,8 @@ void Game::ResetGame()
 	}
 
 	//Reset both players
-	playerOne.ResetPlayer(boundsLimit_);
-	playerTwo.ResetPlayer(boundsLimit_);
+	playerOne_.ResetPlayer(boundsLimit_);
+	playerTwo_.ResetPlayer(boundsLimit_);
 
 	DecidePlayOrder();
 }
@@ -220,14 +231,14 @@ bool Game::GetPlayerMove(int order)
 		while(!playerOneGood) {	
 			try {
 				system("cls");
-				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-				playerOneContinueGame = playerOne.MakeMove();
+				board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
+				playerOneContinueGame = playerOne_.MakeMove();
 				if(!playerOneContinueGame) {
 					continuePlay = false;
 					playerOneGood = true;
 				}
 				else
-					playerOneGood = board.UpdateBoard(playerOne.GetPiece(), playerOne.GetMove(), playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
+					playerOneGood = board_.UpdateBoard(playerOne_.GetPiece(), playerOne_.GetMove(), playerOne_.HasPlayerMadeMove(), playerTwo_.HasPlayerMadeMove());
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
@@ -250,14 +261,14 @@ bool Game::GetPlayerMove(int order)
 		while(!playerTwoGood) {
 			try {
 				system("cls");
-				board.DisplayBoard(roundsPlayed_, gameDraws_, playerOne, playerTwo);
-				playerTwoContinueGame = playerTwo.MakeMove();
+				board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
+				playerTwoContinueGame = playerTwo_.MakeMove();
 				if(!playerTwoContinueGame) {
 					continuePlay = false;
 					playerTwoGood = true;
 				}
 				else
-					playerTwoGood = board.UpdateBoard(playerTwo.GetPiece(), playerTwo.GetMove(), playerOne.HasPlayerMadeMove(), playerTwo.HasPlayerMadeMove());
+					playerTwoGood = board_.UpdateBoard(playerTwo_.GetPiece(), playerTwo_.GetMove(), playerOne_.HasPlayerMadeMove(), playerTwo_.HasPlayerMadeMove());
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
@@ -307,23 +318,23 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	else if(t_gameState == t_winState) {
 		continueGame = false;
 		//Get player piece and compare, update their winCounter
-		if(packet->GetPlayerPiece() == playerOne.GetPiece()) {
-			playerOne.UpdateScore();
-			playerOne.SetPlayerWon();
+		if(packet->GetPlayerPiece() == playerOne_.GetPiece()) {
+			playerOne_.UpdateScore();
+			playerOne_.SetPlayerWon();
 			//Play playerOne Win noise here
 			//Message telling that player 1 has won the game
 			cout<<playerOneWinMessage;
-			playerOne.DisplayScore();
+			playerOne_.DisplayScore();
 			cout<<anyKey;
 			_getche();
 		}
-		else if(packet->GetPlayerPiece() == playerTwo.GetPiece()) {
-			playerTwo.UpdateScore();
-			playerTwo.SetPlayerWon();
+		else if(packet->GetPlayerPiece() == playerTwo_.GetPiece()) {
+			playerTwo_.UpdateScore();
+			playerTwo_.SetPlayerWon();
 			//Play PlayerTwo Win noise here
 			//Message telling that player 2 has won the game
 			cout<<playerTwoWinMessage;
-			playerTwo.DisplayScore();
+			playerTwo_.DisplayScore();
 			cout<<anyKey;
 			_getche();
 		}
@@ -434,15 +445,15 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	else
 		throw Exception(err.Bad_GameState_Unknown);	//play fatal error noise here
 
-	if((playerOne.DidPlayerWin()) || (playerTwo.DidPlayerWin()))
-		board.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne, playerTwo);
+	if((playerOne_.DidPlayerWin()) || (playerTwo_.DidPlayerWin()))
+		board_.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne_, playerTwo_);
 		
 	return continueGame;
 }
 
 void Game::DecidePlayOrder()
 {
-	if(playerOne.GetPiece() == 2)
+	if(playerOne_.GetPiece() == 2)
 		playOrder_ = 1;
 	else
 		playOrder_ = 2;
@@ -450,20 +461,20 @@ void Game::DecidePlayOrder()
 
 void Game::DisplayFinalStats()
 {
-	cout<<"Player 1's name: "<<playerOne.GetName()<<"\n";
-	cout<<playerOne.GetName()<<"\'s final score is: "<<playerOne.GetScore()<<"\n\n";
-	cout<<"Player 2's name: "<<playerTwo.GetName()<<"\n";
-	cout<<playerTwo.GetName()<<"\'s final score is: "<<playerTwo.GetScore()<<"\n\n";
+	cout<<"Player 1's name: "<<playerOne_.GetName()<<"\n";
+	cout<<playerOne_.GetName()<<"\'s final score is: "<<playerOne_.GetScore()<<"\n\n";
+	cout<<"Player 2's name: "<<playerTwo_.GetName()<<"\n";
+	cout<<playerTwo_.GetName()<<"\'s final score is: "<<playerTwo_.GetScore()<<"\n\n";
 	cout<<"There were a total of "<<roundsPlayed_<<" round\\s played and\n";
 	cout<<"there were a total of "<<gameDraws_<<" draws during the game."<<endl;
 }
 
 void Game::DisplayLastRoundStats()
 {
-	cout<<"Player 1's name: "<<playerOne.GetName()<<"\n";
-	cout<<playerOne.GetName()<<"\'s final score is: "<<playerOne.GetScore()<<"\n\n";
-	cout<<"Player 2's name: "<<playerTwo.GetName()<<"\n";
-	cout<<playerTwo.GetName()<<"\'s final score is: "<<playerTwo.GetScore()<<"\n\n";
+	cout<<"Player 1's name: "<<playerOne_.GetName()<<"\n";
+	cout<<playerOne_.GetName()<<"\'s final score is: "<<playerOne_.GetScore()<<"\n\n";
+	cout<<"Player 2's name: "<<playerTwo_.GetName()<<"\n";
+	cout<<playerTwo_.GetName()<<"\'s final score is: "<<playerTwo_.GetScore()<<"\n\n";
 	cout<<"There were a total of "<<turnCounter_<<" turns taken last round\n";
 	cout<<"You have both played "<<roundsPlayed_<<" round\\s so far in this game\n";
 	cout<<"and there have been a total of "<<gameDraws_<<" draw\\s so far in this game"<<endl;
@@ -490,7 +501,7 @@ void Game::DisplayGameInstructions()
 	cout<<"When somebody wins the game or the game is a draw, you can play another round\n";
 	cout<<"or, you can quit.\n\n";
 	cout<<"The board looks something like this:\n";
-	board.DisplaySampleBoard();
+	board_.DisplaySampleBoard();
 	cout<<"The columns going across are numbered 1 to "<<boundsLimit_<<" going from left to right and\n";
 	cout<<"The rows going down are numbered 1 to "<<boundsLimit_<<" going from top to bottom.\n";
 	cout<<"To enter in a choice just type the number of the row first and then the column number seperated by a comma.\n";

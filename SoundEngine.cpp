@@ -44,6 +44,12 @@ SoundEngine::SoundEngine() throw()
 
 	for(int i = 0; i < numOfSounds; i++)
 		soundNameList.insert(pair<const string, int>(soundNameArr[i], soundNumArr[i]));
+
+	//Initialize sound pointers
+	soundEng_ = ixAudioPtr(new IXAudio2*());
+	soundMaster_ = ixMasterVoicePtr(new IXAudio2MasteringVoice*());
+	for(auto &i : soundSourceList)
+		i = ixSourceVoicePtr(new IXAudio2SourceVoice*());
 }
 
 SoundEngine::~SoundEngine()
@@ -56,10 +62,11 @@ void SoundEngine::InitializeSoundEngine()
 {
 	//Declare filename constants
 	const string fileType = ".wav";
-	const string fileLocation = ".\\Sounds\\";
+	const string fileLocation = "../Sounds/";
 	array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
 													   (fileLocation + pieceClickSound + fileType), (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType)};
 	
+
 	//Initialize sound engine
 	if(FAILED(XAudio2Create(&(*soundEng_)))) {
 		CoUninitialize();

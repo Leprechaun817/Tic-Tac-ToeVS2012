@@ -29,6 +29,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <fstream>
 #include <memory>
 #include <string>
+#include <sstream>
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
