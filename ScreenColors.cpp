@@ -170,7 +170,7 @@ void ScreenColors::SetTextToPlayerColor() const
 	if(screenColorInitialized)
 		SetConsoleTextAttribute(hConsole_, colorAttribute_);
 	else
-		throw Exception(err.Invalid_Variable_Access);
+		throw Exception(err.Invalid_Variable_Access);	//Play fatal error message here
 }
 
 const int ScreenColors::GetTextColor() const
@@ -178,7 +178,7 @@ const int ScreenColors::GetTextColor() const
 	if(screenColorInitialized)
 		return colorAttribute_;
 	else
-		throw Exception(err.Invalid_Variable_Access);
+		throw Exception(err.Invalid_Variable_Access);	//Play fatal error message here
 }
 
 void ScreenColors::OutputCharacterWithColor(char c, int color)

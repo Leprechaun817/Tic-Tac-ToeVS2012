@@ -67,9 +67,8 @@ Game::Game() throw()
 	array<int, 23> constantsValues = {0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, -1, -2};
 	
 	//constantsList must be created before board and the 2 players are initialized becuase otherwise I'd be sending them a empty map container
-	for(unsigned int i = 0; i < constantsValues.size(); i++) {
+	for(unsigned int i = 0; i < constantsValues.size(); i++)
 		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
-	}
 }
 
 //TODO:
@@ -150,11 +149,13 @@ bool Game::EndGame()
 
 	//Clear the screen
 	system("cls");
+	
 	DisplayLastRoundStats();
 	//Ask player/s whether they want to play another round
 	bool quitGame;
 	bool loop = false;
 	while(!loop) {
+		//Play game over noise here
 		cout<<"Would you like to play for another round? y or n"<<endl;
 		cin>>answer;
 
@@ -213,8 +214,7 @@ bool Game::GetPlayerMove(int order)
 {
 	bool continuePlay = true;
 
-	if(order == 1)
-	{
+	if(order == 1) {
 		bool playerOneContinueGame;
 		bool playerOneGood = false;
 		while(!playerOneGood) {	
@@ -231,6 +231,7 @@ bool Game::GetPlayerMove(int order)
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
+					//Play bad move noise here
 					cout<<e.what()<<"\n";
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
@@ -238,11 +239,12 @@ bool Game::GetPlayerMove(int order)
 				}
 				else
 					throw;
+					//Play fatal error noise here
 			}
+			//Play click noise here
 		}
 	}
-	else
-	{
+	else {
 		bool playerTwoContinueGame;
 		bool playerTwoGood = false;
 		while(!playerTwoGood) {
@@ -259,6 +261,7 @@ bool Game::GetPlayerMove(int order)
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
+					//Play bad move noise here
 					cout<<e.what()<<"\n";
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
@@ -266,7 +269,9 @@ bool Game::GetPlayerMove(int order)
 				}
 				else
 					throw;
+					//Play fatal error noise here
 			}
+			//Play click noise here
 		}
 	}
 
@@ -305,6 +310,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		if(packet->GetPlayerPiece() == playerOne.GetPiece()) {
 			playerOne.UpdateScore();
 			playerOne.SetPlayerWon();
+			//Play playerOne Win noise here
 			//Message telling that player 1 has won the game
 			cout<<playerOneWinMessage;
 			playerOne.DisplayScore();
@@ -314,6 +320,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		else if(packet->GetPlayerPiece() == playerTwo.GetPiece()) {
 			playerTwo.UpdateScore();
 			playerTwo.SetPlayerWon();
+			//Play PlayerTwo Win noise here
 			//Message telling that player 2 has won the game
 			cout<<playerTwoWinMessage;
 			playerTwo.DisplayScore();
@@ -322,6 +329,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		}
 		else
 			throw Exception(err.Bad_PlayerPiece_Variable_Fatal);
+			//Play fatal error noise here
 
 		//Values pulled from map list that will be compared against the winType to figure out what it is
 		const int t_diagonalWinType = GetConstantFromList(diagonalWinType), t_acrossWinType = GetConstantFromList(acrossWinType), t_downWinType = GetConstantFromList(downWinType);
@@ -377,6 +385,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					throw Exception(err.Bad_AcrossLocation_Fatal);
 				else
 					throw Exception(err.Bad_AcrossLocation_Unknown);
+				//play fatal error noise here
 			}
 		}
 		else if(t_winType == t_downWinType) {
@@ -406,6 +415,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					throw Exception(err.Bad_DownLocation_Fatal);
 				else
 					throw Exception(err.Bad_DownLocation_Unknown);
+				//play fatal error noise here
 			}
 		}
 		//win type didn't equal 1, 2, or 3, an error has occured
@@ -416,12 +426,13 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 				throw Exception(err.Bad_WinType_Variable_Fatal);
 			else
 				throw Exception(err.Bad_WinType_Variable_Unknown);
+			//play fatal error noise here
 		}
 	}
 	else if(t_gameState == t_fatalError)
-		throw Exception(err.Bad_GameState_Fatal);
+		throw Exception(err.Bad_GameState_Fatal);	//play fatal error noise here
 	else
-		throw Exception(err.Bad_GameState_Unknown);
+		throw Exception(err.Bad_GameState_Unknown);	//play fatal error noise here
 
 	if((playerOne.DidPlayerWin()) || (playerTwo.DidPlayerWin()))
 		board.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne, playerTwo);
@@ -468,7 +479,7 @@ int Game::GetConstantFromList(string request)
 		}
 
 	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);
+		throw Exception(err.Unknown_Constant_Error);	//play fatal error noise here
 	return returnValue;
 }
 
@@ -549,7 +560,7 @@ void Game::DisplayNoticeFile(char noticeType)
 	}
 
 	if((!f.is_open()) || (!f.good()))
-		throw Exception(err.Fatal_Error, "Could not find the notice,\nor notice files have been corrupted.");
+		throw Exception(err.Fatal_Error, "Could not find the notice,\nor notice files have been corrupted.");	//play fatal error noise here
 
 	int lineCount = 0;
 	while(!f.eof()) {

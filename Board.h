@@ -110,6 +110,7 @@ private:
 	char XorO(int num);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
 	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pieceHasColor);
 	char DisplayWinMessage(int playerID, int playerPiece, int playerTextColor);
+	void DisplayWinLocationMessage(bool across, bool down, bool diagonal, bool diagonalLeft, bool diagonalRight, int acrossDownLocation, string winningPlayer, char winningPlayerPiece);
 	bool ProcessSpaceList(int location, int playerPiece);
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();

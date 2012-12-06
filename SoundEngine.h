@@ -28,6 +28,8 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <xaudio2.h>
 #include <memory>
 #include <vector>
+#include <map>
+#include <array>
 #include "SoundBuffer.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
@@ -40,20 +42,25 @@ typedef unique_ptr<IXAudio2MasteringVoice*> ixMasterVoicePtr;
 typedef vector<SoundBuffer> wBufferVectors;
 typedef vector<ixSourceVoicePtr> svVector;
 
+typedef map<const string, int> ConstList;
+typedef map<const string, int>::const_iterator ConstListIters_C;
+
 class SoundEngine
 {
 public:
 	SoundEngine() throw();
 	~SoundEngine();
 	void InitializeSoundEngine();
-	void PlaySoundQueue(int sound);
+	void PlaySoundFromQueue(string sound);
 
 //Constant Variables
 private:
-	static const string playerOneWin, playerTwoWin, gameOver, pieceClick, errorBadMove, errorFatal;
+	static const string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound;
+	static const int numOfSounds = 6;
 
 //Container Variables
 private:
+	ConstList soundNameList;
 	wBufferVectors soundBufferList;
 	svVector soundSourceList;
 	ErrorTypes err;
@@ -61,11 +68,11 @@ private:
 //Regular Variables
 private:
 	ixAudioPtr soundEng_;
-	ixSourceVoicePtr soundSource_;
 	ixMasterVoicePtr soundMaster_;
 	bool isSoundEngineInitialized_;
 
 //Private Functions
 private:
 	void LoadSound(const string filename);
+	int GetConstantFromList(string soundRequest);
 };

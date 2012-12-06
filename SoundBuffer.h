@@ -38,6 +38,7 @@ typedef unique_ptr<BYTE> bytePtr;
 typedef unique_ptr<XAUDIO2_BUFFER> xa2BufferPtr;
 typedef unique_ptr<WAVEFORMATEX> wFormatPtr;
 
+//Add support for other sound/music file types, especially ogg
 class SoundBuffer
 {
 public:

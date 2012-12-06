@@ -103,7 +103,7 @@ int WinDrawPacket::GetConstantFromList(string request)
 		}
 
 	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);
+		throw Exception(err.Unknown_Constant_Error);	//Play fatal error message here
 
 	return returnValue;
 }
@@ -113,7 +113,7 @@ const int WinDrawPacket::GetGameState() const
 	if(packetCreated_)
 		return gameState_;
 	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
 }
 
 const int WinDrawPacket::GetPlayerPiece() const
@@ -121,7 +121,7 @@ const int WinDrawPacket::GetPlayerPiece() const
 	if(packetCreated_)
 		return playerPiece_;
 	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
 }
 
 const int WinDrawPacket::GetWinType() const
@@ -129,7 +129,7 @@ const int WinDrawPacket::GetWinType() const
 	if(packetCreated_)
 		return winType_;
 	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
 }
 
 const int WinDrawPacket::GetDiagType() const
@@ -137,7 +137,7 @@ const int WinDrawPacket::GetDiagType() const
 	if(packetCreated_)
 		return diagonalType_;
 	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
 }
 
 const int WinDrawPacket::GetRow() const
@@ -145,7 +145,7 @@ const int WinDrawPacket::GetRow() const
 	if(packetCreated_)
 		return rowAcross_;
 	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
 }
 
 const int WinDrawPacket::GetColumn() const
@@ -153,5 +153,5 @@ const int WinDrawPacket::GetColumn() const
 	if(packetCreated_)
 		return columnDown_;
 	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
 }

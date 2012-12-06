@@ -143,7 +143,7 @@ bool Player::MakeMove()
 	cout<<"Ex. 1,1 or q to quit the game"<<endl;
 	cin>>choice;
 
-	bool checkMove = true;
+	bool checkMove = false;
 	bool loop = false;
 	while(!loop) {
 		//Used unsigned int here because move.size is also an unsigned integer.
@@ -155,14 +155,18 @@ bool Player::MakeMove()
 				return false;
 			}
 
-		checkMove = CheckMoveFormat(choice);
-		if(!checkMove) {
+		try {
+			checkMove = CheckMoveFormat(choice);
+			if(checkMove) {
+				move_ = ReformatMove(choice);
+				loop = true;
+			}
+		}
+		catch(Exception &e) {
+			//Play bad move noise here
+			cout<<e.what()<<"\n";
 			cout<<"Please re-enter your choice\n";
 			cin>>choice;
-		}
-		else {
-			move_ = ReformatMove(choice);
-			loop = true;
 		}
 	}
 
@@ -237,7 +241,7 @@ const int Player::GetID() const
 	if(playerInitialized_)
 		return id_;
 	else
-		throw Exception(err.Invalid_Variable_Access, varError); 
+		throw Exception(err.Invalid_Variable_Access, varError); //Play fatal error message here
 }
 
 const int Player::GetPiece() const
@@ -245,7 +249,7 @@ const int Player::GetPiece() const
 	if(playerInitialized_)
 		return playerPiece_;
 	else
-		throw Exception(err.Invalid_Variable_Access, varError);
+		throw Exception(err.Invalid_Variable_Access, varError); //Play fatal error message here
 }
 
 const string Player::GetName() const
@@ -253,7 +257,7 @@ const string Player::GetName() const
 	if(playerInitialized_)
 		return name_;
 	else
-		throw Exception(err.Invalid_Variable_Access, varError);
+		throw Exception(err.Invalid_Variable_Access, varError); //Play fatal error message here
 }
 
 const int Player::GetScore() const
@@ -261,7 +265,7 @@ const int Player::GetScore() const
 	if(playerInitialized_)
 		return score_;
 	else
-		throw Exception(err.Invalid_Variable_Access, varError);
+		throw Exception(err.Invalid_Variable_Access, varError); //Play fatal error message here
 }
 
 const int Player::GetMove() const
@@ -269,7 +273,7 @@ const int Player::GetMove() const
 	if(playerInitialized_)
 		return move_;
 	else
-		throw Exception(err.Invalid_Variable_Access, varError);
+		throw Exception(err.Invalid_Variable_Access, varError); //Play fatal error message here
 }
 
 const bool Player::DidPlayerWin() const
@@ -277,7 +281,7 @@ const bool Player::DidPlayerWin() const
 	if(playerInitialized_)
 		return win_;
 	else
-		throw Exception(err.Invalid_Variable_Access, varError);
+		throw Exception(err.Invalid_Variable_Access, varError); //Play fatal error message here
 }
 
 const int Player::GetPlayerTextColor() const
@@ -285,7 +289,7 @@ const int Player::GetPlayerTextColor() const
 	if(playerInitialized_)
 		return (textColor.GetTextColor());
 	else
-		throw Exception(err.Invalid_Variable_Access, varError);
+		throw Exception(err.Invalid_Variable_Access, varError); //Play fatal error message here
 }
 
 void Player::SetPlayerWon()

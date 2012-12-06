@@ -163,9 +163,6 @@ void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pi
 		ResetConsoleColor();
 }
 
-//TODO:
-//To be re-written, instead of it getting a player object, it will get the neccessary play information sent to it only
-//Will beed to add function to player so that the text color of the player can be accessed
 char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor)
 {
 	const int lineSize = 46;
@@ -841,7 +838,22 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 
 	SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 
-	//Tell how the player won
+	//Tell the winning player how they won
+	DisplayWinLocationMessage(across, down, diagonal, diagonalLeft, diagonalRight, acrossDownLocation, winningPlayer, winningPlayerPiece);
+
+	ResetConsoleColor();
+	cout<<endl<<"Press any key to continue..."<<endl;
+	_getche();
+	system("cls");
+}
+
+void Board::DisplayWinLocationMessage(bool across, bool down, bool diagonal, bool diagonalLeft, bool diagonalRight, int acrossDownLocation, string winningPlayer, char winningPlayerPiece)
+{
+	const int t_columnOne = GetConstantFromList(columnOne), t_columnTwo = GetConstantFromList(columnTwo), t_columnThree = GetConstantFromList(columnThree),
+			  t_columnFour = GetConstantFromList(columnFour), t_columnFive = GetConstantFromList(columnFive);
+	const int t_rowOne = GetConstantFromList(rowOne), t_rowTwo = GetConstantFromList(rowTwo), t_rowThree = GetConstantFromList(rowThree), t_rowFour = GetConstantFromList(rowFour),
+			  t_rowFive = GetConstantFromList(rowFive);
+	
 	if(diagonal && !across && !down) {
 		if(diagonalLeft)
 			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from left to right"<<endl;
@@ -872,10 +884,6 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 		else if(acrossDownLocation == t_columnFive)
 			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 5"<<endl;
 	}
-	ResetConsoleColor();
-	cout<<endl<<"Press any key to continue..."<<endl;
-	_getche();
-	system("cls");
 }
 
 bool Board::CheckMoveLocation(int location)
@@ -899,7 +907,7 @@ bool Board::CheckMoveLocation(int location)
 bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus)
 {
 	if(!playerOneMoveStatus && !playerTwoMoveStatus)
-		throw Exception(err.Fatal_Error);
+		throw Exception(err.Fatal_Error);	//Play fatal error message here
 	
 	if(!(CheckMoveLocation(location)))
 		throw Exception(err.Move_Out_Of_Bounds);
@@ -933,6 +941,7 @@ char Board::XorO(int num)
 	else if(num == t_xPlayerPiece)
 		return GetConstantFromList(t_xPlayerPiece);
 	else {
+		//Play fatal error message here
 		string errorMsg = "DEBUG MESSAGE - If you're seeing this check the calls for the XorO function\n";
 		throw Exception(err.Fatal_Error, errorMsg);
 	}
@@ -981,7 +990,7 @@ int Board::GetConstantFromList(string request)
 		}
 
 	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);
+		throw Exception(err.Unknown_Constant_Error);	//Play fatal error message here
 
 	return returnValue;
 }
@@ -996,7 +1005,7 @@ char Board::GetConstantFromList(int request)
 		}
 
 	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);
+		throw Exception(err.Unknown_Constant_Error);	//Play fatal error message here
 
 	return returnValue;
 }
