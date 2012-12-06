@@ -44,6 +44,7 @@ public:
 	SoundBuffer() throw();
 	SoundBuffer(const SoundBuffer &sb) throw();
 	~SoundBuffer();
+	SoundBuffer& operator=(const SoundBuffer &sb) throw();
 	const xa2BufferPtr GetXA2Buffer() const;
 	const wFormatPtr GetWFormat() const;
 	bool LoadFile(const string soundFile);

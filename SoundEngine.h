@@ -23,6 +23,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 ********************************************************************************************/
 
 #pragma once
+#pragma warning( disable : 4101 )
 #include <Windows.h>
 #include <xaudio2.h>
 #include <memory>
@@ -47,6 +48,10 @@ public:
 	void InitializeSoundEngine();
 	void PlaySoundQueue(int sound);
 
+//Constant Variables
+private:
+	static const string playerOneWin, playerTwoWin, gameOver, pieceClick, errorBadMove, errorFatal;
+
 //Container Variables
 private:
 	wBufferVectors soundBufferList;
@@ -55,10 +60,10 @@ private:
 
 //Regular Variables
 private:
-	ixAudioPtr soundEng;
-	ixSourceVoicePtr soundSource;
-	ixMasterVoicePtr soundMaster;
-	bool isSoundEngineInitialized;
+	ixAudioPtr soundEng_;
+	ixSourceVoicePtr soundSource_;
+	ixMasterVoicePtr soundMaster_;
+	bool isSoundEngineInitialized_;
 
 //Private Functions
 private:

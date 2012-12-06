@@ -25,7 +25,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "SoundEngine.h"
 
 SoundEngine::SoundEngine() throw()
-	: isSoundEngineInitialized(false)
+	: isSoundEngineInitialized_(false)
 {
 	//This must be called first, the sound needs to have a COM obejct in order to work
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -35,21 +35,21 @@ SoundEngine::SoundEngine() throw()
 
 SoundEngine::~SoundEngine()
 {
-	(*soundEng)->Release();
+	(*soundEng_)->Release();
 	CoUninitialize();
 }
 
 void SoundEngine::InitializeSoundEngine()
 {
 	//Initialize sound engine
-	if(FAILED(XAudio2Create(&(*soundEng)))) {
+	if(FAILED(XAudio2Create(&(*soundEng_)))) {
 		CoUninitialize();
 		throw Exception(err.SoundEngine_Fatal_Error, "Unable to create audio engine.");
 	}
 
 	//Initialize the mastering voice
-	if(FAILED((*soundEng)->CreateMasteringVoice(&(*soundMaster)))) {
-		(*soundEng)->Release();
+	if(FAILED((*soundEng_)->CreateMasteringVoice(&(*soundMaster_)))) {
+		(*soundEng_)->Release();
 		CoUninitialize();
 		throw Exception(err.SoundEngine_Fatal_Error, "Unable to create mastering voice.");
 	}
@@ -60,7 +60,7 @@ void SoundEngine::InitializeSoundEngine()
 			i.LoadFile("file1");
 		}
 		catch(Exception &e) {
-			(*soundEng)->Release();
+			(*soundEng_)->Release();
 			CoUninitialize();
 			throw;
 		}
@@ -68,12 +68,19 @@ void SoundEngine::InitializeSoundEngine()
 
 	int x = 0;
 	for(auto &i : soundSourceList) {
-		if(FAILED((*soundEng)->CreateSourceVoice(&(*i), &(*soundBufferList[0].GetWFormat())))) {
-			(*soundEng)->Release();
+		if(FAILED((*soundEng_)->CreateSourceVoice(&(*i), &(*soundBufferList[0].GetWFormat())))) {
+			(*soundEng_)->Release();
 			CoUninitialize();
 			throw Exception(err.SoundEngine_Fatal_Error, "Unable to create source voice.");
 		}
 	}
 
-	isSoundEngineInitialized = true;
+	isSoundEngineInitialized_ = true;
+}
+
+void SoundEngine::PlaySoundQueue(int sound)
+{
+	(*soundSourceList[sound])->Start();
+
+	(*soundSourceList[sound])->SubmitSourceBuffer(&(*soundBufferList[sound].GetXA2Buffer()));
 }

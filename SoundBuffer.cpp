@@ -35,7 +35,7 @@ SoundBuffer::SoundBuffer(const SoundBuffer &sb) throw()
 	buffer_ = sb.buffer_;
 
 	if(sb.soundData_) {
-		soundData_ = bytePtr(new BYTE(buffer_.AudioBytes));
+		soundData_ = bytePtr(new BYTE[buffer_.AudioBytes]);
 		CopyMemory(soundData_.get(), sb.soundData_.get(), buffer_.AudioBytes);
 		buffer_.pAudioData = soundData_.get();
 	}
@@ -45,6 +45,21 @@ SoundBuffer::~SoundBuffer()
 {
 	if(soundData_)
 		soundData_.reset();
+}
+
+SoundBuffer& SoundBuffer::operator=(const SoundBuffer &sb) throw()
+{
+	soundData_.reset();
+	format_ = sb.format_;
+	buffer_ = sb.buffer_;
+
+	if(sb.soundData_) {
+		soundData_ = bytePtr(new BYTE[buffer_.AudioBytes]);
+		CopyMemory(soundData_.get(), sb.soundData_.get(), buffer_.AudioBytes);
+		buffer_.pAudioData = soundData_.get();
+	}
+
+	return *this;
 }
 
 void SoundBuffer::InitializeSoundBuffer()
@@ -100,7 +115,7 @@ bool SoundBuffer::LoadFile(const string soundFile)
 		inputSoundFile.seekg((i + 4), ios::beg);
 		inputSoundFile.read(reinterpret_cast<char*>(&dwChunkSize), sizeof(dwChunkSize));
 		if(dwChunkID == 'atad') {
-			soundData_ = bytePtr(new BYTE(dwChunkSize));
+			soundData_ = bytePtr(new BYTE[dwChunkSize]);
 			inputSoundFile.seekg((i + 8), ios::beg);
 			inputSoundFile.read(reinterpret_cast<char*>(soundData_.get()), dwChunkSize);
 			buffer_.AudioBytes = dwChunkSize;
