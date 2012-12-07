@@ -43,13 +43,12 @@ typedef vector<SoundBuffer> wBufferVectors;
 typedef vector<ixSourceVoicePtr> svVector;
 
 typedef map<const string, int> ConstList;
-typedef map<const string, int>::const_iterator ConstListIters_C;
 
 class SoundEngine
 {
 public:
 	SoundEngine() throw();
-	~SoundEngine();
+	~SoundEngine() throw();
 	void InitializeSoundEngine();
 	void PlaySoundFromQueue(string sound);
 
@@ -74,5 +73,5 @@ private:
 //Private Functions
 private:
 	void LoadSound(const string filename);
-	int GetConstantFromList(string soundRequest);
+	int GetConstantFromList(string soundRequest) const;
 };

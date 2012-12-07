@@ -34,6 +34,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <Windows.h>
 #include <stdlib.h>
 #include "Player.h"
+#include "SoundEngine.h"
 #include "WinDrawPacket.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
@@ -44,9 +45,7 @@ typedef unique_ptr<WinDrawPacket> WDPacketPtr;
 typedef vector<int> IntList;
 typedef vector<int>::iterator IntIter;
 typedef map<const string, int> ConstList;
-typedef map<const string, int>::const_iterator ConstListIters_C;
 typedef map<const int, char> PieceList;
-typedef map<const int, char>::const_iterator PieceListIters_C;
 
 class Board
 {
@@ -87,6 +86,9 @@ private:
 	//There are 3 possible combinations
 	static const int A = 9, B = 16, C = 25;
 
+	//Used with the SoundEngine
+	static const string fatalErrorSound;
+
 //Container Variables
 private:
 	IntList spaceList;	//The vector spaceList keeps track of the positions on the board and whether they have been filled with a X,O or have nothing there.
@@ -115,7 +117,7 @@ private:
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();
 	bool CheckMoveLocation(int location);
-	int GetConstantFromList(string request);
-	char GetConstantFromList(int request);
+	int GetConstantFromList(string request) const;
+	char GetConstantFromList(int request) const;
 	void SetWinningPlayersTextColor(bool p, const Player &p1, const Player &p2);
 };

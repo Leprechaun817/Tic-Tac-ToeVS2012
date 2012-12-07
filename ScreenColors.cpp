@@ -24,6 +24,8 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "ScreenColors.h"
 
+const string ScreenColors::fatalErrorSound = "fatalErrorSound";
+
 int ScreenColors::otherPlayerColor_ = 0;
 
 ScreenColors::ScreenColors() throw()
@@ -45,7 +47,7 @@ ScreenColors::ScreenColors() throw()
 												   "red", "purple", "yellow", "white"};
 	colorNames = tempColorNames;
 	//DecidePlayerScreenColor() must be run before the get/set functions can be accessed
-	screenColorInitialized = false;
+	screenColorInitialized_ = false;
 }
 
 void ScreenColors::DecidePlayerScreenColor()
@@ -137,7 +139,7 @@ void ScreenColors::DecidePlayerScreenColor()
 		}
 	}
 
-	screenColorInitialized = true;
+	screenColorInitialized_ = true;
 }
 
 void ScreenColors::SetPlayerTextColor(int color)
@@ -167,7 +169,7 @@ void ScreenColors::ResetConsoleColor()
 
 void ScreenColors::SetTextToPlayerColor() const
 {
-	if(screenColorInitialized)
+	if(screenColorInitialized_)
 		SetConsoleTextAttribute(hConsole_, colorAttribute_);
 	else
 		throw Exception(err.Invalid_Variable_Access);	//Play fatal error message here
@@ -175,7 +177,7 @@ void ScreenColors::SetTextToPlayerColor() const
 
 const int ScreenColors::GetTextColor() const
 {
-	if(screenColorInitialized)
+	if(screenColorInitialized_)
 		return colorAttribute_;
 	else
 		throw Exception(err.Invalid_Variable_Access);	//Play fatal error message here

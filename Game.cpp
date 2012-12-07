@@ -99,8 +99,8 @@ void Game::StartGame()
 		boundsLimit_ = board_.GetMultiplier();
 	
 		//Initializing each player
-		playerOne_.InitializePlayer(boundsLimit_, constantsList);
-		playerTwo_.InitializePlayer(boundsLimit_, constantsList);
+		playerOne_.InitializePlayer(boundsLimit_);
+		playerTwo_.InitializePlayer(boundsLimit_);
 
 		DecidePlayOrder();
 		
@@ -305,7 +305,6 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	if(t_gameState == t_noWinDrawState || t_gameState == t_drawState) {
 		if(t_gameState == t_drawState) {
 			gameDraws_++;
-			//put message indicating that a draw has occurred and a new game is starting
 			cout<<gameDrawMessage;
 			cout<<anyKey;
 			_getche();
@@ -322,7 +321,6 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			playerOne_.UpdateScore();
 			playerOne_.SetPlayerWon();
 			//Play playerOne Win noise here
-			//Message telling that player 1 has won the game
 			cout<<playerOneWinMessage;
 			playerOne_.DisplayScore();
 			cout<<anyKey;
@@ -332,7 +330,6 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			playerTwo_.UpdateScore();
 			playerTwo_.SetPlayerWon();
 			//Play PlayerTwo Win noise here
-			//Message telling that player 2 has won the game
 			cout<<playerTwoWinMessage;
 			playerTwo_.DisplayScore();
 			cout<<anyKey;
@@ -480,10 +477,10 @@ void Game::DisplayLastRoundStats()
 	cout<<"and there have been a total of "<<gameDraws_<<" draw\\s so far in this game"<<endl;
 }
 
-int Game::GetConstantFromList(string request)
+int Game::GetConstantFromList(string request) const
 {
 	int returnValue = -5;
-	for(auto &i : constantsList)
+	for(const auto &i : constantsList)
 		if((i.first) == request) {
 			returnValue = (i.second);
 			break;

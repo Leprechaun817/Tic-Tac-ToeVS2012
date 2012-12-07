@@ -32,26 +32,24 @@ const string Player::oPlayerPiece = "oPlayerPiece";
 const string Player::xPlayerPiece = "xPlayerPiece";
 const string Player::varError = "Player has not been initialized yet,\nplease run initialization function before use.";
 
+const string Player::badMoveErrorSound = "badMoveErrorSound";
+const string Player::fatalErrorSound = "fatalErrorSound";
+
 Player::Player() throw()
 	: textColor(), score_(0), madeMove_(false), playerInitialized_(false), win_(false), resetPlayerFunctionCalled_(false)
 {
-	//if...else... here is used becuase of the fact that numOfPlayers is a static variable so if this class has been
-	//instantiated once this variable will already have a value. So the constructor has to check for that and account for it.
 	if(numOfPlayers_ == 0)	//if numOfPlayers hasn't been used before
 		numOfPlayers_ = 1;
 	else	//if numOfPlayers has been used before
 		numOfPlayers_++;
 
-	//ID will equal the current number of players, which normally won't be more than 2 anyways.
-	//Might as well code for expansion anyways though
 	id_ = numOfPlayers_;
 	AssignPlayerPiece();	
 }
 
-void Player::InitializePlayer(int boundsLimit, const ConstList &cList)
+void Player::InitializePlayer(int boundsLimit)
 {
 	(*this).boundsLimit_ = boundsLimit;
-	(*this).constantsList = cList;
 
 	//Clear the screen
 	system("cls");
@@ -224,10 +222,7 @@ const void Player::SetPlayerTextColor() const
 
 bool Player::HasPlayerMadeMove()
 {
-	//Checks if player has made their move or not returns whatever that value is
-	//and then toggles madeMove to the opposite of what it was.
-	//So if it was true after running this it will be false and visa versa...
-	//Only reset the madeMove_ value if it has already been made true
+	//Resets madeMove_ value only when its value is true
 	if(madeMove_) {
 		madeMove_ = false;
 		return true;

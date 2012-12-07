@@ -50,6 +50,8 @@ const string Board::rowFive = "rowFive";
 const string Board::nullConstant = "nullConstant";
 const string Board::fatalError = "fatalError";
 
+const string Board::fatalErrorSound = "fatalErrorSound";
+
 Board::Board() throw ()
 	: hConsoleWindow_(GetStdHandle(STD_OUTPUT_HANDLE)), totalXsOnBoard_(0), totalOsOnBoard_(0)
 {
@@ -185,8 +187,6 @@ char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor
 bool Board::ProcessSpaceList(int location, int playerPiece)
 {
 	bool error = false; //No errors right now
-	//Only error that can be produced here is where the piece already exists at the
-	//specified spot in the spaceList at which point error would become true
 	
 	//Process spaceList adding the new values	
 	for(auto &i : spaceList)
@@ -983,10 +983,10 @@ void Board::ResetConsoleColor()
 	SetConsoleTextAttribute(hConsoleWindow_, dark_white);
 }
 
-int Board::GetConstantFromList(string request)
+int Board::GetConstantFromList(string request) const
 {
 	int returnValue = -5;
-	for(auto &i : constantsList)
+	for(const auto &i : constantsList)
 		if((i.first) == request) {
 			returnValue = (i.second);
 			break;
@@ -998,10 +998,10 @@ int Board::GetConstantFromList(string request)
 	return returnValue;
 }
 
-char Board::GetConstantFromList(int request)
+char Board::GetConstantFromList(int request) const
 {
 	int returnValue = -5;
-	for(auto &i : numToCharConversionList)
+	for(const auto &i : numToCharConversionList)
 		if((i.first) == request) {
 			return (i.second);
 			break;

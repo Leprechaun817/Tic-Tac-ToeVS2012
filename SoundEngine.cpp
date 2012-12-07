@@ -24,12 +24,12 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "SoundEngine.h"
 
-const string SoundEngine::playerOneWinSound = "playeronewinsound";
-const string SoundEngine::playerTwoWinSound = "playerywowinsound";
-const string SoundEngine::gameOverSound = "gameoversound";
-const string SoundEngine::pieceClickSound = "piececlicksound";
-const string SoundEngine::badMoveErrorSound = "badmoveerrorsound";
-const string SoundEngine::fatalErrorSound = "fatalerrorsound";
+const string SoundEngine::playerOneWinSound = "playerOneWinSound";
+const string SoundEngine::playerTwoWinSound = "playerTwoWinSound";
+const string SoundEngine::gameOverSound = "gameOverSound";
+const string SoundEngine::pieceClickSound = "pieceClickSound";
+const string SoundEngine::badMoveErrorSound = "badMoveErrorSound";
+const string SoundEngine::fatalErrorSound = "fatalErrorSound";
 
 SoundEngine::SoundEngine() throw()
 	: isSoundEngineInitialized_(false)
@@ -52,7 +52,7 @@ SoundEngine::SoundEngine() throw()
 		i = ixSourceVoicePtr(new IXAudio2SourceVoice*());
 }
 
-SoundEngine::~SoundEngine()
+SoundEngine::~SoundEngine() throw()
 {
 	(*soundEng_)->Release();
 	CoUninitialize();
@@ -62,23 +62,17 @@ void SoundEngine::InitializeSoundEngine()
 {
 	//Declare filename constants
 	const string fileType = ".wav";
-	const string fileLocation = "sounds\\";
-	//------TESTING ONLY--------
-	array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound};
-	/*array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
-													   (fileLocation + pieceClickSound + fileType), (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType)};*/
-	//----------DEBUG ONLY START------------
-	cout<<soundFileNames[0];
-	_getche();
-	//----------DEBUG ONLY END------------
+	const string fileLocation = "Sounds\\";
+	array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
+													   (fileLocation + pieceClickSound + fileType), (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType)};
 	//Initialize sound engine
-	if(FAILED(XAudio2Create(&(*soundEng_)))) {
+	if(FAILED(XAudio2Create(soundEng_.get()))) {
 		CoUninitialize();
 		throw Exception(err.SoundEngine_Fatal_Error, "Unable to create audio engine.");
 	}
 
 	//Initialize the mastering voice
-	if(FAILED((*soundEng_)->CreateMasteringVoice(&(*soundMaster_)))) {
+	if(FAILED((*soundEng_)->CreateMasteringVoice(soundMaster_.get()))) {
 		(*soundEng_)->Release();
 		CoUninitialize();
 		throw Exception(err.SoundEngine_Fatal_Error, "Unable to create mastering voice.");
@@ -104,7 +98,7 @@ void SoundEngine::InitializeSoundEngine()
 
 	x = 0;
 	for(auto &i : soundSourceList) {
-		if(FAILED((*soundEng_)->CreateSourceVoice(&(*i), &(*soundBufferList[0].GetWFormat())))) {
+		if(FAILED((*soundEng_)->CreateSourceVoice(i.get(), &(*soundBufferList[0].GetWFormat())))) {
 			(*soundEng_)->Release();
 			CoUninitialize();
 			throw Exception(err.SoundEngine_Fatal_Error, "Unable to create source voice.");
@@ -128,10 +122,10 @@ void SoundEngine::PlaySoundFromQueue(string sound)
 		throw Exception(err.SoundEngine_Fatal_Error, "Sound engine uninitialized, can't play sounds.");
 }
 
-int SoundEngine::GetConstantFromList(string soundRequest)
+int SoundEngine::GetConstantFromList(string soundRequest) const
 {
 	int returnValue = -5;
-	for(auto &i : soundNameList)
+	for(const auto &i : soundNameList)
 		if((i.first) == soundRequest) {
 			returnValue = (i.second);
 			break;

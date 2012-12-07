@@ -49,7 +49,9 @@ const string WinDrawPacket::rowFive = "rowFive";
 const string WinDrawPacket::nullConstant = "nullConstant";
 const string WinDrawPacket::fatalError = "fatalError";
 
-const string WinDrawPacket::packetUnreadable = "Packet has not been created yet...\nPlease run CreatePacket before sending the WinDrawPacket\nback to the Game object\n"; 
+const string WinDrawPacket::packetUnreadable = "Packet has not been created yet...\nPlease run CreatePacket before sending the WinDrawPacket\nback to the Game object\n";
+
+const string WinDrawPacket::fatalErrorSound = "fatalErrorSound";
 
 WinDrawPacket::WinDrawPacket(const ConstList &cList) throw()
 	: gameState_(-2), playerPiece_(-2), winType_(-2), diagonalType_(-2), rowAcross_(-2), columnDown_(-2), packetCreated_(false)
@@ -93,10 +95,10 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 
 }
 
-int WinDrawPacket::GetConstantFromList(string request)
+int WinDrawPacket::GetConstantFromList(string request) const
 {
 	int returnValue = -5;
-	for(auto &i : constantsList)
+	for(const auto &i : constantsList)
 		if((i.first) == request) {
 			returnValue = (i.second);
 			break;

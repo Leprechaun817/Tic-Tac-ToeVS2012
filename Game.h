@@ -42,7 +42,6 @@ using namespace std;
 
 typedef unique_ptr<WinDrawPacket> WDPacketPtr;
 typedef map<const string, int> ConstList;
-typedef map<const string, int>::const_iterator ConstListIters_C;
 
 class Game
 {
@@ -100,7 +99,7 @@ private:
 private:
 	bool GetPlayerMove(int order);
 	bool ProcessPacket(WDPacketPtr packet);
-	int GetConstantFromList(string request);
+	int GetConstantFromList(string request) const;
 	void DecidePlayOrder();
 	void DisplayGameInstructions();
 	void DisplayNotices();

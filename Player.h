@@ -27,14 +27,12 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <string>
 #include <map>
 #include <sstream>
+#include "SoundEngine.h"
 #include "ScreenColors.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
 using namespace std;
-
-typedef map<const string, int> ConstList;
-typedef map<const string, int>::const_iterator ConstListIters_C;
 
 class Player
 {
@@ -47,8 +45,9 @@ public:
 	bool MakeMove();
 	void ResetPlayer(int boundsLimit);
 	void ResetPlayerPiece(); //Call this function before ResetPlayer is called. Very Important!!!
-	void InitializePlayer(int boundsLimit, const ConstList &cList);
+	void InitializePlayer(int boundsLimit);
 	const void SetPlayerTextColor() const;
+	
 	//These return the id and the number representing the playerPiece respectively
 	const int GetID() const;
 	const int GetPiece() const;
@@ -78,11 +77,13 @@ protected:
 //Constants
 private:
 	static const string noPlayerPiece, oPlayerPiece, xPlayerPiece, varError;
+	
+	//Constants for the sounds
+	static const string badMoveErrorSound, fatalErrorSound;
 
 //Container Variables
 private:
 	ScreenColors textColor;
-	ConstList constantsList;
 	ErrorTypes err;
 
 //Local Class Constants

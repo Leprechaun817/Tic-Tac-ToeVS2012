@@ -26,13 +26,13 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <iostream>
 #include <string>
 #include <map>
+#include "SoundEngine.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
 using namespace std;
 
 typedef map<const string, int> ConstList;
-typedef map<const string, int>::const_iterator ConstListIters_C;
 
 class WinDrawPacket
 {
@@ -63,6 +63,9 @@ private:
 	static const string nullConstant;
 	static const string fatalError;
 
+	//Constants for sound
+	static const string fatalErrorSound;
+
 //Local Class Constants
 private:
 	//Local Error String -- Unique to the WinDrawPacket object
@@ -85,5 +88,5 @@ private:
 
 //Private Functions
 private:
-	int GetConstantFromList(string request);
+	int GetConstantFromList(string request) const;
 };

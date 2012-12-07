@@ -23,14 +23,12 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 ********************************************************************************************/
 
 #pragma once
-//#pragma warning(disable : 4244)
 #include <windows.h>
 #include <xaudio2.h>
 #include <fstream>
 #include <memory>
 #include <string>
 #include <sstream>
-#include <conio.h> //temporary - please remove once testing is finished
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
@@ -46,7 +44,7 @@ class SoundBuffer
 public:
 	SoundBuffer() throw();
 	SoundBuffer(const SoundBuffer &sb) throw();
-	~SoundBuffer();
+	~SoundBuffer() throw();
 	SoundBuffer& operator=(const SoundBuffer &sb) throw();
 	const xa2BufferPtr GetXA2Buffer() const;
 	const wFormatPtr GetWFormat() const;
