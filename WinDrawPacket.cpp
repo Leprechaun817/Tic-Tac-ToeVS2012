@@ -104,8 +104,10 @@ int WinDrawPacket::GetConstantFromList(string request) const
 			break;
 		}
 
-	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);	//Play fatal error message here
+	if(returnValue == -5) {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Unknown_Constant_Error);
+	}
 
 	return returnValue;
 }
@@ -114,46 +116,58 @@ const int WinDrawPacket::GetGameState() const
 {
 	if(packetCreated_)
 		return gameState_;
-	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+	}
 }
 
 const int WinDrawPacket::GetPlayerPiece() const
 {
 	if(packetCreated_)
 		return playerPiece_;
-	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+	}
 }
 
 const int WinDrawPacket::GetWinType() const
 {
 	if(packetCreated_)
 		return winType_;
-	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+	}
 }
 
 const int WinDrawPacket::GetDiagType() const
 {
 	if(packetCreated_)
 		return diagonalType_;
-	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+	}
 }
 
 const int WinDrawPacket::GetRow() const
 {
 	if(packetCreated_)
 		return rowAcross_;
-	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+	}
 }
 
 const int WinDrawPacket::GetColumn() const
 {
 	if(packetCreated_)
 		return columnDown_;
-	else
-		throw Exception(err.Invalid_Variable_Access, packetUnreadable);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access, packetUnreadable);
+	}
 }

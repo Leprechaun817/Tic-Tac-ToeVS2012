@@ -30,6 +30,8 @@ const string SoundEngine::gameOverSound = "gameOverSound";
 const string SoundEngine::pieceClickSound = "pieceClickSound";
 const string SoundEngine::badMoveErrorSound = "badMoveErrorSound";
 const string SoundEngine::fatalErrorSound = "fatalErrorSound";
+bool SoundEngine::isSoundEnginePtrInitialized_ = false;
+SoundEngine* SoundEngine::engInstance_ = NULL;
 
 SoundEngine::SoundEngine() throw()
 	: isSoundEngineInitialized_(false)
@@ -56,6 +58,22 @@ SoundEngine::~SoundEngine() throw()
 {
 	(*soundEng_)->Release();
 	CoUninitialize();
+	delete engInstance_;
+}
+
+void SoundEngine::InitPtr()
+{
+	if(engInstance_ == NULL)
+		engInstance_ = new SoundEngine();
+	isSoundEnginePtrInitialized_ = true;
+}
+
+SoundEngine* SoundEngine::GetInstance()
+{
+	if(isSoundEnginePtrInitialized_)
+		return engInstance_;
+	else
+		throw Exception(6, "Pointer for SoundEngine hasn't been initialized yet.\nInitPtr must be called first");
 }
 
 void SoundEngine::InitializeSoundEngine()
@@ -98,26 +116,22 @@ void SoundEngine::InitializeSoundEngine()
 
 	x = 0;
 	for(auto &i : soundSourceList) {
-		if(FAILED((*soundEng_)->CreateSourceVoice(i.get(), &(*soundBufferList[0].GetWFormat())))) {
+		if(FAILED((*soundEng_)->CreateSourceVoice(i.get(), &(*soundBufferList[x++].GetWFormat())))) {
 			(*soundEng_)->Release();
 			CoUninitialize();
 			throw Exception(err.SoundEngine_Fatal_Error, "Unable to create source voice.");
 		}
+		(*i)->Start();
 	}
 
 	isSoundEngineInitialized_ = true;
 }
 
-void SoundEngine::PlaySoundFromQueue(string sound)
+void SoundEngine::PlaySoundFromQueue(string sound) const
 {
-	if(isSoundEngineInitialized_) {
-		int soundNum = GetConstantFromList(sound);
-		(*soundSourceList[soundNum])->Start();
-
+	int soundNum = GetConstantFromList(sound);
+	if(isSoundEngineInitialized_)
 		(*soundSourceList[soundNum])->SubmitSourceBuffer(&(*soundBufferList[soundNum].GetXA2Buffer()));
-
-		(*soundSourceList[soundNum])->Stop();
-	}
 	else
 		throw Exception(err.SoundEngine_Fatal_Error, "Sound engine uninitialized, can't play sounds.");
 }

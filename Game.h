@@ -79,7 +79,6 @@ private:
 private:
 	Player playerOne_, playerTwo_;
 	Board board_;
-	SoundEngine soundEng_;
 
 //Container Variables
 private:

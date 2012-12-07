@@ -910,7 +910,7 @@ bool Board::CheckMoveLocation(int location)
 bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus)
 {
 	if(!playerOneMoveStatus && !playerTwoMoveStatus)
-		throw Exception(err.Fatal_Error);	//Play fatal error message here
+		throw Exception(err.Fatal_Error);
 	
 	if(!(CheckMoveLocation(location)))
 		throw Exception(err.Move_Out_Of_Bounds);
@@ -944,7 +944,6 @@ char Board::XorO(int num)
 	else if(num == t_xPlayerPiece)
 		return GetConstantFromList(t_xPlayerPiece);
 	else {
-		//Play fatal error message here
 		string errorMsg = "DEBUG MESSAGE - If you're seeing this check the calls for the XorO function\n";
 		throw Exception(err.Fatal_Error, errorMsg);
 	}
@@ -992,8 +991,10 @@ int Board::GetConstantFromList(string request) const
 			break;
 		}
 
-	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);	//Play fatal error message here
+	if(returnValue == -5) {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Unknown_Constant_Error);
+	}
 
 	return returnValue;
 }
@@ -1007,8 +1008,10 @@ char Board::GetConstantFromList(int request) const
 			break;
 		}
 
-	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);	//Play fatal error message here
+	if(returnValue == -5) {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Unknown_Constant_Error);
+	}
 
 	return returnValue;
 }

@@ -31,6 +31,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 #include "Game.h"
+#include "SoundEngine.h"
 
 using namespace std;
 
@@ -41,7 +42,7 @@ int main()
 	srand((unsigned)time(0));
 	GamePtr game(new Game());
 	ErrorTypes err;
-
+	
 	try {
 		//Start the game
 		game->StartGame();
@@ -84,6 +85,7 @@ int main()
 			exit(EXIT_FAILURE);	
 		}
 		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices) {
+			SoundEngine::GetInstance()->PlaySoundFromQueue("fatalErrorSound");	//temporary - will remove this later. I just want to test it...
 			system("cls");
 			cout<<e.what()<<"\n";
 			cout<<"Press any key to continue..."<<endl;
@@ -98,6 +100,7 @@ int main()
 			exit(EXIT_FAILURE);
 		}
 		else {
+			SoundEngine::GetInstance()->PlaySoundFromQueue("fatalErrorSound");
 			system("cls");
 			cout<<e.what()<<"\n";
 			cout<<"The program will now close...\n";

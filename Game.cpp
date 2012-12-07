@@ -67,7 +67,7 @@ const string Game::badMoveErrorSound = "badMoveErrorSound";
 const string Game::fatalErrorSound = "fatalErrorSound";
 
 Game::Game() throw()
-	: playerOne_(), playerTwo_(), board_(), soundEng_(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
+	: playerOne_(), playerTwo_(), board_(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
 {
 	array<const string, 23> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
 							   noPlayerPiece, oPlayerPiece, xPlayerPiece, columnOne, columnTwo, columnThree, columnFour, columnFive, rowOne, rowTwo, 
@@ -77,6 +77,9 @@ Game::Game() throw()
 	//constantsList must be created before board and the 2 players are initialized becuase otherwise I'd be sending them a empty map container
 	for(unsigned int i = 0; i < constantsValues.size(); i++)
 		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
+
+	//Initialize the sound engine ptr
+	SoundEngine::InitPtr();
 }
 
 //TODO:
@@ -86,8 +89,9 @@ void Game::StartGame()
 {
 	if(firstPlay_) {
 		//Initialize the sound first before anything else is done
-		soundEng_.InitializeSoundEngine();
+		SoundEngine::GetInstance()->InitializeSoundEngine();
 		
+		//Display all legal notices before anyone is allowed to play the game
 		DisplayNotices();
 
 		//Setup board
@@ -161,6 +165,8 @@ bool Game::EndGame()
 	//Clear the screen
 	system("cls");
 	
+	SoundEngine::GetInstance()->PlaySoundFromQueue(gameOverSound);
+
 	DisplayLastRoundStats();
 	//Ask player/s whether they want to play another round
 	bool quitGame;
@@ -233,6 +239,7 @@ bool Game::GetPlayerMove(int order)
 				system("cls");
 				board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
 				playerOneContinueGame = playerOne_.MakeMove();
+				SoundEngine::GetInstance()->PlaySoundFromQueue(pieceClickSound);
 				if(!playerOneContinueGame) {
 					continuePlay = false;
 					playerOneGood = true;
@@ -242,17 +249,16 @@ bool Game::GetPlayerMove(int order)
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
-					//Play bad move noise here
+					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 					cout<<e.what()<<"\n";
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
 					_getche();
 				}
-				else
+				else {
 					throw;
-					//Play fatal error noise here
+				}
 			}
-			//Play click noise here
 		}
 	}
 	else {
@@ -263,6 +269,7 @@ bool Game::GetPlayerMove(int order)
 				system("cls");
 				board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
 				playerTwoContinueGame = playerTwo_.MakeMove();
+				SoundEngine::GetInstance()->PlaySoundFromQueue(pieceClickSound);
 				if(!playerTwoContinueGame) {
 					continuePlay = false;
 					playerTwoGood = true;
@@ -272,17 +279,16 @@ bool Game::GetPlayerMove(int order)
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
-					//Play bad move noise here
+					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 					cout<<e.what()<<"\n";
 					cout<<"Please re-enter your choice.\n";
 					cout<<anyKey<<endl;
 					_getche();
 				}
-				else
+				else {
 					throw;
-					//Play fatal error noise here
+				}
 			}
-			//Play click noise here
 		}
 	}
 
@@ -320,7 +326,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		if(packet->GetPlayerPiece() == playerOne_.GetPiece()) {
 			playerOne_.UpdateScore();
 			playerOne_.SetPlayerWon();
-			//Play playerOne Win noise here
+			SoundEngine::GetInstance()->PlaySoundFromQueue(playerOneWinSound);
 			cout<<playerOneWinMessage;
 			playerOne_.DisplayScore();
 			cout<<anyKey;
@@ -329,7 +335,7 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		else if(packet->GetPlayerPiece() == playerTwo_.GetPiece()) {
 			playerTwo_.UpdateScore();
 			playerTwo_.SetPlayerWon();
-			//Play PlayerTwo Win noise here
+			SoundEngine::GetInstance()->PlaySoundFromQueue(playerTwoWinSound);
 			cout<<playerTwoWinMessage;
 			playerTwo_.DisplayScore();
 			cout<<anyKey;
@@ -337,7 +343,6 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 		}
 		else
 			throw Exception(err.Bad_PlayerPiece_Variable_Fatal);
-			//Play fatal error noise here
 
 		//Values pulled from map list that will be compared against the winType to figure out what it is
 		const int t_diagonalWinType = GetConstantFromList(diagonalWinType), t_acrossWinType = GetConstantFromList(acrossWinType), t_downWinType = GetConstantFromList(downWinType);
@@ -389,11 +394,10 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			else {
 				if(t_winningAcrossLocation == t_nullConstant)
 					throw Exception(err.Bad_AcrossLocation_Minor);
-				else if(t_winningAcrossLocation == t_fatalError) 
+				else if(t_winningAcrossLocation == t_fatalError)
 					throw Exception(err.Bad_AcrossLocation_Fatal);
 				else
 					throw Exception(err.Bad_AcrossLocation_Unknown);
-				//play fatal error noise here
 			}
 		}
 		else if(t_winType == t_downWinType) {
@@ -423,7 +427,6 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 					throw Exception(err.Bad_DownLocation_Fatal);
 				else
 					throw Exception(err.Bad_DownLocation_Unknown);
-				//play fatal error noise here
 			}
 		}
 		//win type didn't equal 1, 2, or 3, an error has occured
@@ -434,13 +437,12 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 				throw Exception(err.Bad_WinType_Variable_Fatal);
 			else
 				throw Exception(err.Bad_WinType_Variable_Unknown);
-			//play fatal error noise here
 		}
 	}
 	else if(t_gameState == t_fatalError)
-		throw Exception(err.Bad_GameState_Fatal);	//play fatal error noise here
+		throw Exception(err.Bad_GameState_Fatal);
 	else
-		throw Exception(err.Bad_GameState_Unknown);	//play fatal error noise here
+		throw Exception(err.Bad_GameState_Unknown);
 
 	if((playerOne_.DidPlayerWin()) || (playerTwo_.DidPlayerWin()))
 		board_.DisplayWinningBoard(tempType, tempDiagonalLocation, tempAcrossDownLocation, playerOne_, playerTwo_);
@@ -486,8 +488,10 @@ int Game::GetConstantFromList(string request) const
 			break;
 		}
 
-	if(returnValue == -5)
-		throw Exception(err.Unknown_Constant_Error);	//play fatal error noise here
+	if(returnValue == -5) {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Unknown_Constant_Error);
+	}
 	return returnValue;
 }
 
@@ -568,7 +572,7 @@ void Game::DisplayNoticeFile(char noticeType)
 	}
 
 	if((!f.is_open()) || (!f.good()))
-		throw Exception(err.Fatal_Error, "Could not find the notice,\nor notice files have been corrupted.");	//play fatal error noise here
+		throw Exception(err.Fatal_Error, "Could not find the notice,\nor notice files have been corrupted.");
 
 	int lineCount = 0;
 	while(!f.eof()) {

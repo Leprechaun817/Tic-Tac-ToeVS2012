@@ -25,6 +25,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ScreenColors.h"
 
 const string ScreenColors::fatalErrorSound = "fatalErrorSound";
+const string ScreenColors::badMoveErrorSound = "badMoveErrorSound";
 
 int ScreenColors::otherPlayerColor_ = 0;
 
@@ -98,6 +99,7 @@ void ScreenColors::DecidePlayerScreenColor()
 					x++;
 
 			if(!selectionGood) {
+				SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 				ResetConsoleColor();
 				cout<<"\nThat wasn't one of your choices.\n";
 				cout<<"Please re-enter your choice.\n";
@@ -113,6 +115,7 @@ void ScreenColors::DecidePlayerScreenColor()
 				{
 					colorListIter = colorList.find(x++);
 					if(otherPlayerColor_ == (colorListIter->second)) {
+						SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 						ChangeErrorTextColor((colorListIter->second));
 						cout<<" has already been chosen by the other player.\n";
 						cout<<"Please make another choice.\n";
@@ -131,6 +134,7 @@ void ScreenColors::DecidePlayerScreenColor()
 					x++;
 
 			if(!selectionGood && !reCheck) {
+				SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 				ResetConsoleColor();
 				cout<<"\nThat wasn't one of your choices.\n";
 				cout<<"Please re-enter your choice.\n";
@@ -171,16 +175,20 @@ void ScreenColors::SetTextToPlayerColor() const
 {
 	if(screenColorInitialized_)
 		SetConsoleTextAttribute(hConsole_, colorAttribute_);
-	else
-		throw Exception(err.Invalid_Variable_Access);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access);
+	}
 }
 
 const int ScreenColors::GetTextColor() const
 {
 	if(screenColorInitialized_)
 		return colorAttribute_;
-	else
-		throw Exception(err.Invalid_Variable_Access);	//Play fatal error message here
+	else {
+		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+		throw Exception(err.Invalid_Variable_Access);
+	}
 }
 
 void ScreenColors::OutputCharacterWithColor(char c, int color)

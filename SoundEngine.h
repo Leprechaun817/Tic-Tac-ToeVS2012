@@ -47,10 +47,18 @@ typedef map<const string, int> ConstList;
 class SoundEngine
 {
 public:
-	SoundEngine() throw();
+	static void InitPtr();
+	static SoundEngine* GetInstance();
 	~SoundEngine() throw();
 	void InitializeSoundEngine();
-	void PlaySoundFromQueue(string sound);
+	void PlaySoundFromQueue(string sound) const;
+
+//Copy constructor and assignement operator made private and not given definitions
+//so that only one copy of a SoundEngine object can exist at one time
+private:
+	SoundEngine() throw();
+	SoundEngine(const SoundEngine&);
+	SoundEngine& operator=(const SoundEngine&);
 
 //Constant Variables
 private:
@@ -70,6 +78,10 @@ private:
 	ixMasterVoicePtr soundMaster_;
 	bool isSoundEngineInitialized_;
 
+//Static variables/objects
+private:
+	static SoundEngine *engInstance_;
+	static bool isSoundEnginePtrInitialized_;
 //Private Functions
 private:
 	void LoadSound(const string filename);
