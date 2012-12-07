@@ -24,12 +24,12 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "SoundEngine.h"
 
-const string SoundEngine::playerOneWinSound = "playerOneWinSound";
-const string SoundEngine::playerTwoWinSound = "playerTwoWinSound";
-const string SoundEngine::gameOverSound = "gameOverSound";
-const string SoundEngine::pieceClickSound = "pieceClickSound";
-const string SoundEngine::badMoveErrorSound = "badMoveErrorSound";
-const string SoundEngine::fatalErrorSound = "fatalErrorSound";
+const string SoundEngine::playerOneWinSound = "playeronewinsound";
+const string SoundEngine::playerTwoWinSound = "playerywowinsound";
+const string SoundEngine::gameOverSound = "gameoversound";
+const string SoundEngine::pieceClickSound = "piececlicksound";
+const string SoundEngine::badMoveErrorSound = "badmoveerrorsound";
+const string SoundEngine::fatalErrorSound = "fatalerrorsound";
 
 SoundEngine::SoundEngine() throw()
 	: isSoundEngineInitialized_(false)
@@ -62,11 +62,15 @@ void SoundEngine::InitializeSoundEngine()
 {
 	//Declare filename constants
 	const string fileType = ".wav";
-	const string fileLocation = "../Sounds/";
-	array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
-													   (fileLocation + pieceClickSound + fileType), (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType)};
-	
-
+	const string fileLocation = "sounds\\";
+	//------TESTING ONLY--------
+	array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound};
+	/*array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
+													   (fileLocation + pieceClickSound + fileType), (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType)};*/
+	//----------DEBUG ONLY START------------
+	cout<<soundFileNames[0];
+	_getche();
+	//----------DEBUG ONLY END------------
 	//Initialize sound engine
 	if(FAILED(XAudio2Create(&(*soundEng_)))) {
 		CoUninitialize();
@@ -89,7 +93,7 @@ void SoundEngine::InitializeSoundEngine()
 	for(auto &i : soundBufferList) {
 		i.InitializeSoundBuffer();
 		try {
-			i.LoadFile(soundFileNames[x++]);
+			i.LoadFile(soundFileNames[x++].c_str());
 		}
 		catch(Exception &e) {
 			(*soundEng_)->Release();

@@ -70,50 +70,84 @@ void SoundBuffer::InitializeSoundBuffer()
 	isSoundBufferInitialized_ = true;
 }
 
-bool SoundBuffer::LoadFile(const string soundFile)
+bool SoundBuffer::LoadFile(const char *soundFile)
 {
-	if(soundFile.empty())
-		throw Exception(err.SoundBuffer_Fatal_Error, "Cannot find sound file,\nname doesn't match any file");
-	
-	fstream inputSoundFile;
-	inputSoundFile.open(soundFile, ios::binary | ios::in);
-	if(inputSoundFile.bad() || inputSoundFile.is_open())
-		throw Exception(err.SoundBuffer_Fatal_Error, "Sound file is bad or corrupted.");
+	if(soundFile == NULL)
+		throw Exception(err.SoundBuffer_Fatal_Error, "Cannot find sound file, name is NULL.");
 
-	DWORD dwChunkID = 0, dwFileSize = 0, dwChunkSize = 0, dwExtra = 0;
-	//find RIFF chunk identifier
-	inputSoundFile.seekg(0, ios::beg);
-	inputSoundFile.read(reinterpret_cast<char*>(&dwChunkID), sizeof(dwChunkID));
-	if(dwChunkID != 'FFIR') {
+	std::ifstream inputSoundFile(soundFile, std::ios::binary | std::ios::in);
+	if(inputSoundFile.bad())
+		throw Exception(err.SoundBuffer_Fatal_Error, "Sound file is bad or corrupted.");
+		
+	DWORD dwChunkId = 0, dwFileSize = 0, dwChunkSize = 0, dwExtra = 0;
+
+	//look for 'RIFF' chunk identifier
+	inputSoundFile.seekg(0, std::ios::beg);
+	inputSoundFile.read(reinterpret_cast<char*>(&dwChunkId), sizeof(dwChunkId));
+	if(dwChunkId != 'FFIR') {
 		inputSoundFile.close();
 		throw Exception(err.SoundBuffer_Fatal_Error, "Couldn't find the RIFF chunk identifier.\nFile may be corrupted.");
 	}
-
-	//find file size
-	inputSoundFile.seekg(4, ios::beg);
+	//----------DEBUG ONLY START------------
+	cout<<"\nfile did finally load\n";
+	_getche();
+	//----------DEBUG ONLY END------------
+	inputSoundFile.seekg(4, std::ios::beg); //get file size
 	inputSoundFile.read(reinterpret_cast<char*>(&dwFileSize), sizeof(dwFileSize));
 	if(dwFileSize <= 16) {
 		inputSoundFile.close();
-		throw Exception(err.SoundBuffer_Fatal_Error, "File is to small.\nCheck to make sure correct file is being loaded.");
+		throw Exception(err.SoundBuffer_Fatal_Error, "Could not determine file size.\nFile may be corrupted.");
 	}
-
-	//find file format
-	inputSoundFile.seekg(8, ios::beg);
-	inputSoundFile.read(reinterpret_cast<char*>(dwExtra), sizeof(dwExtra));
+	//----------DEBUG ONLY START------------
+	cout<<"got file size...\n";
+	_getche();
+	//----------DEBUG ONLY END------------
+	inputSoundFile.seekg(8, std::ios::beg); //get file format
+	inputSoundFile.read(reinterpret_cast<char*>(&dwExtra), sizeof(dwExtra));
 	if(dwExtra != 'EVAW') {
 		inputSoundFile.close();
 		throw Exception(err.SoundBuffer_Fatal_Error, "Could not determine file format.\nFile may be corrupted.");
 	}
-
-	//look for 'fmt' chunk id
+	//----------DEBUG ONLY START------------
+	cout<<"got the file format succesfully...\n";
+	_getche();
+	//----------DEBUG ONLY END------------
+	//look for 'fmt ' chunk id
 	bool isFormatOK = false;
-	for(unsigned int i = 12; i < dwFileSize; (i += dwChunkSize)) {
-		inputSoundFile.seekg(i, ios::beg);
-		inputSoundFile.read(reinterpret_cast<char*>(&dwChunkID), sizeof(dwChunkID));
-
-		inputSoundFile.seekg((i + 4), ios::beg);
+	for(unsigned int i = 12; i < dwFileSize; ) {
+		inputSoundFile.seekg(i, std::ios::beg);
+		inputSoundFile.read(reinterpret_cast<char*>(&dwChunkId), sizeof(dwChunkId));
+		inputSoundFile.seekg(i + 4, std::ios::beg);
 		inputSoundFile.read(reinterpret_cast<char*>(&dwChunkSize), sizeof(dwChunkSize));
-		if(dwChunkID == 'atad') {
+		if(dwChunkId == ' tmf') {
+			inputSoundFile.seekg(i + 8, std::ios::beg);
+			inputSoundFile.read(reinterpret_cast<char*>(&format_), sizeof(format_));
+			isFormatOK = true;
+			break;
+		}
+		dwChunkSize += 8; //add offsets of the chunk id, and chunk size data entries
+		dwChunkSize += 1;
+		dwChunkSize &= 0xfffffffe; //guarantees WORD padding alignment
+		i += dwChunkSize;
+	}
+	
+	if(!isFormatOK) {
+		inputSoundFile.close();
+		throw Exception(err.SoundBuffer_Fatal_Error, "Couldn't find \'fmt\' in chunk id, sound file may be corrupted");
+	}
+	//----------DEBUG ONLY START------------
+	cout<<"Found fmt in chunk id\n";
+	_getche();
+	//----------DEBUG ONLY END------------
+
+	//look for 'data' chunk id
+	bool isDataOK = false;
+	for(unsigned int i = 12; i < dwFileSize; ) {
+		inputSoundFile.seekg(i, std::ios::beg);
+		inputSoundFile.read(reinterpret_cast<char*>(&dwChunkId), sizeof(dwChunkId));
+		inputSoundFile.seekg(i + 4, std::ios::beg);
+		inputSoundFile.read(reinterpret_cast<char*>(&dwChunkSize), sizeof(dwChunkSize));
+		if(dwChunkId == 'atad') {
 			soundData_ = bytePtr(new BYTE[dwChunkSize]);
 			inputSoundFile.seekg((i + 8), ios::beg);
 			inputSoundFile.read(reinterpret_cast<char*>(soundData_.get()), dwChunkSize);
@@ -121,19 +155,24 @@ bool SoundBuffer::LoadFile(const string soundFile)
 			buffer_.pAudioData = soundData_.get();
 			buffer_.PlayBegin = 0;
 			buffer_.PlayLength = 0;
-			isFormatOK = true;
+			isDataOK = true;
 			break;
 		}
-
-		dwChunkSize += 8;	//Add offsets of the chunk id, and chunk size data entries
+		dwChunkSize += 8; //add offsets of the chunk id, and chunk size data entries
 		dwChunkSize += 1;
-		dwChunkSize &= 0xfffffffe;	//Guarantees WORD padding alignment
+		dwChunkSize &= 0xfffffffe; //guarantees WORD padding alignment
+		i += dwChunkSize;
+	}
+	
+	if(!isDataOK) {
+		inputSoundFile.close();
+		throw Exception(err.SoundBuffer_Fatal_Error, "Couldn't find \'data\' in chunk id, sound file may be corrupted");
 	}
 
-	if(!isFormatOK) {
-		inputSoundFile.close();
-		throw Exception(err.SoundBuffer_Fatal_Error, "Sound file may be corrupted.");
-	}
+	//----------DEBUG ONLY START------------
+	cout<<"Found data in chunk id\n";
+	_getche();
+	//----------DEBUG ONLY END------------
 
 	inputSoundFile.close();
 	return true;
