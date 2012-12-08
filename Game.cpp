@@ -187,6 +187,7 @@ bool Game::EndGame()
 			quitGame = true;
 		}				 
 		else {
+			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 			cout<<"Please enter y or n"<<endl;
 			cout<<"Press any key to continue..."<<endl;
 			_getche();
@@ -548,6 +549,7 @@ void Game::DisplayNotices()
 		else if(choice == showCopyright)
 			DisplayNoticeFile(copyrightNotice);
 		else {
+			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 			cout<<"You choice didn't match any of the available choices.\n";
 			cout<<"Please try again.\n";
 			cout<<"Press any key to continue..."<<endl;
@@ -597,8 +599,10 @@ void Game::DisplayNoticeFile(char noticeType)
 					loop = false;
 					quit = true;
 				}
-				else
+				else {
+					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 					cout<<"\n\nPlease enter in your choice again.\n";
+				}
 			}
 		}
 

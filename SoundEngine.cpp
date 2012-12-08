@@ -31,7 +31,7 @@ const string SoundEngine::pieceClickSound = "pieceClickSound";
 const string SoundEngine::badMoveErrorSound = "badMoveErrorSound";
 const string SoundEngine::fatalErrorSound = "fatalErrorSound";
 bool SoundEngine::isSoundEnginePtrInitialized_ = false;
-SoundEngine* SoundEngine::engInstance_ = NULL;
+SoundEngine::sePtr SoundEngine::engInstance_ = nullptr;
 
 SoundEngine::SoundEngine() throw()
 	: isSoundEngineInitialized_(false)
@@ -58,20 +58,19 @@ SoundEngine::~SoundEngine() throw()
 {
 	(*soundEng_)->Release();
 	CoUninitialize();
-	delete engInstance_;
 }
 
 void SoundEngine::InitPtr()
 {
-	if(engInstance_ == NULL)
-		engInstance_ = new SoundEngine();
+	if(!engInstance_)
+		engInstance_ = sePtr(new SoundEngine());
 	isSoundEnginePtrInitialized_ = true;
 }
 
 SoundEngine* SoundEngine::GetInstance()
 {
 	if(isSoundEnginePtrInitialized_)
-		return engInstance_;
+		return engInstance_.get();
 	else
 		throw Exception(6, "Pointer for SoundEngine hasn't been initialized yet.\nInitPtr must be called first");
 }

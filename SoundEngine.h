@@ -77,10 +77,11 @@ private:
 	ixAudioPtr soundEng_;
 	ixMasterVoicePtr soundMaster_;
 	bool isSoundEngineInitialized_;
+	typedef unique_ptr<SoundEngine> sePtr;
 
 //Static variables/objects
 private:
-	static SoundEngine *engInstance_;
+	static sePtr engInstance_;
 	static bool isSoundEnginePtrInitialized_;
 //Private Functions
 private:
