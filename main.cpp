@@ -67,11 +67,8 @@ int main()
 					//Reset gameRunning to true so that it continues to loop
 					gameRunning = true;
 				}
-				else {				//Yes, player does want to quit. Doesn't want to start a new round
-					//gameRunning already set to false, no need to reassign it
-					//Clear the screen
+				else				//Yes, player does want to quit. Doesn't want to start a new round
 					system("cls");
-				}
 			}
 		}
 	}
