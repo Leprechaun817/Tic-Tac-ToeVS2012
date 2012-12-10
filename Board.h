@@ -83,6 +83,8 @@ private:
 	//The integers that represent the total number of squares on the board
 	//There are 3 possible combinations
 	static const int A = 9, B = 16, C = 25;
+	//Integers that represent how many spaces there are going across, down, or diagonally
+	static const int typeA = 3, typeB = 4, typeC = 5;
 
 	//Used with the SoundEngine
 	static const std::string fatalErrorSound;
@@ -118,4 +120,6 @@ private:
 	int GetConstantFromList(std::string request) const;
 	char GetConstantFromList(int request) const;
 	void SetWinningPlayersTextColor(bool p, const Player &p1, const Player &p2);
+	int FindSpaceListLocation(int locationRequest);
+	void CheckForXsAndOs(int boardLocation, int &xCounter, int &oCounter);
 };

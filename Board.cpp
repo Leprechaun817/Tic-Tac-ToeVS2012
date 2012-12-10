@@ -71,7 +71,6 @@ void Board::SetupBoard(const ConstList &cList)
 {
 	char input;
 	bool answer = false;
-	const int DIVIDER = 3;
 	while(!answer) {
 		system("cls");
 		std::cout<<"How many spaces would like on the board?\n";
@@ -83,17 +82,17 @@ void Board::SetupBoard(const ConstList &cList)
 		std::cin>>input;
 
 		if(input == 'a' || input == 'A') {
-			multiplier_ = A / DIVIDER;
+			multiplier_ = typeA;
 			numOfSpaces_ = A;
 			answer = true;
 		}
 		else if(input == 'b' || input == 'B') {
-			multiplier_ = B / (DIVIDER + 1);
+			multiplier_ = typeB;
 			numOfSpaces_ = B;
 			answer = true;
 		}
 		else if(input == 'c' || input == 'C') {
-			multiplier_ = C / (DIVIDER + 2);
+			multiplier_ = typeC;
 			numOfSpaces_ = C;
 			answer = true;
 		}
@@ -725,7 +724,6 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						else if(acrossDownLocation == t_columnFive && numOfSpaces_ == C)
 							if(squareCount == (startOfColumnFour + addMultiplier))
 								DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
-
 						ResetConsoleColor();
 					}
 					else if(j == temp2 && across && !down && !diagonal && acrossDownLocation == t_rowFour) {
@@ -916,19 +914,330 @@ void Board::SetWinningPlayersTextColor(bool p, const Player &p1, const Player &p
 
 WDPacketPtr Board::FindWinDraw()
 {
-	//Put these constants here because they only have to do with this function
-	//Basically these are the same constants foung in the WinDrawPacket class
-	//Ensures that there aren't any mistakes with the different codes
+	//bool array to keep track of win
+	//depending on the element in the array thats comes out to true, this will
+	//correspond to which spot on the board has a win. If they're all false, there is
+	//either no win or a draw
+	//0 = diagonalLeft
+	//1 = diagonalRight
+	//2 = rowOne
+	//3 = rowTwo
+	//4 = rowThree
+	//5 = rowFour
+	//6 = rowFive
+	//7 = columnOne
+	//8 = columnTwo
+	//9 = columnThree
+	//10 = columnFour
+	//11 = columnFive
+	bool winArray[12] = {false, false, false, false, false, false, false, false, false, false, false, false};
+	bool xWin = false;
+	bool oWin = false;
 
+	const int totalSquares = multiplier_ * 2;
+
+	int numOfXsInRow = 0;
+	int numOfOsInRow = 0;
+
+	//Figure out how many possible wins there are
+	int waysToWin = 0;
+	int addToCounter = 5;
+	if(multiplier_ == typeA || multiplier_ == typeB || multiplier_ == typeC) {
+		waysToWin = typeA + addToCounter;
+		if(multiplier_ == typeB || multiplier_ == typeC) {
+			waysToWin = typeB + (++addToCounter);
+			if(multiplier_ == typeC)
+				waysToWin = typeC + (++addToCounter);
+		}
+	}
+
+	//Figure out possiblity of a draw
+	int totalPiecesOnBoard = GetTotalNumOfPiecesOnBoard();
+	bool possibleDraw = false;
+	if(totalPiecesOnBoard == totalSquares)
+		possibleDraw = true;
+
+	const int startingBoardLocation = 110;
+	const int boardLimit = startingBoardLocation * multiplier_;
+	int currentBoardLocation = startingBoardLocation;
+	bool loop = true;
+	int i = 0;
+	while(i < waysToWin) { 
+		if(i == 0) {     //Test left diagonal
+			for(int j = 0; j < multiplier_; j++) {
+				CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+				//Increment currentBoardLocation by necessay amount
+				currentBoardLocation += startingBoardLocation;
+				if(currentBoardLocation > boardLimit)
+					break;
+			}
+
+			if(numOfXsInRow == multiplier_) {
+				winArray[0] = true;
+				xWin = true;
+				break;
+			}
+			else if(numOfOsInRow == multiplier_) {
+				winArray[0] = true;
+				oWin = true;
+				break;
+			}
+		}
+		else if(i == 1) {     //Test right diagonal
+			const int incrementBoard = 90;
+			currentBoardLocation = 140;
+			for(int j = 0; j < multiplier_; j++) {
+				CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+				//Increment currentBoardLocation by necessary amount
+				currentBoardLocation += incrementBoard;
+				if(currentBoardLocation > boardLimit)
+					break;
+			}
+
+			if(numOfXsInRow == multiplier_) {
+				winArray[1] = true;
+				xWin = true;
+				break;
+			}
+			else if(numOfOsInRow == multiplier_) {
+				winArray[1] = true;
+				oWin = true;
+				break;
+			}
+		}
+		else {
+			if(multiplier_ == typeA) {
+				if(i == 2 || i == 3 || i == 4) {     //Test for rowOne, rowTwo, rowThree
+					const int incrementBoard = 10;
+					currentBoardLocation *= (i - 1);
+					for(int j = 0; j < multiplier_; j++) {
+						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+						currentBoardLocation += incrementBoard;
+					}
+
+					if(numOfXsInRow == multiplier_) {
+						winArray[i] = true;
+						xWin = true;
+						break;
+					}
+					else if(numOfOsInRow == multiplier_) {
+						winArray[i] = true;
+						oWin = true;
+						break;
+					}
+				}
+				else if(i == 5 || i == 6 || i == 7) {     //Test for columnOne, columnTwo, columnThree
+					const int incrementBoard = 100;
+					currentBoardLocation *= (i - 4);
+					for(int j = 0; j < multiplier_; j++) {
+						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+						currentBoardLocation += incrementBoard;
+					}
+
+					if(numOfXsInRow == multiplier_) {
+						winArray[(i + 2)] = true;
+						xWin = true;
+						break;
+					}
+					else if(numOfOsInRow == multiplier_) {
+						winArray[(i + 2)] = true;
+						oWin = true;
+						break;
+					}
+				}
+			}
+			else if(multiplier_ == typeB) {
+				if(i == 2 || i == 3 || i == 4 || i == 5) { //Test for rowOne, rowTwo, rowThree, rowFour
+					const int incrementBoard = 10;
+					currentBoardLocation *= (i - 1);
+					for(int j = 0; j < multiplier_; j++) {
+						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+						currentBoardLocation += incrementBoard;
+					}
+
+					if(numOfXsInRow == multiplier_) {
+						winArray[i] = true;
+						xWin = true;
+						break;
+					}
+					else if(numOfOsInRow == multiplier_) {
+						winArray[i] = true;
+						oWin = true;
+						break;
+					}
+				}
+				else if(i == 6 || i == 7 || i == 8 || i == 9) { //Test for columnOne, columnTwo, columnThree, columnFour
+					const int incrementBoard = 100;
+					currentBoardLocation *= (i - 5);
+					for(int j = 0; j < multiplier_; j++) {
+						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+						currentBoardLocation += incrementBoard;
+					}
+
+					if(numOfXsInRow == multiplier_) {
+						winArray[i + 1] = true;
+						xWin = true;
+						break;
+					}
+					else if(numOfOsInRow == multiplier_) {
+						winArray[i + 1] = true;
+						oWin = true;
+						break;
+					}
+				}
+			}
+			else if(multiplier_ == typeC) {
+				if(i == 2 || i == 3|| i == 4 || i == 5 || i == 6) {
+					const int incrementBoard = 10;
+					currentBoardLocation *= (i - 1);
+					for(int j = 0; j < multiplier_; j++) {
+						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+						currentBoardLocation += incrementBoard;
+					}
+
+					if(numOfXsInRow == multiplier_) {
+						winArray[i] = true;
+						xWin = true;
+						break;
+					}
+					else if(numOfOsInRow == multiplier_) {
+						winArray[i] = true;
+						oWin = true;
+						break;
+					}
+				}
+				else if(i == 7 || i == 8 || i == 9 || i == 10 || i == 11) {
+					const int incrementBoard = 100;
+					currentBoardLocation *= (i - 6);
+					for(int j = 0; j < multiplier_; j++) {
+						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
+						currentBoardLocation += incrementBoard;
+					}
+
+					if(numOfXsInRow == multiplier_) {
+						winArray[i] = true;
+						xWin = true;
+						break;
+					}
+					else if(numOfOsInRow == multiplier_) {
+						winArray[i] = true;
+						oWin = true;
+						break;
+					}
+				}
+			}
+		}
+
+		//Reset counters/boardLocation
+		numOfXsInRow = 0;
+		numOfOsInRow = 0;
+
+		currentBoardLocation = startingBoardLocation;
+	}
 	
-	//----TEMPORARY VALUES FOR TESTING ONLY----
-	int tempGameOutcome = GetConstantFromList(winState), tempPiece = GetConstantFromList(xPlayerPiece), tempWinLocation = GetConstantFromList(diagonalWinType),
-		tempDiagonalLocation = GetConstantFromList(diagonalRightSubType), tempRowLocation = GetConstantFromList(nullConstant), tempColumnLocation = GetConstantFromList(nullConstant);
-	//----ABOVE VALUES ARE TEMPORARY----
-	//----FOR TESTING PURPOSES ONLY----
+	int gameOutcome = 0;
+	int gamePiece = 0;
+	int winType = 0;
+	int diagonalLocation = 0;
+	int rowLocation = 0;
+	int columnLocation = 0;
+	if(!xWin && !oWin && !possibleDraw)
+		gameOutcome = GetConstantFromList(noWinDrawState);
+	else if(!xWin && !oWin && possibleDraw)
+		gameOutcome = GetConstantFromList(drawState);
+	else if(xWin && !oWin) {
+		gameOutcome = GetConstantFromList(winState);
+		gamePiece = GetConstantFromList(xPlayerPiece);	
+	}
+	else if(!xWin && oWin) {
+		gameOutcome = GetConstantFromList(winState);
+		gamePiece = GetConstantFromList(oPlayerPiece);
+	}
+	else
+		throw Exception(err.Fatal_Error, "DEBUG MESSAGE - If you see this there is a bug in the code...");
+
+	if(gameOutcome == GetConstantFromList(winState)) {
+		bool parsingIsDone = false;
+		for(int i = 0; i < 11; i++) {
+			if(i == 0 || i == 1) {
+				winType = GetConstantFromList(diagonalWinType);
+				if(i == 0 && winArray[i] && !parsingIsDone) {
+					diagonalLocation = GetConstantFromList(diagonalLeftSubType);
+					parsingIsDone = true;
+				}
+				else if(i == 1 && winArray[i] && !parsingIsDone) {
+					diagonalLocation = GetConstantFromList(diagonalRightSubType);
+					parsingIsDone = true;
+				}
+				if(parsingIsDone) {
+					rowLocation = GetConstantFromList(nullConstant);
+					columnLocation = GetConstantFromList(nullConstant);
+				}
+				break;
+			}
+			else if(i >= 2 && i <=6) {
+				winType = GetConstantFromList(acrossWinType);
+				if(i == 2 && winArray[i] && !parsingIsDone) {
+					rowLocation = GetConstantFromList(rowOne);
+					parsingIsDone = true;
+				}
+				else if(i == 3 && winArray[i] && !parsingIsDone) {
+					rowLocation = GetConstantFromList(rowTwo);
+					parsingIsDone = true;
+				}
+				else if(i == 4 && winArray[i] && !parsingIsDone) {
+					rowLocation = GetConstantFromList(rowThree);
+					parsingIsDone = true;
+				}
+				else if(i == 5 && winArray[i] && !parsingIsDone) {
+					rowLocation = GetConstantFromList(rowFour);
+					parsingIsDone = true;
+				}
+				else if(i == 6 && winArray[i] && !parsingIsDone) {
+					rowLocation = GetConstantFromList(rowFive);
+					parsingIsDone = true;
+				}
+				if(parsingIsDone) {
+					diagonalLocation = GetConstantFromList(nullConstant);
+					columnLocation = GetConstantFromList(nullConstant);
+				}
+				break;
+			}
+			else if(i >= 7 && i <= 11) {
+				winType = GetConstantFromList(downWinType);
+				if(i == 7 && winArray[i] && !parsingIsDone) {
+					columnLocation = GetConstantFromList(columnOne);
+					parsingIsDone = true;
+				}
+				else if(i == 8 && winArray[i] && !parsingIsDone) {
+					columnLocation = GetConstantFromList(columnTwo);
+					parsingIsDone = true;
+				}
+				else if(i == 9 && winArray[i] && !parsingIsDone) {
+					columnLocation = GetConstantFromList(columnThree);
+					parsingIsDone = true;
+				}
+				else if(i == 10 && winArray[i] && !parsingIsDone) {
+					columnLocation = GetConstantFromList(columnFour);
+					parsingIsDone = true;
+				}
+				else if(i == 11 && winArray[i] && !parsingIsDone) {
+					columnLocation = GetConstantFromList(columnFive);
+					parsingIsDone = true;
+				}
+				if(parsingIsDone) {
+					diagonalLocation = GetConstantFromList(nullConstant);
+					rowLocation = GetConstantFromList(nullConstant);
+				}
+				break;
+			}
+		}
+		if(!parsingIsDone)
+			throw Exception(err.Fatal_Error, "Check code in FindWin Function, there is a problem");
+	}
 
 	WDPacketPtr packet(new WinDrawPacket(constantsList));
-	packet->CreatePacket(tempGameOutcome, tempPiece, tempWinLocation, tempDiagonalLocation, tempRowLocation, tempColumnLocation);
+	packet->CreatePacket(gameOutcome, gamePiece, winType, diagonalLocation, rowLocation, columnLocation);
 
 	return packet;
 }
@@ -971,6 +1280,34 @@ char Board::GetConstantFromList(int request) const
 	}
 
 	return returnValue;
+}
+
+int Board::FindSpaceListLocation(int spaceRequest)
+{
+	int returnValue = -5;
+	int tens = 10;
+	int hundreds = 100;
+	int x = 0;
+	for( auto i : spaceList)
+		if(spaceRequest == ((i / tens) * hundreds))
+			returnValue = x;
+		else
+			x++;
+
+	if(returnValue == -5)
+		throw Exception(err.Fatal_Error, "DEBUG MESSAGE - Please check values being used, something isn't right\nFindSpaceListLocation()");
+
+	return returnValue;
+}
+
+void Board::CheckForXsAndOs(int boardLocation, int &xCounter, int &oCounter)
+{
+	int xNumber = GetConstantFromList(xPlayerPiece);
+	int oNumber = GetConstantFromList(oPlayerPiece);
+	if((spaceList.at(FindSpaceListLocation(boardLocation)) - boardLocation) == xNumber)
+		xCounter++;
+	else if((spaceList.at(FindSpaceListLocation(boardLocation)) - boardLocation) == oNumber)
+		oCounter++;
 }
 
 const int Board::GetMultiplier() const
