@@ -27,13 +27,13 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 int Player::numOfPlayers_ = 0;
 int Player::otherPlayerPiece_ = 0;
 
-const string Player::noPlayerPiece = "noPlayerPiece";
-const string Player::oPlayerPiece = "oPlayerPiece";
-const string Player::xPlayerPiece = "xPlayerPiece";
-const string Player::varError = "Player has not been initialized yet,\nplease run initialization function before use.";
+const std::string Player::noPlayerPiece = "noPlayerPiece";
+const std::string Player::oPlayerPiece = "oPlayerPiece";
+const std::string Player::xPlayerPiece = "xPlayerPiece";
+const std::string Player::varError = "Player has not been initialized yet,\nplease run initialization function before use.";
 
-const string Player::badMoveErrorSound = "badMoveErrorSound";
-const string Player::fatalErrorSound = "fatalErrorSound";
+const std::string Player::badMoveErrorSound = "badMoveErrorSound";
+const std::string Player::fatalErrorSound = "fatalErrorSound";
 
 Player::Player() throw()
 	: textColor(), score_(0), madeMove_(false), playerInitialized_(false), win_(false), resetPlayerFunctionCalled_(false)
@@ -55,9 +55,9 @@ void Player::InitializePlayer(int boundsLimit)
 	system("cls");
 	//Ask player for name
 	//Had to put it here because I need the ID for the prompt...
-	string n;
-	cout<<"Player "<<id_<<": What is your name?"<<endl;
-	cin>>n;
+	std::string n;
+	std::cout<<"Player "<<id_<<": What is your name?"<<std::endl;
+	std::cin>>n;
 
 	//Assigning string value n to name
 	name_ = n;
@@ -119,12 +119,12 @@ void Player::PieceGen()
 
 void Player::DisplayName()
 {
-	cout<<"Player "<<id_<<": "<<name_;
+	std::cout<<"Player "<<id_<<": "<<name_;
 }
 
 void Player::DisplayScore()
 {
-	cout<<"Player "<<id_<<"'s score is: "<<score_;
+	std::cout<<"Player "<<id_<<"'s score is: "<<score_;
 }
 
 void Player::UpdateScore()
@@ -135,11 +135,11 @@ void Player::UpdateScore()
 bool Player::MakeMove()
 {
 	DisplayName();
-	string choice;
-	cout<<endl;
-	cout<<"Enter in your choice below...\n";
-	cout<<"Ex. 1,1 or q to quit the game"<<endl;
-	cin>>choice;
+	std::string choice;
+	std::cout<<std::endl;
+	std::cout<<"Enter in your choice below...\n";
+	std::cout<<"Ex. 1,1 or q to quit the game"<<std::endl;
+	std::cin>>choice;
 
 	bool checkMove = false;
 	bool loop = false;
@@ -162,9 +162,9 @@ bool Player::MakeMove()
 		}
 		catch(Exception &e) {
 			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
-			cout<<e.what()<<"\n";
-			cout<<"Please re-enter your choice\n";
-			cin>>choice;
+			std::cout<<e.what()<<"\n";
+			std::cout<<"Please re-enter your choice\n";
+			std::cin>>choice;
 		}
 	}
 
@@ -173,9 +173,9 @@ bool Player::MakeMove()
 	return true;
 }
 
-bool Player::CheckMoveFormat(string choice)
+bool Player::CheckMoveFormat(std::string choice)
 {
-	const string toManyCharacters = "Your entry has to many characters, please try again...", toFewCharacters = "Your entry has to few characters, please try again...",
+	const std::string toManyCharacters = "Your entry has to many characters, please try again...", toFewCharacters = "Your entry has to few characters, please try again...",
 				 noComma = "Your entry must have a comma in it, please try again...";
 	
 	const unsigned int sizeOfMove = 3;
@@ -192,11 +192,11 @@ bool Player::CheckMoveFormat(string choice)
 		return true;
 }
 
-int Player::ReformatMove(string choice)
+int Player::ReformatMove(std::string choice)
 {
 	const int hundred = 100, ten = 10;
 	
-	stringstream ss;
+	std::stringstream ss;
 	ss.clear();
 
 	int firstNumber, secondNumber;
@@ -251,7 +251,7 @@ const int Player::GetPiece() const
 	}
 }
 
-const string Player::GetName() const
+const std::string Player::GetName() const
 {
 	if(playerInitialized_)
 		return name_;

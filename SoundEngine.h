@@ -34,15 +34,13 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
-using namespace std;
+typedef std::unique_ptr<IXAudio2*> ixAudioPtr;
+typedef std::unique_ptr<IXAudio2SourceVoice*> ixSourceVoicePtr;
+typedef std::unique_ptr<IXAudio2MasteringVoice*> ixMasterVoicePtr;
+typedef std::vector<SoundBuffer> wBufferVectors;
+typedef std::vector<ixSourceVoicePtr> svVector;
 
-typedef unique_ptr<IXAudio2*> ixAudioPtr;
-typedef unique_ptr<IXAudio2SourceVoice*> ixSourceVoicePtr;
-typedef unique_ptr<IXAudio2MasteringVoice*> ixMasterVoicePtr;
-typedef vector<SoundBuffer> wBufferVectors;
-typedef vector<ixSourceVoicePtr> svVector;
-
-typedef map<const string, int> ConstList;
+typedef std::map<const std::string, int> ConstList;
 
 class SoundEngine
 {
@@ -51,7 +49,7 @@ public:
 	static SoundEngine* GetInstance();
 	~SoundEngine() throw();
 	void InitializeSoundEngine();
-	void PlaySoundFromQueue(string sound) const;
+	void PlaySoundFromQueue(std::string sound) const;
 
 //Copy constructor and assignement operator made private and not given definitions
 //so that only one copy of a SoundEngine object can exist at one time
@@ -62,7 +60,7 @@ private:
 
 //Constant Variables
 private:
-	static const string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound;
+	static const std::string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound;
 	static const int numOfSounds = 6;
 
 //Container Variables
@@ -77,7 +75,7 @@ private:
 	ixAudioPtr soundEng_;
 	ixMasterVoicePtr soundMaster_;
 	bool isSoundEngineInitialized_;
-	typedef unique_ptr<SoundEngine> sePtr;
+	typedef std::unique_ptr<SoundEngine> sePtr;
 
 //Static variables/objects
 private:
@@ -85,6 +83,6 @@ private:
 	static bool isSoundEnginePtrInitialized_;
 //Private Functions
 private:
-	void LoadSound(const string filename);
-	int GetConstantFromList(string soundRequest) const;
+	void LoadSound(const std::string filename);
+	int GetConstantFromList(std::string soundRequest) const;
 };

@@ -26,57 +26,57 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 //----Message Constants----
 //Win/Draw Messages
-const string Game::gameDrawMessage = "The game has ended in a draw.\nYou can now start a new round or end the game...\n";
-const string Game::playerOneWinMessage = "Player 1 has won this round!!\nCongratulations!!!^o^\n";
-const string Game::playerTwoWinMessage = "Player 2 has won this round!!\nCongratulations!!!^o^\n";
+const std::string Game::gameDrawMessage = "The game has ended in a draw.\nYou can now start a new round or end the game...\n";
+const std::string Game::playerOneWinMessage = "Player 1 has won this round!!\nCongratulations!!!^o^\n";
+const std::string Game::playerTwoWinMessage = "Player 2 has won this round!!\nCongratulations!!!^o^\n";
 
 //----Other Messages----
-const string Game::anyKey = "Press any key to continue...\n";
+const std::string Game::anyKey = "Press any key to continue...\n";
 
 //----Constants Strings----
-const string Game::noWinDrawState = "noWinDrawState";
-const string Game::winState = "winState";
-const string Game::drawState = "drawState";
-const string Game::acrossWinType = "acrossWinType";
-const string Game::downWinType = "downWinType";
-const string Game::diagonalWinType = "diagonalWinType";
-const string Game::diagonalLeftSubType = "diagonalLeftSubType";
-const string Game::diagonalRightSubType = "diagonalRightSubType";
-const string Game::noPlayerPiece = "noPlayerPiece";
-const string Game::oPlayerPiece = "oPlayerPiece";
-const string Game::xPlayerPiece = "xPlayerPiece";
-const string Game::columnOne = "columnOne";
-const string Game::columnTwo = "columnTwo";
-const string Game::columnThree = "columnThree";
-const string Game::columnFour = "columnFour";
-const string Game::columnFive = "columnFive";
-const string Game::rowOne = "rowOne";
-const string Game::rowTwo = "rowTwo";
-const string Game::rowThree = "rowThree";
-const string Game::rowFour = "rowFour";
-const string Game::rowFive = "rowFive";
-const string Game::nullConstant = "nullConstant";
-const string Game::fatalError = "fatalError";
+const std::string Game::noWinDrawState = "noWinDrawState";
+const std::string Game::winState = "winState";
+const std::string Game::drawState = "drawState";
+const std::string Game::acrossWinType = "acrossWinType";
+const std::string Game::downWinType = "downWinType";
+const std::string Game::diagonalWinType = "diagonalWinType";
+const std::string Game::diagonalLeftSubType = "diagonalLeftSubType";
+const std::string Game::diagonalRightSubType = "diagonalRightSubType";
+const std::string Game::noPlayerPiece = "noPlayerPiece";
+const std::string Game::oPlayerPiece = "oPlayerPiece";
+const std::string Game::xPlayerPiece = "xPlayerPiece";
+const std::string Game::columnOne = "columnOne";
+const std::string Game::columnTwo = "columnTwo";
+const std::string Game::columnThree = "columnThree";
+const std::string Game::columnFour = "columnFour";
+const std::string Game::columnFive = "columnFive";
+const std::string Game::rowOne = "rowOne";
+const std::string Game::rowTwo = "rowTwo";
+const std::string Game::rowThree = "rowThree";
+const std::string Game::rowFour = "rowFour";
+const std::string Game::rowFive = "rowFive";
+const std::string Game::nullConstant = "nullConstant";
+const std::string Game::fatalError = "fatalError";
 
 //Constants for sounds
-const string Game::playerOneWinSound = "playerOneWinSound";
-const string Game::playerTwoWinSound = "playerTwoWinSound";
-const string Game::gameOverSound = "gameOverSound";
-const string Game::pieceClickSound = "pieceClickSound";
-const string Game::badMoveErrorSound = "badMoveErrorSound";
-const string Game::fatalErrorSound = "fatalErrorSound";
+const std::string Game::playerOneWinSound = "playerOneWinSound";
+const std::string Game::playerTwoWinSound = "playerTwoWinSound";
+const std::string Game::gameOverSound = "gameOverSound";
+const std::string Game::pieceClickSound = "pieceClickSound";
+const std::string Game::badMoveErrorSound = "badMoveErrorSound";
+const std::string Game::fatalErrorSound = "fatalErrorSound";
 
 Game::Game() throw()
 	: playerOne_(), playerTwo_(), board_(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
 {
-	array<const string, 23> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
+	std::array<const std::string, 23> constantsNames = {noWinDrawState, winState, drawState, acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType,
 							   noPlayerPiece, oPlayerPiece, xPlayerPiece, columnOne, columnTwo, columnThree, columnFour, columnFive, rowOne, rowTwo, 
 							   rowThree, rowFour, rowFive, nullConstant, fatalError};
-	array<int, 23> constantsValues = {0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, -1, -2};
+	std::array<int, 23> constantsValues = {0, 1, 2, 1, 2, 3, 1, 2, 0, 1, 2, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, -1, -2};
 	
 	//constantsList must be created before board and the 2 players are initialized becuase otherwise I'd be sending them a empty map container
 	for(unsigned int i = 0; i < constantsValues.size(); i++)
-		constantsList.insert(pair<const string, int>(constantsNames[i], constantsValues[i]));
+		constantsList.insert(std::pair<const std::string, int>(constantsNames[i], constantsValues[i]));
 
 	//Initialize the sound engine ptr
 	SoundEngine::InitPtr();
@@ -173,8 +173,8 @@ bool Game::EndGame()
 	bool loop = false;
 	while(!loop) {
 		//Play game over noise here
-		cout<<"Would you like to play for another round? y or n"<<endl;
-		cin>>answer;
+		std::cout<<"Would you like to play for another round? y or n"<<std::endl;
+		std::cin>>answer;
 
 		if(answer == 'Y' || answer == 'y') {
 			//Player wants to go for another round
@@ -188,8 +188,8 @@ bool Game::EndGame()
 		}				 
 		else {
 			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
-			cout<<"Please enter y or n"<<endl;
-			cout<<"Press any key to continue..."<<endl;
+			std::cout<<"Please enter y or n"<<std::endl;
+			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
 			system("cls");
 		}
@@ -215,9 +215,9 @@ void Game::ResetGame()
 		playerOne_.ResetPlayerPiece();
 	}
 	catch(Exception &e) {
-		cout<<e.what()<<"\n";
-		cout<<"DEBUG ERROR - If you see this something is wrong with the code!!!\n";
-		cout<<"Press any key to continue..."<<endl;
+		std::cout<<e.what()<<"\n";
+		std::cout<<"DEBUG ERROR - If you see this something is wrong with the code!!!\n";
+		std::cout<<"Press any key to continue..."<<std::endl;
 		_getche();
 	}
 
@@ -251,9 +251,9 @@ bool Game::GetPlayerMove(int order)
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
 					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
-					cout<<e.what()<<"\n";
-					cout<<"Please re-enter your choice.\n";
-					cout<<anyKey<<endl;
+					std::cout<<e.what()<<"\n";
+					std::cout<<"Please re-enter your choice.\n";
+					std::cout<<anyKey<<std::endl;
 					_getche();
 				}
 				else {
@@ -281,9 +281,9 @@ bool Game::GetPlayerMove(int order)
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
 					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
-					cout<<e.what()<<"\n";
-					cout<<"Please re-enter your choice.\n";
-					cout<<anyKey<<endl;
+					std::cout<<e.what()<<"\n";
+					std::cout<<"Please re-enter your choice.\n";
+					std::cout<<anyKey<<std::endl;
 					_getche();
 				}
 				else {
@@ -312,8 +312,8 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 	if(t_gameState == t_noWinDrawState || t_gameState == t_drawState) {
 		if(t_gameState == t_drawState) {
 			gameDraws_++;
-			cout<<gameDrawMessage;
-			cout<<anyKey;
+			std::cout<<gameDrawMessage;
+			std::cout<<anyKey;
 			_getche();
 			continueGame = false;
 			return continueGame;
@@ -328,18 +328,18 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			playerOne_.UpdateScore();
 			playerOne_.SetPlayerWon();
 			SoundEngine::GetInstance()->PlaySoundFromQueue(playerOneWinSound);
-			cout<<playerOneWinMessage;
+			std::cout<<playerOneWinMessage;
 			playerOne_.DisplayScore();
-			cout<<anyKey;
+			std::cout<<anyKey;
 			_getche();
 		}
 		else if(packet->GetPlayerPiece() == playerTwo_.GetPiece()) {
 			playerTwo_.UpdateScore();
 			playerTwo_.SetPlayerWon();
 			SoundEngine::GetInstance()->PlaySoundFromQueue(playerTwoWinSound);
-			cout<<playerTwoWinMessage;
+			std::cout<<playerTwoWinMessage;
 			playerTwo_.DisplayScore();
-			cout<<anyKey;
+			std::cout<<anyKey;
 			_getche();
 		}
 		else
@@ -461,26 +461,26 @@ void Game::DecidePlayOrder()
 
 void Game::DisplayFinalStats()
 {
-	cout<<"Player 1's name: "<<playerOne_.GetName()<<"\n";
-	cout<<playerOne_.GetName()<<"\'s final score is: "<<playerOne_.GetScore()<<"\n\n";
-	cout<<"Player 2's name: "<<playerTwo_.GetName()<<"\n";
-	cout<<playerTwo_.GetName()<<"\'s final score is: "<<playerTwo_.GetScore()<<"\n\n";
-	cout<<"There were a total of "<<roundsPlayed_<<" round\\s played and\n";
-	cout<<"there were a total of "<<gameDraws_<<" draws during the game."<<endl;
+	std::cout<<"Player 1's name: "<<playerOne_.GetName()<<"\n";
+	std::cout<<playerOne_.GetName()<<"\'s final score is: "<<playerOne_.GetScore()<<"\n\n";
+	std::cout<<"Player 2's name: "<<playerTwo_.GetName()<<"\n";
+	std::cout<<playerTwo_.GetName()<<"\'s final score is: "<<playerTwo_.GetScore()<<"\n\n";
+	std::cout<<"There were a total of "<<roundsPlayed_<<" round\\s played and\n";
+	std::cout<<"there were a total of "<<gameDraws_<<" draws during the game."<<std::endl;
 }
 
 void Game::DisplayLastRoundStats()
 {
-	cout<<"Player 1's name: "<<playerOne_.GetName()<<"\n";
-	cout<<playerOne_.GetName()<<"\'s final score is: "<<playerOne_.GetScore()<<"\n\n";
-	cout<<"Player 2's name: "<<playerTwo_.GetName()<<"\n";
-	cout<<playerTwo_.GetName()<<"\'s final score is: "<<playerTwo_.GetScore()<<"\n\n";
-	cout<<"There were a total of "<<turnCounter_<<" turns taken last round\n";
-	cout<<"You have both played "<<roundsPlayed_<<" round\\s so far in this game\n";
-	cout<<"and there have been a total of "<<gameDraws_<<" draw\\s so far in this game"<<endl;
+	std::cout<<"Player 1's name: "<<playerOne_.GetName()<<"\n";
+	std::cout<<playerOne_.GetName()<<"\'s final score is: "<<playerOne_.GetScore()<<"\n\n";
+	std::cout<<"Player 2's name: "<<playerTwo_.GetName()<<"\n";
+	std::cout<<playerTwo_.GetName()<<"\'s final score is: "<<playerTwo_.GetScore()<<"\n\n";
+	std::cout<<"There were a total of "<<turnCounter_<<" turns taken last round\n";
+	std::cout<<"You have both played "<<roundsPlayed_<<" round\\s so far in this game\n";
+	std::cout<<"and there have been a total of "<<gameDraws_<<" draw\\s so far in this game"<<std::endl;
 }
 
-int Game::GetConstantFromList(string request) const
+int Game::GetConstantFromList(std::string request) const
 {
 	int returnValue = -5;
 	for(const auto &i : constantsList)
@@ -498,47 +498,47 @@ int Game::GetConstantFromList(string request) const
 
 void Game::DisplayGameInstructions()
 {
-	cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<endl;
-	cout<<"Get "<<boundsLimit_<<" in a row going across, down or diagonally to win."<<endl;
-	cout<<"When somebody wins the game or the game is a draw, you can play another round\n";
-	cout<<"or, you can quit.\n\n";
-	cout<<"The board looks something like this:\n";
+	std::cout<<"Welcome to Tic-Tac-Toe!!!!!!!"<<std::endl;
+	std::cout<<"Get "<<boundsLimit_<<" in a row going across, down or diagonally to win."<<std::endl;
+	std::cout<<"When somebody wins the game or the game is a draw, you can play another round\n";
+	std::cout<<"or, you can quit.\n\n";
+	std::cout<<"The board looks something like this:\n";
 	board_.DisplaySampleBoard();
-	cout<<"The columns going across are numbered 1 to "<<boundsLimit_<<" going from left to right and\n";
-	cout<<"The rows going down are numbered 1 to "<<boundsLimit_<<" going from top to bottom.\n";
-	cout<<"To enter in a choice just type the number of the row first and then the column number seperated by a comma.\n";
-	cout<<"Ex: 1,1\n\n";
-	cout<<"The player who got Xs will go first and this is picked randomly each time a new game is played"<<endl;
-	cout<<"Whenever you're ready we can start..."<<endl;
-	cout<<"Press any key to continue..."<<endl;
+	std::cout<<"The columns going across are numbered 1 to "<<boundsLimit_<<" going from left to right and\n";
+	std::cout<<"The rows going down are numbered 1 to "<<boundsLimit_<<" going from top to bottom.\n";
+	std::cout<<"To enter in a choice just type the number of the row first and then the column number seperated by a comma.\n";
+	std::cout<<"Ex: 1,1\n\n";
+	std::cout<<"The player who got Xs will go first and this is picked randomly each time a new game is played"<<std::endl;
+	std::cout<<"Whenever you're ready we can start..."<<std::endl;
+	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
 }
 
 void Game::DisplayNotices()
 {
-	const string acceptance = "I AGREE";
-	const string nonacceptance = "I DISAGREE";
-	const string showWarranty = "SHOW W";
-	const string showCopyright = "SHOW C";
+	const std::string acceptance = "I AGREE";
+	const std::string nonacceptance = "I DISAGREE";
+	const std::string showWarranty = "SHOW W";
+	const std::string showCopyright = "SHOW C";
 	
 	char warrantyNotice = 'w';
 	char copyrightNotice = 'c';
 	
 	bool loop = true;
 	while(loop) {
-		string choice;
+		std::string choice;
 		system("cls");
-		cout<<"Aaron's Tic-Tac-Toe Clone\t-\tCOPYRIGHT 2012 Aaron Gagern\n";
-		cout<<"This program comes with ABSOLUTELY NO WARRANTY\n";
-		cout<<"This is free software, and you are welcome to redistribute it\n";
-		cout<<"under certain conditions\n\n";
-		cout<<"For more details on the warranty, type SHOW W\n";
-		cout<<"To see the GPLv3 license, type SHOW C\n";
-		cout<<"If you accept this license, please type I AGREE\n";
-		cout<<"If you don't wish to do this type, I DISAGREE\n";
-		cout<<"The program will then exit.\n";
-		cout<<"Please type your choice below."<<endl;
-		getline(cin, choice);
+		std::cout<<"Aaron's Tic-Tac-Toe Clone\t-\tCOPYRIGHT 2012 Aaron Gagern\n";
+		std::cout<<"This program comes with ABSOLUTELY NO WARRANTY\n";
+		std::cout<<"This is free software, and you are welcome to redistribute it\n";
+		std::cout<<"under certain conditions\n\n";
+		std::cout<<"For more details on the warranty, type SHOW W\n";
+		std::cout<<"To see the GPLv3 license, type SHOW C\n";
+		std::cout<<"If you accept this license, please type I AGREE\n";
+		std::cout<<"If you don't wish to do this type, I DISAGREE\n";
+		std::cout<<"The program will then exit.\n";
+		std::cout<<"Please type your choice below."<<std::endl;
+		std::getline(std::cin, choice);
 
 		if(choice == acceptance)
 			loop = false;
@@ -550,9 +550,9 @@ void Game::DisplayNotices()
 			DisplayNoticeFile(copyrightNotice);
 		else {
 			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
-			cout<<"You choice didn't match any of the available choices.\n";
-			cout<<"Please try again.\n";
-			cout<<"Press any key to continue..."<<endl;
+			std::cout<<"You choice didn't match any of the available choices.\n";
+			std::cout<<"Please try again.\n";
+			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
 		}
 	}
@@ -560,16 +560,16 @@ void Game::DisplayNotices()
 
 void Game::DisplayNoticeFile(char noticeType)
 {
-	string line;
+	std::string line;
 	int lineStop = 0;
 	
-	ifstream f;
+	std::ifstream f;
 	if(noticeType == 'w') {
-		f.open("WARRANTY.txt", ios::in);
+		f.open("WARRANTY.txt", std::ios::in);
 		lineStop = 10;
 	}
 	if(noticeType == 'c') {
-		f.open("COPYING.txt", ios::in);
+		f.open("COPYING.txt", std::ios::in);
 		lineStop = 20;
 	}
 
@@ -579,7 +579,7 @@ void Game::DisplayNoticeFile(char noticeType)
 	int lineCount = 0;
 	while(!f.eof()) {
 		getline(f, line);
-		cout<<line;
+		std::cout<<line;
 		lineCount++;
 
 		bool loop = true;
@@ -587,13 +587,13 @@ void Game::DisplayNoticeFile(char noticeType)
 		if((lineCount % lineStop) == 0) {
 			while(loop) {
 				char choice;
-				cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
-				cout<<"To stop reading this and go back, type q and press enter.\n";
-				cin>>choice;
+				std::cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
+				std::cout<<"To stop reading this and go back, type q and press enter.\n";
+				std::cin>>choice;
 
 				if(choice == 'c' || choice == 'C') {
 					loop = false;
-					cout<<"\n\n";
+					std::cout<<"\n\n";
 				}
 				else if(choice == 'q' || choice == 'Q') {
 					loop = false;
@@ -601,7 +601,7 @@ void Game::DisplayNoticeFile(char noticeType)
 				}
 				else {
 					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
-					cout<<"\n\nPlease enter in your choice again.\n";
+					std::cout<<"\n\nPlease enter in your choice again.\n";
 				}
 			}
 		}
@@ -613,10 +613,10 @@ void Game::DisplayNoticeFile(char noticeType)
 	//Close the file
 	f.close();
 
-	cout<<"Press any key to continue..."<<endl;
+	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
 
 	//Remove any remaining junk from cin stream
-	cin.clear();
-	cin.ignore(1000, '\n');
+	std::cin.clear();
+	std::cin.ignore(1000, '\n');
 }

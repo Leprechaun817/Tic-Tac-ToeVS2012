@@ -25,33 +25,33 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "WinDrawPacket.h"
 
 //----Constants List Variables----//
-const string WinDrawPacket::noWinDrawState = "noWinDrawState";
-const string WinDrawPacket::winState = "winState";
-const string WinDrawPacket::drawState = "drawState";
-const string WinDrawPacket::acrossWinType = "acrossWinType";
-const string WinDrawPacket::downWinType = "downWinType";
-const string WinDrawPacket::diagonalWinType = "diagonalWinType";
-const string WinDrawPacket::diagonalLeftSubType = "diagonalLeftSubType";
-const string WinDrawPacket::diagonalRightSubType = "diagonalRightSubType";
-const string WinDrawPacket::noPlayerPiece = "noPlayerPiece";
-const string WinDrawPacket::oPlayerPiece = "oPlayerPiece";
-const string WinDrawPacket::xPlayerPiece = "xPlayerPiece";
-const string WinDrawPacket::columnOne = "columnOne";
-const string WinDrawPacket::columnTwo = "columnTwo";
-const string WinDrawPacket::columnThree = "columnThree";
-const string WinDrawPacket::columnFour = "columnFour";
-const string WinDrawPacket::columnFive = "columnFive";
-const string WinDrawPacket::rowOne = "rowOne";
-const string WinDrawPacket::rowTwo = "rowTwo";
-const string WinDrawPacket::rowThree = "rowThree";
-const string WinDrawPacket::rowFour = "rowFour";
-const string WinDrawPacket::rowFive = "rowFive";
-const string WinDrawPacket::nullConstant = "nullConstant";
-const string WinDrawPacket::fatalError = "fatalError";
+const std::string WinDrawPacket::noWinDrawState = "noWinDrawState";
+const std::string WinDrawPacket::winState = "winState";
+const std::string WinDrawPacket::drawState = "drawState";
+const std::string WinDrawPacket::acrossWinType = "acrossWinType";
+const std::string WinDrawPacket::downWinType = "downWinType";
+const std::string WinDrawPacket::diagonalWinType = "diagonalWinType";
+const std::string WinDrawPacket::diagonalLeftSubType = "diagonalLeftSubType";
+const std::string WinDrawPacket::diagonalRightSubType = "diagonalRightSubType";
+const std::string WinDrawPacket::noPlayerPiece = "noPlayerPiece";
+const std::string WinDrawPacket::oPlayerPiece = "oPlayerPiece";
+const std::string WinDrawPacket::xPlayerPiece = "xPlayerPiece";
+const std::string WinDrawPacket::columnOne = "columnOne";
+const std::string WinDrawPacket::columnTwo = "columnTwo";
+const std::string WinDrawPacket::columnThree = "columnThree";
+const std::string WinDrawPacket::columnFour = "columnFour";
+const std::string WinDrawPacket::columnFive = "columnFive";
+const std::string WinDrawPacket::rowOne = "rowOne";
+const std::string WinDrawPacket::rowTwo = "rowTwo";
+const std::string WinDrawPacket::rowThree = "rowThree";
+const std::string WinDrawPacket::rowFour = "rowFour";
+const std::string WinDrawPacket::rowFive = "rowFive";
+const std::string WinDrawPacket::nullConstant = "nullConstant";
+const std::string WinDrawPacket::fatalError = "fatalError";
 
-const string WinDrawPacket::packetUnreadable = "Packet has not been created yet...\nPlease run CreatePacket before sending the WinDrawPacket\nback to the Game object\n";
+const std::string WinDrawPacket::packetUnreadable = "Packet has not been created yet...\nPlease run CreatePacket before sending the WinDrawPacket\nback to the Game object\n";
 
-const string WinDrawPacket::fatalErrorSound = "fatalErrorSound";
+const std::string WinDrawPacket::fatalErrorSound = "fatalErrorSound";
 
 WinDrawPacket::WinDrawPacket(const ConstList &cList) throw()
 	: gameState_(-2), playerPiece_(-2), winType_(-2), diagonalType_(-2), rowAcross_(-2), columnDown_(-2), packetCreated_(false)
@@ -95,7 +95,7 @@ void WinDrawPacket::CreatePacket(const int gameOutcome, const int winningPiece, 
 
 }
 
-int WinDrawPacket::GetConstantFromList(string request) const
+int WinDrawPacket::GetConstantFromList(std::string request) const
 {
 	int returnValue = -5;
 	for(const auto &i : constantsList)

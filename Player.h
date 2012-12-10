@@ -32,8 +32,6 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
-using namespace std;
-
 class Player
 {
 public:
@@ -51,7 +49,7 @@ public:
 	//These return the id and the number representing the playerPiece respectively
 	const int GetID() const;
 	const int GetPiece() const;
-	const string GetName() const;
+	const std::string GetName() const;
 	const int GetScore() const;
 	const int GetMove() const;
 	const int GetPlayerTextColor() const;
@@ -71,15 +69,15 @@ public:
 protected:
 	void AssignPlayerPiece();  //Assign either an X or an O to a player
 	void PieceGen();	//Used to generate the first players piece, X or O.
-	bool CheckMoveFormat(string choice);
-	int ReformatMove(string choice);
+	bool CheckMoveFormat(std::string choice);
+	int ReformatMove(std::string choice);
 
 //Constants
 private:
-	static const string noPlayerPiece, oPlayerPiece, xPlayerPiece, varError;
+	static const std::string noPlayerPiece, oPlayerPiece, xPlayerPiece, varError;
 	
 	//Constants for the sounds
-	static const string badMoveErrorSound, fatalErrorSound;
+	static const std::string badMoveErrorSound, fatalErrorSound;
 
 //Container Variables
 private:
@@ -93,7 +91,7 @@ private:
 //Regular Variables
 private:
 	int id_;
-	string name_;
+	std::string name_;
 	int score_;
 	int playerPiece_;
 	static int otherPlayerPiece_;

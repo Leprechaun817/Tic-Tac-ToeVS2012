@@ -38,10 +38,8 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
-using namespace std;
-
-typedef unique_ptr<WinDrawPacket> WDPacketPtr;
-typedef map<const string, int> ConstList;
+typedef std::unique_ptr<WinDrawPacket> WDPacketPtr;
+typedef std::map<const std::string, int> ConstList;
 
 class Game
 {
@@ -57,23 +55,23 @@ public:
 //----Message Constants----
 private:
 	//Win/Draw Messages
-	static const string gameDrawMessage, playerOneWinMessage, playerTwoWinMessage;
+	static const std::string gameDrawMessage, playerOneWinMessage, playerTwoWinMessage;
 	//Other Messages
-	static const string anyKey;
+	static const std::string anyKey;
 
 //----Constants Strings----
 private:
 	//These are used while creating the constantsList
-	static const string noWinDrawState, winState, drawState;
-	static const string acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType;
-	static const string noPlayerPiece, oPlayerPiece, xPlayerPiece;
-	static const string columnOne, columnTwo, columnThree, columnFour, columnFive;
-	static const string rowOne, rowTwo, rowThree, rowFour, rowFive;
-	static const string nullConstant;
-	static const string fatalError;
+	static const std::string noWinDrawState, winState, drawState;
+	static const std::string acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType;
+	static const std::string noPlayerPiece, oPlayerPiece, xPlayerPiece;
+	static const std::string columnOne, columnTwo, columnThree, columnFour, columnFive;
+	static const std::string rowOne, rowTwo, rowThree, rowFour, rowFive;
+	static const std::string nullConstant;
+	static const std::string fatalError;
 
 	//Used in accessing the sounds
-	static const string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound;
+	static const std::string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound;
 
 //Object Variables
 private:
@@ -98,7 +96,7 @@ private:
 private:
 	bool GetPlayerMove(int order);
 	bool ProcessPacket(WDPacketPtr packet);
-	int GetConstantFromList(string request) const;
+	int GetConstantFromList(std::string request) const;
 	void DecidePlayOrder();
 	void DisplayGameInstructions();
 	void DisplayNotices();

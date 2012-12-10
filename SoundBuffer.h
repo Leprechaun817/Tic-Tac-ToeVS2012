@@ -32,11 +32,9 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
-using namespace std;
-
-typedef unique_ptr<BYTE> bytePtr;
-typedef unique_ptr<XAUDIO2_BUFFER> xa2BufferPtr;
-typedef unique_ptr<WAVEFORMATEX> wFormatPtr;
+typedef std::unique_ptr<BYTE> bytePtr;
+typedef std::unique_ptr<XAUDIO2_BUFFER> xa2BufferPtr;
+typedef std::unique_ptr<WAVEFORMATEX> wFormatPtr;
 
 //Add support for other sound/music file types, especially ogg
 class SoundBuffer

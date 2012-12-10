@@ -24,8 +24,8 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "ScreenColors.h"
 
-const string ScreenColors::fatalErrorSound = "fatalErrorSound";
-const string ScreenColors::badMoveErrorSound = "badMoveErrorSound";
+const std::string ScreenColors::fatalErrorSound = "fatalErrorSound";
+const std::string ScreenColors::badMoveErrorSound = "badMoveErrorSound";
 
 int ScreenColors::otherPlayerColor_ = 0;
 
@@ -38,13 +38,13 @@ ScreenColors::ScreenColors() throw()
 	int color;
 	for(int i = 0; i < constListSize; i++) {
 		color = i % constListSize;
-		colorList.insert(pair<const int, int>(i, color));
+		colorList.insert(std::pair<const int, int>(i, color));
 	}
 
 	//Initialize colorNames array with values
 	//Create temp array with color names and then copy it over to the colorNames array
 	//A bit messy but it works
-	array<string, constListSize> tempColorNames = {"black", "dark blue", "dark green", "dark cyan", "dark red", "dark purple", "dark yellow", "dark white", "gray", "blue", "green", "cyan",
+	std::array<std::string, constListSize> tempColorNames = {"black", "dark blue", "dark green", "dark cyan", "dark red", "dark purple", "dark yellow", "dark white", "gray", "blue", "green", "cyan",
 												   "red", "purple", "yellow", "white"};
 	colorNames = tempColorNames;
 	//DecidePlayerScreenColor() must be run before the get/set functions can be accessed
@@ -53,31 +53,31 @@ ScreenColors::ScreenColors() throw()
 
 void ScreenColors::DecidePlayerScreenColor()
 {
-	const string space = "\t";
-	const string dash = " - ";
+	const std::string space = "\t";
+	const std::string dash = " - ";
 	char choiceLoop = 'a';
 
 	system("cls");
-	cout<<"What color do you want your piece to be?\n";
+	std::cout<<"What color do you want your piece to be?\n";
 	int x = 1;
 	for(auto &i : colorList) {
 		if((i.second) == 0)
 			continue;
 		
 		SetConsoleTextAttribute(hConsole_, (i.second));
-		cout<<space<<choiceLoop++<<dash<<colorNames[x];
+		std::cout<<space<<choiceLoop++<<dash<<colorNames[x];
 
 		if((x + 1) == constListSize)
-			cout<<"\n";
+			std::cout<<"\n";
 		else if((x % 2) == 0)
-			cout<<"\n";
+			std::cout<<"\n";
 		x++;
 	}
 	ResetConsoleColor();
 	
 	char selection;
-	cout<<"Please enter the letter which represents your choice.\n";
-	cout<<"Ex. a\n";
+	std::cout<<"Please enter the letter which represents your choice.\n";
+	std::cout<<"Ex. a\n";
 	selection = GetSelection();
 	bool checkForOtherPlayer = false;
 	while(!checkForOtherPlayer) {
@@ -101,8 +101,8 @@ void ScreenColors::DecidePlayerScreenColor()
 			if(!selectionGood) {
 				SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 				ResetConsoleColor();
-				cout<<"\nThat wasn't one of your choices.\n";
-				cout<<"Please re-enter your choice.\n";
+				std::cout<<"\nThat wasn't one of your choices.\n";
+				std::cout<<"Please re-enter your choice.\n";
 				selection = GetSelection();
 			}
 		}
@@ -117,8 +117,8 @@ void ScreenColors::DecidePlayerScreenColor()
 					if(otherPlayerColor_ == (colorListIter->second)) {
 						SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 						ChangeErrorTextColor((colorListIter->second));
-						cout<<" has already been chosen by the other player.\n";
-						cout<<"Please make another choice.\n";
+						std::cout<<" has already been chosen by the other player.\n";
+						std::cout<<"Please make another choice.\n";
 						selection = GetSelection();
 						reCheck = true;
 						break;
@@ -136,8 +136,8 @@ void ScreenColors::DecidePlayerScreenColor()
 			if(!selectionGood && !reCheck) {
 				SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 				ResetConsoleColor();
-				cout<<"\nThat wasn't one of your choices.\n";
-				cout<<"Please re-enter your choice.\n";
+				std::cout<<"\nThat wasn't one of your choices.\n";
+				std::cout<<"Please re-enter your choice.\n";
 				selection = GetSelection();
 			}
 		}
@@ -158,7 +158,7 @@ void ScreenColors::ChangeErrorTextColor(int color)
 	int x = 0;
 	for(auto &i : colorList) {
 		if((i.second) == color) {
-			cout<<"\n"<<colorNames[x];
+			std::cout<<"\n"<<colorNames[x];
 			break;
 		}
 		x++;

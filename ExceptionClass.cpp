@@ -24,7 +24,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "ExceptionClass.h"
 
-Exception::Exception(int type, string extraMsg1) throw()
+Exception::Exception(int type, std::string extraMsg1) throw()
 	: errorType_(type), errorMsg_(extraMsg1)
 {
 	switch(type) {

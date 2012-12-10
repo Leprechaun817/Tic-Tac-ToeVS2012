@@ -24,12 +24,12 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "SoundEngine.h"
 
-const string SoundEngine::playerOneWinSound = "playerOneWinSound";
-const string SoundEngine::playerTwoWinSound = "playerTwoWinSound";
-const string SoundEngine::gameOverSound = "gameOverSound";
-const string SoundEngine::pieceClickSound = "pieceClickSound";
-const string SoundEngine::badMoveErrorSound = "badMoveErrorSound";
-const string SoundEngine::fatalErrorSound = "fatalErrorSound";
+const std::string SoundEngine::playerOneWinSound = "playerOneWinSound";
+const std::string SoundEngine::playerTwoWinSound = "playerTwoWinSound";
+const std::string SoundEngine::gameOverSound = "gameOverSound";
+const std::string SoundEngine::pieceClickSound = "pieceClickSound";
+const std::string SoundEngine::badMoveErrorSound = "badMoveErrorSound";
+const std::string SoundEngine::fatalErrorSound = "fatalErrorSound";
 bool SoundEngine::isSoundEnginePtrInitialized_ = false;
 SoundEngine::sePtr SoundEngine::engInstance_ = nullptr;
 
@@ -41,11 +41,11 @@ SoundEngine::SoundEngine() throw()
 	soundBufferList.resize(numOfSounds);
 	soundSourceList.resize(numOfSounds);
 
-	array<const string, numOfSounds> soundNameArr = {playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound};
-	array<int, numOfSounds> soundNumArr = {0, 1, 2, 3, 4, 5};
+	std::array<const std::string, numOfSounds> soundNameArr = {playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound};
+	std::array<int, numOfSounds> soundNumArr = {0, 1, 2, 3, 4, 5};
 
 	for(int i = 0; i < numOfSounds; i++)
-		soundNameList.insert(pair<const string, int>(soundNameArr[i], soundNumArr[i]));
+		soundNameList.insert(std::pair<const std::string, int>(soundNameArr[i], soundNumArr[i]));
 
 	//Initialize sound pointers
 	soundEng_ = ixAudioPtr(new IXAudio2*());
@@ -78,9 +78,9 @@ SoundEngine* SoundEngine::GetInstance()
 void SoundEngine::InitializeSoundEngine()
 {
 	//Declare filename constants
-	const string fileType = ".wav";
-	const string fileLocation = "Sounds\\";
-	array<const string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
+	const std::string fileType = ".wav";
+	const std::string fileLocation = "Sounds\\";
+	std::array<const std::string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
 													   (fileLocation + pieceClickSound + fileType), (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType)};
 	//Initialize sound engine
 	if(FAILED(XAudio2Create(soundEng_.get()))) {
@@ -126,7 +126,7 @@ void SoundEngine::InitializeSoundEngine()
 	isSoundEngineInitialized_ = true;
 }
 
-void SoundEngine::PlaySoundFromQueue(string sound) const
+void SoundEngine::PlaySoundFromQueue(std::string sound) const
 {
 	int soundNum = GetConstantFromList(sound);
 	if(isSoundEngineInitialized_)
@@ -135,7 +135,7 @@ void SoundEngine::PlaySoundFromQueue(string sound) const
 		throw Exception(err.SoundEngine_Fatal_Error, "Sound engine uninitialized, can't play sounds.");
 }
 
-int SoundEngine::GetConstantFromList(string soundRequest) const
+int SoundEngine::GetConstantFromList(std::string soundRequest) const
 {
 	int returnValue = -5;
 	for(const auto &i : soundNameList)

@@ -39,13 +39,11 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
-using namespace std;
-
-typedef unique_ptr<WinDrawPacket> WDPacketPtr;
-typedef vector<int> IntList;
-typedef vector<int>::iterator IntIter;
-typedef map<const string, int> ConstList;
-typedef map<const int, char> PieceList;
+typedef std::unique_ptr<WinDrawPacket> WDPacketPtr;
+typedef std::vector<int> IntList;
+typedef std::vector<int>::iterator IntIter;
+typedef std::map<const std::string, int> ConstList;
+typedef std::map<const int, char> PieceList;
 
 class Board
 {
@@ -68,13 +66,13 @@ public:
 //----String constants----//
 //For use with the constantsList
 private:
-	static const string noWinDrawState, winState, drawState;
-	static const string acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType;
-	static const string noPlayerPiece, oPlayerPiece, xPlayerPiece;
-	static const string columnOne, columnTwo, columnThree, columnFour, columnFive;
-	static const string rowOne, rowTwo, rowThree, rowFour, rowFive;
-	static const string nullConstant;
-	static const string fatalError;
+	static const std::string noWinDrawState, winState, drawState;
+	static const std::string acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType;
+	static const std::string noPlayerPiece, oPlayerPiece, xPlayerPiece;
+	static const std::string columnOne, columnTwo, columnThree, columnFour, columnFive;
+	static const std::string rowOne, rowTwo, rowThree, rowFour, rowFive;
+	static const std::string nullConstant;
+	static const std::string fatalError;
 	
 	//The characters that make up the board
 	static const char horizontalLine2 = '-', verticalLine = '|';
@@ -87,7 +85,7 @@ private:
 	static const int A = 9, B = 16, C = 25;
 
 	//Used with the SoundEngine
-	static const string fatalErrorSound;
+	static const std::string fatalErrorSound;
 
 //Container Variables
 private:
@@ -112,12 +110,12 @@ private:
 	char XorO(int num);	//Figure out whether the space is supposed to contain an X or O or nothing and returns the proper character
 	void DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pieceHasColor);
 	char DisplayWinMessage(int playerID, int playerPiece, int playerTextColor);
-	void DisplayWinLocationMessage(bool across, bool down, bool diagonal, bool diagonalLeft, bool diagonalRight, int acrossDownLocation, string winningPlayer, char winningPlayerPiece);
+	void DisplayWinLocationMessage(bool across, bool down, bool diagonal, bool diagonalLeft, bool diagonalRight, int acrossDownLocation, std::string winningPlayer, char winningPlayerPiece);
 	bool ProcessSpaceList(int location, int playerPiece);
 	void ProcessPiecePlacementList();
 	void ResetConsoleColor();
 	bool CheckMoveLocation(int location);
-	int GetConstantFromList(string request) const;
+	int GetConstantFromList(std::string request) const;
 	char GetConstantFromList(int request) const;
 	void SetWinningPlayersTextColor(bool p, const Player &p1, const Player &p2);
 };

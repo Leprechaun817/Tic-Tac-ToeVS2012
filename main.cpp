@@ -33,9 +33,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "Game.h"
 #include "SoundEngine.h"
 
-using namespace std;
-
-typedef unique_ptr<Game> GamePtr;
+typedef std::unique_ptr<Game> GamePtr;
 
 int main()
 {
@@ -75,41 +73,41 @@ int main()
 	catch(Exception &e) {
 		if(e.GetErrorType() == err.Invalid_Variable_Access) {
 			system("cls");
-			cout<<e.what()<<"\n";
-			cout<<"Failed to initialize objects properly.\n";
-			cout<<"Press any key to continue..."<<endl;
+			std::cout<<e.what()<<"\n";
+			std::cout<<"Failed to initialize objects properly.\n";
+			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
 			exit(EXIT_FAILURE);	
 		}
 		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices) {
 			SoundEngine::GetInstance()->PlaySoundFromQueue("fatalErrorSound");	//temporary - will remove this later. I just want to test it...
 			system("cls");
-			cout<<e.what()<<"\n";
-			cout<<"Press any key to continue..."<<endl;
+			std::cout<<e.what()<<"\n";
+			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
 			exit(EXIT_SUCCESS);
 		}
 		else if(e.GetErrorType() == err.Unknown_Constant_Error) {
 			system("cls");
-			cout<<e.what()<<"\n";
-			cout<<"DEBUG MESSAGE - Check the call in the code, probably a misspelled argument or something..."<<endl;
+			std::cout<<e.what()<<"\n";
+			std::cout<<"DEBUG MESSAGE - Check the call in the code, probably a misspelled argument or something..."<<std::endl;
 			_getche();
 			exit(EXIT_FAILURE);
 		}
 		else {
 			SoundEngine::GetInstance()->PlaySoundFromQueue("fatalErrorSound");
 			system("cls");
-			cout<<e.what()<<"\n";
-			cout<<"The program will now close...\n";
-			cout<<"Press any key to continue..."<<endl;
+			std::cout<<e.what()<<"\n";
+			std::cout<<"The program will now close...\n";
+			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	game->DisplayFinalStats();
-	cout<<"Hope you enjoyed the game!!\n";
-	cout<<"Thanks for playing... ^_^"<<endl;
+	std::cout<<"Hope you enjoyed the game!!\n";
+	std::cout<<"Thanks for playing... ^_^"<<std::endl;
 	_getche();
 	
 	return 0;

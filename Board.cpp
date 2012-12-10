@@ -26,31 +26,31 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 //----String Constants----//
 //Used with the constants list
-const string Board::noWinDrawState = "noWinDrawState";
-const string Board::winState = "winState";
-const string Board::drawState = "drawState";
-const string Board::acrossWinType = "acrossWinType";
-const string Board::downWinType = "downWinType";
-const string Board::diagonalWinType = "diagonalWinType";
-const string Board::diagonalLeftSubType = "diagonalLeftSubType";
-const string Board::diagonalRightSubType = "diagonalRightSubType";
-const string Board::noPlayerPiece = "noPlayerPiece";
-const string Board::oPlayerPiece = "oPlayerPiece";
-const string Board::xPlayerPiece = "xPlayerPiece";
-const string Board::columnOne = "columnOne";
-const string Board::columnTwo = "columnTwo";
-const string Board::columnThree = "columnThree";
-const string Board::columnFour = "columnFour";
-const string Board::columnFive = "columnFive";
-const string Board::rowOne = "rowOne";
-const string Board::rowTwo = "rowTwo";
-const string Board::rowThree = "rowThree";
-const string Board::rowFour = "rowFour";
-const string Board::rowFive = "rowFive";
-const string Board::nullConstant = "nullConstant";
-const string Board::fatalError = "fatalError";
+const std::string Board::noWinDrawState = "noWinDrawState";
+const std::string Board::winState = "winState";
+const std::string Board::drawState = "drawState";
+const std::string Board::acrossWinType = "acrossWinType";
+const std::string Board::downWinType = "downWinType";
+const std::string Board::diagonalWinType = "diagonalWinType";
+const std::string Board::diagonalLeftSubType = "diagonalLeftSubType";
+const std::string Board::diagonalRightSubType = "diagonalRightSubType";
+const std::string Board::noPlayerPiece = "noPlayerPiece";
+const std::string Board::oPlayerPiece = "oPlayerPiece";
+const std::string Board::xPlayerPiece = "xPlayerPiece";
+const std::string Board::columnOne = "columnOne";
+const std::string Board::columnTwo = "columnTwo";
+const std::string Board::columnThree = "columnThree";
+const std::string Board::columnFour = "columnFour";
+const std::string Board::columnFive = "columnFive";
+const std::string Board::rowOne = "rowOne";
+const std::string Board::rowTwo = "rowTwo";
+const std::string Board::rowThree = "rowThree";
+const std::string Board::rowFour = "rowFour";
+const std::string Board::rowFive = "rowFive";
+const std::string Board::nullConstant = "nullConstant";
+const std::string Board::fatalError = "fatalError";
 
-const string Board::fatalErrorSound = "fatalErrorSound";
+const std::string Board::fatalErrorSound = "fatalErrorSound";
 
 Board::Board() throw ()
 	: hConsoleWindow_(GetStdHandle(STD_OUTPUT_HANDLE)), totalXsOnBoard_(0), totalOsOnBoard_(0)
@@ -59,11 +59,11 @@ Board::Board() throw ()
 	system("cls");
 
 	//Enter values into the numToCharConversionList
-	array<const int, sizeOfPieceArr> pieceNumbersArr = {0, 1, 2};
-	array<char, sizeOfPieceArr> pieceCharactersArr = {' ', 'O', 'X'};
+	std::array<const int, sizeOfPieceArr> pieceNumbersArr = {0, 1, 2};
+	std::array<char, sizeOfPieceArr> pieceCharactersArr = {' ', 'O', 'X'};
 
 	for(int i = 0; i < sizeOfPieceArr; i++) {
-		numToCharConversionList.insert(pair<const int, char>(pieceNumbersArr[i], pieceCharactersArr[i]));
+		numToCharConversionList.insert(std::pair<const int, char>(pieceNumbersArr[i], pieceCharactersArr[i]));
 	}
 }	
 
@@ -74,13 +74,13 @@ void Board::SetupBoard(const ConstList &cList)
 	const int DIVIDER = 3;
 	while(!answer) {
 		system("cls");
-		cout<<"How many spaces would like on the board?\n";
-		cout<<"Your choices are:\n";
-		cout<<" A)	9\n";
-		cout<<" B)	16\n";
-		cout<<" C)	25\n";
-		cout<<"Please enter the letter representing your choice below.\n";
-		cin>>input;
+		std::cout<<"How many spaces would like on the board?\n";
+		std::cout<<"Your choices are:\n";
+		std::cout<<" A)	9\n";
+		std::cout<<" B)	16\n";
+		std::cout<<" C)	25\n";
+		std::cout<<"Please enter the letter representing your choice below.\n";
+		std::cin>>input;
 
 		if(input == 'a' || input == 'A') {
 			multiplier_ = A / DIVIDER;
@@ -98,8 +98,8 @@ void Board::SetupBoard(const ConstList &cList)
 			answer = true;
 		}
 		else {
-			cout<<"Please enter a choice as listed above."<<endl;
-			cout<<"Try again..."<<endl;
+			std::cout<<"Please enter a choice as listed above."<<std::endl;
+			std::cout<<"Try again..."<<std::endl;
 			_getche();
 		}
 	}
@@ -155,7 +155,7 @@ void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pi
 	
 	char pTemp;
 	pTemp = XorO(piecePlacement[squareCount]);
-	cout<<pTemp;
+	std::cout<<pTemp;
 	temp2 += pieceSpacing;
 	squareCount++;
 
@@ -168,15 +168,15 @@ char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor
 	const int lineSize = 46;
 	system("cls");
 	SetConsoleTextAttribute(hConsoleWindow_, playerTextColor);
-	cout<<"^o^ ---- Player "<<playerID<<" has won the game!!! ---- ^o^"<<"\n";
-	cout<<"-----------    Congratulations    ------------"<<"\n";
+	std::cout<<"^o^ ---- Player "<<playerID<<" has won the game!!! ---- ^o^"<<"\n";
+	std::cout<<"-----------    Congratulations    ------------"<<"\n";
 	for(int i = 1; i <= 46; i++) {
-		cout<<playerPiece;
+		std::cout<<playerPiece;
 		Sleep(50);
 	}
 	ResetConsoleColor();
-	cout<<"\n";
-	cout<<"Press any key to continue..."<<endl;
+	std::cout<<"\n";
+	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
 
 	return (XorO(playerPiece));
@@ -206,8 +206,8 @@ void Board::ProcessPiecePlacementList()
 	IntIter spaceListIter;
 	spaceListIter = spaceList.begin();
 
-	string sTemp;
-	stringstream ssTemp;
+	std::string sTemp;
+	std::stringstream ssTemp;
 	for(auto &i : piecePlacement) {	
 		//Convert number from spaceList to a string
 		sTemp.clear();
@@ -252,25 +252,25 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 		for(int j = 1; j <= sizeOfBoardAcross; j++) {
 			if(i == 1 || i == 13 || i == 17 || i == 21) {
 				if(j == 1 || j == sizeOfBoardAcross)
-					cout<<t_space;
+					std::cout<<t_space;
 				else
-					cout<<horizontalLine2;
+					std::cout<<horizontalLine2;
 			}
 			else if(i == 4 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18 || i == 20) {
 				if(j == 1)
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 				else if(j == temp1) {
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
 				else
-					cout<<t_space;
+					std::cout<<t_space;
 			}
 			else if(i == 7 || i == 11 || i == 15 || i == 19) {
 				if(j == 1)
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 				else if(j == temp1) {
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
 				else if(j == temp2) {
@@ -290,29 +290,29 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 					}
 				}
 				else
-					cout<<t_space;
+					std::cout<<t_space;
 			}
 			else {
 				switch (i) {
 				case 2:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == sizeOfBoardAcross)
-						cout<<verticalLine<<"          Round: "<<numRounds;
+						std::cout<<verticalLine<<"          Round: "<<numRounds;
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 3:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == sizeOfBoardAcross)
-						cout<<verticalLine<<"          Ties: "<<numTies;
+						std::cout<<verticalLine<<"          Ties: "<<numTies;
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else if(j == temp2) {
@@ -332,53 +332,53 @@ void Board::DisplayBoard(int numRounds, int numTies, const Player &pOne, const P
 						}
 					}
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 5:
 					if(j == 1)
-						cout<<t_space;
+						std::cout<<t_space;
 					else if(j == sizeOfBoardAcross)
-						cout<<t_space<<"          Player 1: "<<pOne.GetName();
+						std::cout<<t_space<<"          Player 1: "<<pOne.GetName();
 					else
-						cout<<horizontalLine2;
+						std::cout<<horizontalLine2;
 					break;
 				case 6:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == sizeOfBoardAcross)
-						cout<<verticalLine<<"          Player 1's Score: "<<pOne.GetScore();
+						std::cout<<verticalLine<<"          Player 1's Score: "<<pOne.GetScore();
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 8:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == sizeOfBoardAcross)
-						cout<<verticalLine<<"          Player 2: "<<pTwo.GetName();
+						std::cout<<verticalLine<<"          Player 2: "<<pTwo.GetName();
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 9:
 					if(j == 1)
-						cout<<t_space;
+						std::cout<<t_space;
 					else if(j == sizeOfBoardAcross)
-						cout<<t_space<<"          Player 2's Score: "<<pTwo.GetScore();
+						std::cout<<t_space<<"          Player 2's Score: "<<pTwo.GetScore();
 					else
-						cout<<horizontalLine2;
+						std::cout<<horizontalLine2;
 					break;
 				}
 			}
 		}
 		//Move to next line
-		cout<<endl;
+		std::cout<<std::endl;
 		//Reset temporary values
 		//temp1 will reset to 1
 		//temp2 will reset to 3
@@ -403,25 +403,25 @@ void Board::DisplaySampleBoard()
 		for(int j = 1; j <= sizeOfBoardAcross; j++) {
 			if(i == 1 || i == 5 || i == 9 || i == 13 || i == 17 || i == 21) {
 				if(j == 1 || j == sizeOfBoardAcross)
-					cout<<t_space;
+					std::cout<<t_space;
 				else
-					cout<<horizontalLine2;
+					std::cout<<horizontalLine2;
 			}
 			else if(i == 2 || i == 3 || i == 4 || i == 6 || i == 7 || i == 8 || i == 10 || i == 11 || i == 12 ||
 					i == 14 || i == 15 || i == 16 || i == 18 || i == 19 || i == 20)
 			{
 				if(j == 1)
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 				else if(j == temp1) {
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
 				else
-					cout<<t_space;
+					std::cout<<t_space;
 			}
 		}
 		//Move to next line
-		cout<<endl;
+		std::cout<<std::endl;
 		//Reset temporary values
 		temp1 = 1;
 	}
@@ -472,7 +472,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	char winningPlayerPiece;
 	
 	//Winning player string
-	string winningPlayer;
+	std::string winningPlayer;
 	
 	if(pOne.DidPlayerWin()) {
 		winningPlayerPiece = DisplayWinMessage(pOne.GetID(), pOne.GetPiece(), pOne.GetPlayerTextColor());
@@ -506,27 +506,27 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 		for(int j = 1; j <= sizeOfBoardAcross; j++) {
 			if(i == 1 || i == 5 || i == 9 || i == 13 || i == 17 || i == 21) {
 				if(j == 1 || j == sizeOfBoardAcross)
-					cout<<t_space;
+					std::cout<<t_space;
 				else
-					cout<<horizontalLine2;
+					std::cout<<horizontalLine2;
 			}
 			else if(i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18) {
 				if(j == 1)
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 				else if(j == temp1) {
-					cout<<verticalLine;
+					std::cout<<verticalLine;
 					temp1 += sizeOfSquareAcross;
 				}
 				else
-					cout<<t_space;
+					std::cout<<t_space;
 			}
 			else {
 				switch(i) {
 				case 3:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else if(j == temp2 && diagonal && diagonalLeft && squareCount == boardStart) {
@@ -569,13 +569,13 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(j == temp2 && !diagonal && !across && !down)
 						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 7:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else if(j == temp2 && diagonal && diagonalLeft) {
@@ -625,13 +625,13 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(j == temp2 && !diagonal && !across && !down)
 						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 11:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else if(j == temp2 && diagonal && diagonalLeft) {
@@ -682,13 +682,13 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(j == temp2 && !diagonal && !across && !down)
 						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 15:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else if(j == temp2 && diagonal && diagonalLeft) {
@@ -735,13 +735,13 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(j == temp2 && !diagonal && !across && !down)
 						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				case 19:
 					if(j == 1)
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 					else if(j == temp1) {
-						cout<<verticalLine;
+						std::cout<<verticalLine;
 						temp1 += sizeOfSquareAcross;
 					}
 					else if(j == temp2 && diagonal && diagonalLeft && squareCount == endOfRowFiveC) {
@@ -780,13 +780,13 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 					else if(j == temp2 && !diagonal && !across && !down)
 						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
 					else
-						cout<<t_space;
+						std::cout<<t_space;
 					break;
 				}
 			}
 		}
 		//Move to next line
-		cout<<endl;
+		std::cout<<std::endl;
 		//Reset temporary values
 		//temp1 will reset to 1
 		//temp2 will reset to 3
@@ -794,7 +794,7 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 		temp2 = 3;
 	}
 	//Skip a line, for spacing
-	cout<<endl;
+	std::cout<<std::endl;
 
 	SetWinningPlayersTextColor(playerOneWon, pOne, pTwo);
 
@@ -802,12 +802,12 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	DisplayWinLocationMessage(across, down, diagonal, diagonalLeft, diagonalRight, acrossDownLocation, winningPlayer, winningPlayerPiece);
 
 	ResetConsoleColor();
-	cout<<endl<<"Press any key to continue..."<<endl;
+	std::cout<<std::endl<<"Press any key to continue..."<<std::endl;
 	_getche();
 	system("cls");
 }
 
-void Board::DisplayWinLocationMessage(bool across, bool down, bool diagonal, bool diagonalLeft, bool diagonalRight, int acrossDownLocation, string winningPlayer, char winningPlayerPiece)
+void Board::DisplayWinLocationMessage(bool across, bool down, bool diagonal, bool diagonalLeft, bool diagonalRight, int acrossDownLocation, std::string winningPlayer, char winningPlayerPiece)
 {
 	const int t_columnOne = GetConstantFromList(columnOne), t_columnTwo = GetConstantFromList(columnTwo), t_columnThree = GetConstantFromList(columnThree),
 			  t_columnFour = GetConstantFromList(columnFour), t_columnFive = GetConstantFromList(columnFive);
@@ -816,33 +816,33 @@ void Board::DisplayWinLocationMessage(bool across, bool down, bool diagonal, boo
 	
 	if(diagonal && !across && !down) {
 		if(diagonalLeft)
-			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from left to right"<<endl;
+			std::cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from left to right"<<std::endl;
 		else if(diagonalRight)
-			cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from right to left"<<endl;
+			std::cout<<winningPlayer<<" won with a diagonal line of "<<winningPlayerPiece<<"'s going from right to left"<<std::endl;
 	}
 	else if(across && !down && !diagonal) {
 		if(acrossDownLocation == t_rowOne)
-			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 1"<<endl;
+			std::cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 1"<<std::endl;
 		else if(acrossDownLocation == t_rowTwo)
-			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 2"<<endl;
+			std::cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 2"<<std::endl;
 		else if(acrossDownLocation == t_rowThree)
-			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 3"<<endl;
+			std::cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 3"<<std::endl;
 		else if(acrossDownLocation == t_rowFour)
-			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 4"<<endl;
+			std::cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 4"<<std::endl;
 		else if(acrossDownLocation == t_rowFive)
-			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 5"<<endl;
+			std::cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going across on row 5"<<std::endl;
 	}
 	else if(down && !across && !diagonal) {
 		if(acrossDownLocation == t_columnOne)
-			cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going down on column 1"<<endl;
+			std::cout<<winningPlayer<<" won with a line of "<<winningPlayerPiece<<"'s going down on column 1"<<std::endl;
 		else if(acrossDownLocation == t_columnTwo)
-			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 2"<<endl;
+			std::cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 2"<<std::endl;
 		else if(acrossDownLocation == t_columnThree)
-			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 3"<<endl;
+			std::cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 3"<<std::endl;
 		else if(acrossDownLocation == t_columnFour)
-			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 4"<<endl;
+			std::cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 4"<<std::endl;
 		else if(acrossDownLocation == t_columnFive)
-			cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 5"<<endl;
+			std::cout<<winningPlayer<<" win with a line of "<<winningPlayerPiece<<"'s going down on column 5"<<std::endl;
 	}
 }
 
@@ -901,7 +901,7 @@ char Board::XorO(int num)
 	else if(num == t_xPlayerPiece)
 		return GetConstantFromList(t_xPlayerPiece);
 	else {
-		string errorMsg = "DEBUG MESSAGE - If you're seeing this check the calls for the XorO function\n";
+		std::string errorMsg = "DEBUG MESSAGE - If you're seeing this check the calls for the XorO function\n";
 		throw Exception(err.Fatal_Error, errorMsg);
 	}
 }
@@ -939,7 +939,7 @@ void Board::ResetConsoleColor()
 	SetConsoleTextAttribute(hConsoleWindow_, dark_white);
 }
 
-int Board::GetConstantFromList(string request) const
+int Board::GetConstantFromList(std::string request) const
 {
 	int returnValue = -5;
 	for(const auto &i : constantsList)

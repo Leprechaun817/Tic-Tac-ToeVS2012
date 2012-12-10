@@ -28,16 +28,14 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <string>
 #include "ErrorTypes.h"
 
-using namespace std;
-
-class Exception : public exception
+class Exception : public std::exception
 {
 public:
-	Exception(int type, string extraMsg1 = " ") throw();
+	Exception(int type, std::string extraMsg1 = " ") throw();
 	const char* what() const throw();
 	const int GetErrorType() const;
 private:
-	string errorMsg_;
+	std::string errorMsg_;
 	int errorType_;
 	ErrorTypes err;
 };

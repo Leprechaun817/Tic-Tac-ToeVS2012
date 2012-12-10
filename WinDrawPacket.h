@@ -30,9 +30,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
-using namespace std;
-
-typedef map<const string, int> ConstList;
+typedef std::map<const std::string, int> ConstList;
 
 class WinDrawPacket
 {
@@ -55,21 +53,21 @@ public:
 
 //----Constants List Variables----//
 private:
-	static const string noWinDrawState, winState, drawState;
-	static const string acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType;
-	static const string noPlayerPiece, oPlayerPiece, xPlayerPiece;
-	static const string columnOne, columnTwo, columnThree, columnFour, columnFive;
-	static const string rowOne, rowTwo, rowThree, rowFour, rowFive;
-	static const string nullConstant;
-	static const string fatalError;
+	static const std::string noWinDrawState, winState, drawState;
+	static const std::string acrossWinType, downWinType, diagonalWinType, diagonalLeftSubType, diagonalRightSubType;
+	static const std::string noPlayerPiece, oPlayerPiece, xPlayerPiece;
+	static const std::string columnOne, columnTwo, columnThree, columnFour, columnFive;
+	static const std::string rowOne, rowTwo, rowThree, rowFour, rowFive;
+	static const std::string nullConstant;
+	static const std::string fatalError;
 
 	//Constants for sound
-	static const string fatalErrorSound;
+	static const std::string fatalErrorSound;
 
 //Local Class Constants
 private:
 	//Local Error String -- Unique to the WinDrawPacket object
-	static const string packetUnreadable;
+	static const std::string packetUnreadable;
 
 //Container Variables
 private:
@@ -88,5 +86,5 @@ private:
 
 //Private Functions
 private:
-	int GetConstantFromList(string request) const;
+	int GetConstantFromList(std::string request) const;
 };

@@ -138,7 +138,7 @@ bool SoundBuffer::LoadFile(const char *soundFile)
 		inputSoundFile.read(reinterpret_cast<char*>(&dwChunkSize), sizeof(dwChunkSize));
 		if(dwChunkId == 'atad') {
 			soundData_ = bytePtr(new BYTE[dwChunkSize]);
-			inputSoundFile.seekg((i + 8), ios::beg);
+			inputSoundFile.seekg((i + 8), std::ios::beg);
 			inputSoundFile.read(reinterpret_cast<char*>(soundData_.get()), dwChunkSize);
 			buffer_.AudioBytes = dwChunkSize;
 			buffer_.pAudioData = soundData_.get();
