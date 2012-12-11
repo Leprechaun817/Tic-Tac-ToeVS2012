@@ -960,6 +960,8 @@ WDPacketPtr Board::FindWinDraw()
 	const int startingBoardLocation = 110;
 	const int boardLimit = startingBoardLocation * multiplier_;
 	int currentBoardLocation = startingBoardLocation;
+	bool noReset = false;
+	bool AcrossOrDown = false;	//Across is false, Down is true
 	bool loop = true;
 	int i = 0;
 	while(i < waysToWin) { 
@@ -985,7 +987,7 @@ WDPacketPtr Board::FindWinDraw()
 		}
 		else if(i == 1) {     //Test right diagonal
 			const int incrementBoard = 90;
-			currentBoardLocation = 140;
+			currentBoardLocation = (startingBoardLocation + (multiplier_ * 10)) - 10;
 			for(int j = 0; j < multiplier_; j++) {
 				CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
 				//Increment currentBoardLocation by necessary amount
@@ -1009,7 +1011,17 @@ WDPacketPtr Board::FindWinDraw()
 			if(multiplier_ == typeA) {
 				if(i == 2 || i == 3 || i == 4) {     //Test for rowOne, rowTwo, rowThree
 					const int incrementBoard = 10;
-					currentBoardLocation *= (i - 1);
+					if(i == 2) {
+						currentBoardLocation = startingBoardLocation;
+						noReset = true;
+					}
+					else if(i == 3) 
+						currentBoardLocation += 100;
+					else {
+						currentBoardLocation += 100;
+						noReset = false;
+					}
+
 					for(int j = 0; j < multiplier_; j++) {
 						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
 						currentBoardLocation += incrementBoard;
@@ -1028,7 +1040,19 @@ WDPacketPtr Board::FindWinDraw()
 				}
 				else if(i == 5 || i == 6 || i == 7) {     //Test for columnOne, columnTwo, columnThree
 					const int incrementBoard = 100;
-					currentBoardLocation *= (i - 4);
+					if(i == 5) {
+						currentBoardLocation = startingBoardLocation;
+						noReset = true;
+						AcrossOrDown = true;
+					}
+					else if(i == 6)
+						currentBoardLocation += 10;
+					else {
+						currentBoardLocation += 10;
+						noReset = false;
+						AcrossOrDown = false;
+					}
+
 					for(int j = 0; j < multiplier_; j++) {
 						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
 						currentBoardLocation += incrementBoard;
@@ -1049,7 +1073,17 @@ WDPacketPtr Board::FindWinDraw()
 			else if(multiplier_ == typeB) {
 				if(i == 2 || i == 3 || i == 4 || i == 5) { //Test for rowOne, rowTwo, rowThree, rowFour
 					const int incrementBoard = 10;
-					currentBoardLocation *= (i - 1);
+					if(i == 2) {
+						currentBoardLocation = startingBoardLocation;
+						noReset = true;
+					}
+					else if(i == 3 || i == 4)
+						currentBoardLocation += 100;
+					else {
+						currentBoardLocation += 100;
+						noReset = false;
+					}
+
 					for(int j = 0; j < multiplier_; j++) {
 						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
 						currentBoardLocation += incrementBoard;
@@ -1068,7 +1102,19 @@ WDPacketPtr Board::FindWinDraw()
 				}
 				else if(i == 6 || i == 7 || i == 8 || i == 9) { //Test for columnOne, columnTwo, columnThree, columnFour
 					const int incrementBoard = 100;
-					currentBoardLocation *= (i - 5);
+					if(i == 6) {
+						currentBoardLocation = startingBoardLocation;
+						noReset = true;
+						AcrossOrDown = true;
+					}
+					else if(i == 7 || i == 8)
+						currentBoardLocation += 10;
+					else {
+						currentBoardLocation += 10;
+						noReset = false;
+						AcrossOrDown = false;
+					}
+
 					for(int j = 0; j < multiplier_; j++) {
 						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
 						currentBoardLocation += incrementBoard;
@@ -1087,9 +1133,19 @@ WDPacketPtr Board::FindWinDraw()
 				}
 			}
 			else if(multiplier_ == typeC) {
-				if(i == 2 || i == 3|| i == 4 || i == 5 || i == 6) {
+				if(i == 2 || i == 3|| i == 4 || i == 5 || i == 6) { //Test for rowOne, rowTwo, rowThree, rowFour, rowFive
 					const int incrementBoard = 10;
-					currentBoardLocation *= (i - 1);
+					if(i == 2) {
+						currentBoardLocation = startingBoardLocation;
+						noReset = true;
+					}
+					else if(i == 3 || i == 4 || i == 5)
+						currentBoardLocation += 100;
+					else {
+						currentBoardLocation += 100;
+						noReset = false;
+					}
+
 					for(int j = 0; j < multiplier_; j++) {
 						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
 						currentBoardLocation += incrementBoard;
@@ -1106,9 +1162,21 @@ WDPacketPtr Board::FindWinDraw()
 						break;
 					}
 				}
-				else if(i == 7 || i == 8 || i == 9 || i == 10 || i == 11) {
+				else if(i == 7 || i == 8 || i == 9 || i == 10 || i == 11) { //Test for columnOne, columnTwo, columnThree, columnFour, columnFive
 					const int incrementBoard = 100;
-					currentBoardLocation *= (i - 6);
+					if(i == 7) {
+						currentBoardLocation = startingBoardLocation;
+						noReset = true;
+						AcrossOrDown = true;
+					}
+					else if(i == 8 || i == 9 || i == 10)
+						currentBoardLocation += 10;
+					else {
+						currentBoardLocation += 10;
+						noReset = false;
+						AcrossOrDown = false;
+					}
+
 					for(int j = 0; j < multiplier_; j++) {
 						CheckForXsAndOs(currentBoardLocation, numOfXsInRow, numOfOsInRow);
 						currentBoardLocation += incrementBoard;
@@ -1132,7 +1200,15 @@ WDPacketPtr Board::FindWinDraw()
 		numOfXsInRow = 0;
 		numOfOsInRow = 0;
 
-		currentBoardLocation = startingBoardLocation;
+		if(!noReset)
+			currentBoardLocation = startingBoardLocation;
+		else {
+			if(!AcrossOrDown)
+				currentBoardLocation -= (multiplier_ * 10);
+			else
+				currentBoardLocation -= (multiplier_ * 100);
+		}
+		i++;
 	}
 	
 	int gameOutcome = 0;
@@ -1172,8 +1248,8 @@ WDPacketPtr Board::FindWinDraw()
 				if(parsingIsDone) {
 					rowLocation = GetConstantFromList(nullConstant);
 					columnLocation = GetConstantFromList(nullConstant);
+					break;
 				}
-				break;
 			}
 			else if(i >= 2 && i <=6) {
 				winType = GetConstantFromList(acrossWinType);
@@ -1200,8 +1276,8 @@ WDPacketPtr Board::FindWinDraw()
 				if(parsingIsDone) {
 					diagonalLocation = GetConstantFromList(nullConstant);
 					columnLocation = GetConstantFromList(nullConstant);
+					break;
 				}
-				break;
 			}
 			else if(i >= 7 && i <= 11) {
 				winType = GetConstantFromList(downWinType);
@@ -1228,8 +1304,8 @@ WDPacketPtr Board::FindWinDraw()
 				if(parsingIsDone) {
 					diagonalLocation = GetConstantFromList(nullConstant);
 					rowLocation = GetConstantFromList(nullConstant);
+					break;
 				}
-				break;
 			}
 		}
 		if(!parsingIsDone)
@@ -1289,7 +1365,7 @@ int Board::FindSpaceListLocation(int spaceRequest)
 	int hundreds = 100;
 	int x = 0;
 	for( auto i : spaceList)
-		if(spaceRequest == ((i / tens) * hundreds))
+		if(spaceRequest == ((i / tens) * tens))
 			returnValue = x;
 		else
 			x++;
