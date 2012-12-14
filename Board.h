@@ -58,6 +58,8 @@ public:
 	void ResetBoard();  //Resets board and sets it up for another play-through
 	bool UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus);
 	WDPacketPtr FindWinDraw();
+	void UpdateXs();
+	void UpdateOs();
 
 	//Get functions
 	const int GetMultiplier() const;

@@ -133,7 +133,7 @@ bool Game::GameLoop()
 	const int playerOneTurn = 1, playerTwoTurn = 2;
 	bool continueGame = true;
 	
-	if(playOrder_ == 1) {
+	if(playOrder_ == playerOneTurn) {
 		continueGame = GetPlayerMove(playerOneTurn);
 		if(!continueGame)
 			return continueGame;
@@ -152,7 +152,7 @@ bool Game::GameLoop()
 			return continueGame;
 	}
 	
-	if(board_.GetTotalNumOfPiecesOnBoard() >= boundsLimit_)
+	if(board_.GetTotalNumOfPiecesOnBoard() > (boundsLimit_ - 1))
 		continueGame = ProcessPacket(board_.FindWinDraw());
 	
 	return continueGame;
@@ -230,6 +230,8 @@ void Game::ResetGame()
 
 bool Game::GetPlayerMove(int order)
 {
+	const int t_xPlayerPiece = GetConstantFromList(xPlayerPiece);
+
 	bool continuePlay = true;
 
 	if(order == 1) {
@@ -245,8 +247,14 @@ bool Game::GetPlayerMove(int order)
 					continuePlay = false;
 					playerOneGood = true;
 				}
-				else
+				else {
 					playerOneGood = board_.UpdateBoard(playerOne_.GetPiece(), playerOne_.GetMove(), playerOne_.HasPlayerMadeMove(), playerTwo_.HasPlayerMadeMove());
+					board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
+					if(playerOne_.GetPiece() == t_xPlayerPiece)
+						board_.UpdateXs();
+					else
+						board_.UpdateOs();
+				}
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
@@ -256,9 +264,8 @@ bool Game::GetPlayerMove(int order)
 					std::cout<<anyKey<<std::endl;
 					_getche();
 				}
-				else {
+				else
 					throw;
-				}
 			}
 		}
 	}
@@ -275,8 +282,14 @@ bool Game::GetPlayerMove(int order)
 					continuePlay = false;
 					playerTwoGood = true;
 				}
-				else
+				else {
 					playerTwoGood = board_.UpdateBoard(playerTwo_.GetPiece(), playerTwo_.GetMove(), playerOne_.HasPlayerMadeMove(), playerTwo_.HasPlayerMadeMove());
+					board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
+					if(playerTwo_.GetPiece() == t_xPlayerPiece)
+						board_.UpdateXs();
+					else
+						board_.UpdateOs();
+				}
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
@@ -286,9 +299,8 @@ bool Game::GetPlayerMove(int order)
 					std::cout<<anyKey<<std::endl;
 					_getche();
 				}
-				else {
+				else
 					throw;
-				}
 			}
 		}
 	}
@@ -328,18 +340,18 @@ bool Game::ProcessPacket(WDPacketPtr packet)
 			playerOne_.UpdateScore();
 			playerOne_.SetPlayerWon();
 			SoundEngine::GetInstance()->PlaySoundFromQueue(playerOneWinSound);
-			std::cout<<playerOneWinMessage;
+			std::cout<<"\n"<<playerOneWinMessage;
 			playerOne_.DisplayScore();
-			std::cout<<anyKey;
+			std::cout<<"\n"<<anyKey;
 			_getche();
 		}
 		else if(packet->GetPlayerPiece() == playerTwo_.GetPiece()) {
 			playerTwo_.UpdateScore();
 			playerTwo_.SetPlayerWon();
 			SoundEngine::GetInstance()->PlaySoundFromQueue(playerTwoWinSound);
-			std::cout<<playerTwoWinMessage;
+			std::cout<<"\n"<<playerTwoWinMessage;
 			playerTwo_.DisplayScore();
-			std::cout<<anyKey;
+			std::cout<<"\n"<<anyKey;
 			_getche();
 		}
 		else
@@ -619,4 +631,31 @@ void Game::DisplayNoticeFile(char noticeType)
 	//Remove any remaining junk from cin stream
 	std::cin.clear();
 	std::cin.ignore(1000, '\n');
+}
+
+void Game::SetGameFullscreen()
+{
+	HWND hWnd;
+
+	SetConsoleTitle((TCHAR*)"Tic-Tac-Toe");
+	hWnd = FindWindow(NULL, (TCHAR*)"Tic-Tac-Toe");
+	COORD NewWindowSize = GetLargestConsoleWindowSize(hConsole_);
+	SMALL_RECT DisplayArea = {0, 0, 0, 0};
+
+	SetConsoleScreenBufferSize(hConsole_, NewWindowSize);
+
+	DisplayArea.Right = (NewWindowSize.X - 1);
+	DisplayArea.Bottom = (NewWindowSize.Y - 1);
+
+	SetConsoleWindowInfo(hConsole_, TRUE, &DisplayArea);
+
+	ShowWindow(hWnd, SW_MAXIMIZE);
+}
+
+//TODO:
+//Finish this later. Will look very similar to the function above.
+//Will need to figure out later how to store the original size of the current window when it first opens up in normal screen mode
+void Game::SetGameWindowed()
+{
+	//SetConsoleDisplayMode(hConsole_, CONSOLE_WINDOWED_MODE);
 }

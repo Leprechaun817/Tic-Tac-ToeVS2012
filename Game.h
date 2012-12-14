@@ -31,6 +31,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <memory>
 #include <map>
 #include <array>
+#include <Windows.h>
 #include "Board.h"
 #include "Player.h"
 #include "WinDrawPacket.h"
@@ -77,6 +78,7 @@ private:
 private:
 	Player playerOne_, playerTwo_;
 	Board board_;
+	HANDLE hConsole_;
 
 //Container Variables
 private:
@@ -101,4 +103,6 @@ private:
 	void DisplayGameInstructions();
 	void DisplayNotices();
 	void DisplayNoticeFile(char noticeType);
+	void SetGameFullscreen();
+	void SetGameWindowed();
 };

@@ -165,6 +165,7 @@ void Board::DisplayPiece(int &squareCount, int &temp2, int pieceSpacing, bool pi
 char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor)
 {
 	const int lineSize = 46;
+	char piece = XorO(playerPiece);
 	system("cls");
 	SetConsoleTextAttribute(hConsoleWindow_, playerTextColor);
 	std::cout<<"^o^ ---- Player "<<playerID<<" has won the game!!! ---- ^o^"<<"\n";
@@ -178,7 +179,7 @@ char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor
 	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
 
-	return (XorO(playerPiece));
+	return piece;
 }
 
 bool Board::ProcessSpaceList(int location, int playerPiece)
@@ -874,11 +875,6 @@ bool Board::UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus,
 	
 	const int t_xPlayerPiece = GetConstantFromList(xPlayerPiece);
 
-	if(playerPiece == t_xPlayerPiece)
-		totalXsOnBoard_++;
-	else
-		totalOsOnBoard_++;
-
 	ProcessPiecePlacementList();
 
 	return true;
@@ -1394,4 +1390,14 @@ const int Board::GetMultiplier() const
 const int Board::GetTotalNumOfPiecesOnBoard() const
 {
 	return (totalOsOnBoard_ + totalXsOnBoard_);
+}
+
+void Board::UpdateXs()
+{
+	totalXsOnBoard_++;
+}
+
+void Board::UpdateOs()
+{
+	totalOsOnBoard_++;
 }
