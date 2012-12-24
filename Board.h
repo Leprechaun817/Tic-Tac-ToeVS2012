@@ -89,7 +89,7 @@ private:
 	static const int typeA = 3, typeB = 4, typeC = 5;
 
 	//Used with the SoundEngine
-	static const std::string fatalErrorSound;
+	static const std::string fatalErrorSound, clickSound;
 
 //Container Variables
 private:

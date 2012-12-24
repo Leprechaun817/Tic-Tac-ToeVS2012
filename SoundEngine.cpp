@@ -30,6 +30,9 @@ const std::string SoundEngine::gameOverSound = "gameOverSound";
 const std::string SoundEngine::pieceClickSound = "pieceClickSound";
 const std::string SoundEngine::badMoveErrorSound = "badMoveErrorSound";
 const std::string SoundEngine::fatalErrorSound = "fatalErrorSound";
+const std::string SoundEngine::clickSound = "clickSound";
+const std::string SoundEngine::endOfGameSound = "endOfGameSound";
+const std::string SoundEngine::minorErrorSound = "minorErrorSound";
 bool SoundEngine::isSoundEnginePtrInitialized_ = false;
 SoundEngine::sePtr SoundEngine::engInstance_ = nullptr;
 
@@ -41,8 +44,9 @@ SoundEngine::SoundEngine() throw()
 	soundBufferList.resize(numOfSounds);
 	soundSourceList.resize(numOfSounds);
 
-	std::array<const std::string, numOfSounds> soundNameArr = {playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound};
-	std::array<int, numOfSounds> soundNumArr = {0, 1, 2, 3, 4, 5};
+	std::array<const std::string, numOfSounds> soundNameArr = {playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound, clickSound, 
+															   endOfGameSound, minorErrorSound};
+	std::array<int, numOfSounds> soundNumArr = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
 	for(int i = 0; i < numOfSounds; i++)
 		soundNameList.insert(std::pair<const std::string, int>(soundNameArr[i], soundNumArr[i]));
@@ -80,8 +84,12 @@ void SoundEngine::InitializeSoundEngine()
 	//Declare filename constants
 	const std::string fileType = ".wav";
 	const std::string fileLocation = "Sounds\\";
-	std::array<const std::string, numOfSounds> soundFileNames = {(fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), (fileLocation + gameOverSound + fileType), 
-													   (fileLocation + pieceClickSound + fileType), (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType)};
+	std::array<const std::string, numOfSounds> soundFileNames = { (fileLocation + playerOneWinSound + fileType), (fileLocation + playerTwoWinSound + fileType), 
+																  (fileLocation + gameOverSound + fileType), (fileLocation + pieceClickSound + fileType), 
+																  (fileLocation + badMoveErrorSound + fileType), (fileLocation + fatalErrorSound + fileType), 
+																  (fileLocation + clickSound + fileType), (fileLocation + endOfGameSound + fileType), 
+																  (fileLocation + minorErrorSound + fileType) 
+																};
 	//Initialize sound engine
 	if(FAILED(XAudio2Create(soundEng_.get()))) {
 		CoUninitialize();

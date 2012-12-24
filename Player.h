@@ -77,7 +77,7 @@ private:
 	static const std::string noPlayerPiece, oPlayerPiece, xPlayerPiece, varError;
 	
 	//Constants for the sounds
-	static const std::string badMoveErrorSound, fatalErrorSound;
+	static const std::string badMoveErrorSound, fatalErrorSound, clickSound;
 
 //Container Variables
 private:

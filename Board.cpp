@@ -51,6 +51,7 @@ const std::string Board::nullConstant = "nullConstant";
 const std::string Board::fatalError = "fatalError";
 
 const std::string Board::fatalErrorSound = "fatalErrorSound";
+const std::string Board::clickSound = "clickSound";
 
 Board::Board() throw ()
 	: hConsoleWindow_(GetStdHandle(STD_OUTPUT_HANDLE)), totalXsOnBoard_(0), totalOsOnBoard_(0)
@@ -80,6 +81,7 @@ void Board::SetupBoard(const ConstList &cList)
 		std::cout<<" C)	25\n";
 		std::cout<<"Please enter the letter representing your choice below.\n";
 		std::cin>>input;
+		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 		if(input == 'a' || input == 'A') {
 			multiplier_ = typeA;
@@ -100,6 +102,7 @@ void Board::SetupBoard(const ConstList &cList)
 			std::cout<<"Please enter a choice as listed above."<<std::endl;
 			std::cout<<"Try again..."<<std::endl;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 	}
 

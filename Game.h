@@ -72,7 +72,7 @@ private:
 	static const std::string fatalError;
 
 	//Used in accessing the sounds
-	static const std::string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound;
+	static const std::string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound, clickSound, endOfGameSound, minorErrorSound;
 
 //Object Variables
 private:

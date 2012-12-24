@@ -65,6 +65,9 @@ const std::string Game::gameOverSound = "gameOverSound";
 const std::string Game::pieceClickSound = "pieceClickSound";
 const std::string Game::badMoveErrorSound = "badMoveErrorSound";
 const std::string Game::fatalErrorSound = "fatalErrorSound";
+const std::string Game::clickSound = "clickSound";
+const std::string Game::endOfGameSound = "endOfGameSound";
+const std::string Game::minorErrorSound = "minorErrorSound";
 
 Game::Game() throw()
 	: playerOne_(), playerTwo_(), board_(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
@@ -196,7 +199,7 @@ bool Game::EndGame()
 
 	//Clear the screen
 	system("cls");
-	
+
 	SoundEngine::GetInstance()->PlaySoundFromQueue(gameOverSound);
 
 	DisplayLastRoundStats();
@@ -223,6 +226,7 @@ bool Game::EndGame()
 			std::cout<<"Please enter y or n"<<std::endl;
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			system("cls");
 		}
 	}
@@ -558,6 +562,7 @@ void Game::DisplayGameInstructions()
 	std::cout<<"Whenever you're ready we can start..."<<std::endl;
 	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
+	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 }
 
 void Game::DisplayNotices()
@@ -585,6 +590,7 @@ void Game::DisplayNotices()
 		std::cout<<"The program will then exit.\n";
 		std::cout<<"Please type your choice below."<<std::endl;
 		std::getline(std::cin, choice);
+		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 		if(choice == acceptance)
 			loop = false;
@@ -600,6 +606,7 @@ void Game::DisplayNotices()
 			std::cout<<"Please try again.\n";
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 	}
 }
@@ -636,6 +643,7 @@ void Game::DisplayNoticeFile(char noticeType)
 				std::cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
 				std::cout<<"To stop reading this and go back, type q and press enter.\n";
 				std::cin>>choice;
+				SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 				if(choice == 'c' || choice == 'C') {
 					loop = false;

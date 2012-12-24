@@ -26,6 +26,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 const std::string ScreenColors::fatalErrorSound = "fatalErrorSound";
 const std::string ScreenColors::badMoveErrorSound = "badMoveErrorSound";
+const std::string ScreenColors::clickSound = "clickSound";
 
 int ScreenColors::otherPlayerColor_ = 0;
 
@@ -285,6 +286,8 @@ char ScreenColors::GetSelection()
 			}
 		}
 	}
+
+	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 	return output;
 }

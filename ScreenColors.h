@@ -49,7 +49,7 @@ public:
 private:
 	static const int black = 0, dark_blue = 1, dark_green = 2, dark_cyan = 3, dark_red = 4, dark_purple = 5, dark_yellow = 6, dark_white = 7, gray = 8, blue = 9, green = 10, cyan = 11, 
 					 red = 12, purple = 13, yellow = 14, white = 15;
-	static const std::string fatalErrorSound, badMoveErrorSound;
+	static const std::string fatalErrorSound, badMoveErrorSound, clickSound;
 	
 //Local Class Constants
 private:

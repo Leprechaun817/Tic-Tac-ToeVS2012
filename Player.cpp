@@ -34,6 +34,7 @@ const std::string Player::varError = "Player has not been initialized yet,\nplea
 
 const std::string Player::badMoveErrorSound = "badMoveErrorSound";
 const std::string Player::fatalErrorSound = "fatalErrorSound";
+const std::string Player::clickSound = "clickSound";
 
 Player::Player() throw()
 	: textColor(), score_(0), madeMove_(false), playerInitialized_(false), win_(false), resetPlayerFunctionCalled_(false)
@@ -58,6 +59,7 @@ void Player::InitializePlayer(int boundsLimit)
 	std::string n;
 	std::cout<<"Player "<<id_<<": What is your name?"<<std::endl;
 	std::cin>>n;
+	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 	//Assigning string value n to name
 	name_ = n;

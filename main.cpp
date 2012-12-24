@@ -37,6 +37,9 @@ typedef std::unique_ptr<Game> GamePtr;
 
 int main()
 {
+	const std::string fatalErrorSound = "fatalErrorSound";
+	const std::string endOfGameSound = "endOfGameSound";
+	
 	srand((unsigned)time(0));
 	GamePtr game(new Game());
 	ErrorTypes err;
@@ -80,7 +83,7 @@ int main()
 			exit(EXIT_FAILURE);	
 		}
 		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices) {
-			SoundEngine::GetInstance()->PlaySoundFromQueue("fatalErrorSound");	//temporary - will remove this later. I just want to test it...
+			SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);	//temporary - will remove this later. I just want to test it...
 			system("cls");
 			std::cout<<e.what()<<"\n";
 			std::cout<<"Press any key to continue..."<<std::endl;
@@ -108,6 +111,7 @@ int main()
 	game->DisplayFinalStats();
 	std::cout<<"Hope you enjoyed the game!!\n";
 	std::cout<<"Thanks for playing... ^_^"<<std::endl;
+	SoundEngine::GetInstance()->PlaySoundFromQueue(endOfGameSound);
 	_getche();
 	
 	return 0;

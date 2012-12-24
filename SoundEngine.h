@@ -60,8 +60,8 @@ private:
 
 //Constant Variables
 private:
-	static const std::string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound;
-	static const int numOfSounds = 6;
+	static const std::string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound, clickSound, endOfGameSound, minorErrorSound;
+	static const int numOfSounds = 9;
 
 //Container Variables
 private:
