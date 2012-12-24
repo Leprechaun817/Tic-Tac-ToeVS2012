@@ -80,6 +80,13 @@ Game::Game() throw()
 
 	//Initialize the sound engine ptr
 	SoundEngine::InitPtr();
+
+	//Set titile of window
+	SetConsoleTitle((TCHAR*)"Tic-Tac-Toe");
+
+	//Get console handle
+	hConsole_ = GetStdHandle(STD_OUTPUT_HANDLE);
+	hWnd_ = FindWindow(NULL, (TCHAR*)"Tic-Tac-Toe");
 }
 
 //TODO:
@@ -91,6 +98,8 @@ void Game::StartGame()
 		//Initialize the sound first before anything else is done
 		SoundEngine::GetInstance()->InitializeSoundEngine();
 		
+		SetGameFullscreen();
+
 		//Display all legal notices before anyone is allowed to play the game
 		DisplayNotices();
 
@@ -131,29 +140,52 @@ void Game::StartGame()
 bool Game::GameLoop()
 {
 	const int playerOneTurn = 1, playerTwoTurn = 2;
+	int totalPiecesOnBoard = board_.GetTotalNumOfPiecesOnBoard();
+	int boundsLimitTest = boundsLimit_ - 1;
 	bool continueGame = true;
 	
 	if(playOrder_ == playerOneTurn) {
 		continueGame = GetPlayerMove(playerOneTurn);
 		if(!continueGame)
 			return continueGame;
-		
+		else {
+			if(totalPiecesOnBoard > boundsLimitTest) {
+				continueGame = CheckGameState(board_.GetGameState());
+				return continueGame;
+			}
+		}
+
 		continueGame = GetPlayerMove(playerTwoTurn);
 		if(!continueGame)
 			return continueGame;
+		else {
+			if(totalPiecesOnBoard > boundsLimitTest) {
+				continueGame = CheckGameState(board_.GetGameState());
+				return continueGame;
+			}
+		}
 	}
 	else {
 		continueGame = GetPlayerMove(playerTwoTurn);
 		if(!continueGame)
 			return continueGame;
+		else {
+			if(totalPiecesOnBoard > boundsLimitTest) {
+				continueGame = CheckGameState(board_.GetGameState());
+				return continueGame;
+			}
+		}
 
 		continueGame = GetPlayerMove(playerOneTurn);
 		if(!continueGame)
 			return continueGame;
+		else {
+			if(totalPiecesOnBoard > boundsLimitTest) {
+				continueGame = CheckGameState(board_.GetGameState());
+				return continueGame;
+			}
+		}
 	}
-	
-	if(board_.GetTotalNumOfPiecesOnBoard() > (boundsLimit_ - 1))
-		continueGame = ProcessPacket(board_.FindWinDraw());
 	
 	return continueGame;
 }
@@ -249,6 +281,7 @@ bool Game::GetPlayerMove(int order)
 				}
 				else {
 					playerOneGood = board_.UpdateBoard(playerOne_.GetPiece(), playerOne_.GetMove(), playerOne_.HasPlayerMadeMove(), playerTwo_.HasPlayerMadeMove());
+					system("cls");
 					board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
 					if(playerOne_.GetPiece() == t_xPlayerPiece)
 						board_.UpdateXs();
@@ -284,6 +317,7 @@ bool Game::GetPlayerMove(int order)
 				}
 				else {
 					playerTwoGood = board_.UpdateBoard(playerTwo_.GetPiece(), playerTwo_.GetMove(), playerOne_.HasPlayerMadeMove(), playerTwo_.HasPlayerMadeMove());
+					system("cls");
 					board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
 					if(playerTwo_.GetPiece() == t_xPlayerPiece)
 						board_.UpdateXs();
@@ -308,7 +342,7 @@ bool Game::GetPlayerMove(int order)
 	return continuePlay;
 }
 
-bool Game::ProcessPacket(WDPacketPtr packet)
+bool Game::CheckGameState(WDPacketPtr packet)
 {
 	bool continueGame = true;
 	int tempType = GetConstantFromList(fatalError), tempDiagonalLocation = GetConstantFromList(fatalError), tempAcrossDownLocation = GetConstantFromList(fatalError);
@@ -635,10 +669,7 @@ void Game::DisplayNoticeFile(char noticeType)
 
 void Game::SetGameFullscreen()
 {
-	HWND hWnd;
-
-	SetConsoleTitle((TCHAR*)"Tic-Tac-Toe");
-	hWnd = FindWindow(NULL, (TCHAR*)"Tic-Tac-Toe");
+	hWnd_ = FindWindow(NULL, (TCHAR*)"Tic-Tac-Toe");
 	COORD NewWindowSize = GetLargestConsoleWindowSize(hConsole_);
 	SMALL_RECT DisplayArea = {0, 0, 0, 0};
 
@@ -649,7 +680,7 @@ void Game::SetGameFullscreen()
 
 	SetConsoleWindowInfo(hConsole_, TRUE, &DisplayArea);
 
-	ShowWindow(hWnd, SW_MAXIMIZE);
+	ShowWindow(hWnd_, SW_MAXIMIZE);
 }
 
 //TODO:

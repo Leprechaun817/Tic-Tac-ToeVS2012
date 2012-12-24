@@ -79,6 +79,7 @@ private:
 	Player playerOne_, playerTwo_;
 	Board board_;
 	HANDLE hConsole_;
+	HWND hWnd_;
 
 //Container Variables
 private:
@@ -97,7 +98,7 @@ private:
 //Private Functions
 private:
 	bool GetPlayerMove(int order);
-	bool ProcessPacket(WDPacketPtr packet);
+	bool CheckGameState(WDPacketPtr packet);
 	int GetConstantFromList(std::string request) const;
 	void DecidePlayOrder();
 	void DisplayGameInstructions();

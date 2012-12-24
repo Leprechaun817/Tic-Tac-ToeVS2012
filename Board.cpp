@@ -908,7 +908,7 @@ void Board::SetWinningPlayersTextColor(bool p, const Player &p1, const Player &p
 		p2.SetPlayerTextColor();
 }
 
-WDPacketPtr Board::FindWinDraw()
+WDPacketPtr Board::GetGameState()
 {
 	//bool array to keep track of win
 	//depending on the element in the array thats comes out to true, this will

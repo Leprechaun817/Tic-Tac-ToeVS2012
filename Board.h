@@ -57,7 +57,7 @@ public:
 	void DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLocation, const Player &pOne, const Player &pTwo);
 	void ResetBoard();  //Resets board and sets it up for another play-through
 	bool UpdateBoard(int playerPiece, int location, bool playerOneMoveStatus, bool playerTwoMoveStatus);
-	WDPacketPtr FindWinDraw();
+	WDPacketPtr GetGameState();
 	void UpdateXs();
 	void UpdateOs();
 
