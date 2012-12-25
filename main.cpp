@@ -22,7 +22,7 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 *********************************************************************************************
 ********************************************************************************************/
 
-#pragma warning( disable : 4101 )	//Disables warning about unreferenced local variable.
+#pragma warning( disable : 4101 )	//Disables warning about unreferenced local variable. There doesn't seem to be a way to reference it without using it...
 #include <stdlib.h>
 #include <iostream>
 #include <memory>
@@ -38,7 +38,6 @@ typedef std::unique_ptr<Game> GamePtr;
 int main()
 {
 	const std::string fatalErrorSound = "fatalErrorSound";
-	const std::string minorErrorSound = "minorErrorSound";
 	const std::string endOfGameSound = "endOfGameSound";
 	const std::string clickSound = "clickSound";
 
@@ -76,17 +75,16 @@ int main()
 		}
 	}
 	catch(Exception &e) {
-		int errorType = e.GetErrorType();
-		if(errorType == err.Invalid_Variable_Access) {
+		if(e.GetErrorType() == err.Invalid_Variable_Access) {
 			system("cls");
 			std::cout<<e.what()<<"\n";
-			std::cout<<"DEBUG MESSAGE - Failed to initialize objects properly.\n";
+			std::cout<<"Failed to initialize objects properly.\n";
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
 			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			exit(EXIT_FAILURE);	
 		}
-		else if(errorType == err.NonAcceptance_Of_Notices) {
+		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices) {
 			SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);	//temporary - will remove this later. I just want to test it...
 			system("cls");
 			std::cout<<e.what()<<"\n";
@@ -95,28 +93,16 @@ int main()
 			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			exit(EXIT_SUCCESS);
 		}
-		else if(errorType == err.Unknown_Constant_Error) {
+		else if(e.GetErrorType() == err.Unknown_Constant_Error) {
 			system("cls");
 			std::cout<<e.what()<<"\n";
-			std::cout<<"DEBUG MESSAGE - Check the call in the code, probably a misspelled argument or something...\n";
-			std::cout<<"Press any key to continue..."<<std::endl;
-			_getche();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
-			exit(EXIT_FAILURE);
-		}
-		else if(errorType == err.Minor_Error || errorType == err.Bad_DiagonalLocation_Minor || errorType == err.Bad_AcrossLocation_Minor || errorType == err.Bad_DownLocation_Minor ||
-				errorType == err.Bad_WinType_Variable_Minor)
-		{
-			SoundEngine::GetInstance()->PlaySoundFromQueue(minorErrorSound);
-			system("cls");
-			std::cout<<e.what()<<"\n";
-			std::cout<<"Press any key to continue..."<<std::endl;
+			std::cout<<"DEBUG MESSAGE - Check the call in the code, probably a misspelled argument or something..."<<std::endl;
 			_getche();
 			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			exit(EXIT_FAILURE);
 		}
 		else {
-			SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+			SoundEngine::GetInstance()->PlaySoundFromQueue("fatalErrorSound");
 			system("cls");
 			std::cout<<e.what()<<"\n";
 			std::cout<<"The program will now close...\n";
