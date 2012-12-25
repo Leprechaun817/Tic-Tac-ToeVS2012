@@ -24,12 +24,16 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #pragma once
 #pragma warning( disable : 4101 )
+#include <iostream>
+#include <string>
+#include <conio.h>
 #include <Windows.h>
 #include <xaudio2.h>
 #include <memory>
 #include <vector>
 #include <map>
 #include <array>
+#include <algorithm>
 #include "SoundBuffer.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
@@ -75,6 +79,7 @@ private:
 	ixAudioPtr soundEng_;
 	ixMasterVoicePtr soundMaster_;
 	bool isSoundEngineInitialized_;
+	//bool soundOnOrOff_;
 	typedef std::unique_ptr<SoundEngine> sePtr;
 
 //Static variables/objects
@@ -85,4 +90,5 @@ private:
 private:
 	void LoadSound(const std::string filename);
 	int GetConstantFromList(std::string soundRequest) const;
+	//void AskUserForSound();
 };
