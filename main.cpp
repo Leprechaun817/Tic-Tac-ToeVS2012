@@ -39,7 +39,8 @@ int main()
 {
 	const std::string fatalErrorSound = "fatalErrorSound";
 	const std::string endOfGameSound = "endOfGameSound";
-	
+	const std::string clickSound = "clickSound";
+
 	srand((unsigned)time(0));
 	GamePtr game(new Game());
 	ErrorTypes err;
@@ -80,6 +81,7 @@ int main()
 			std::cout<<"Failed to initialize objects properly.\n";
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			exit(EXIT_FAILURE);	
 		}
 		else if(e.GetErrorType() == err.NonAcceptance_Of_Notices) {
@@ -88,6 +90,7 @@ int main()
 			std::cout<<e.what()<<"\n";
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			exit(EXIT_SUCCESS);
 		}
 		else if(e.GetErrorType() == err.Unknown_Constant_Error) {
@@ -95,6 +98,7 @@ int main()
 			std::cout<<e.what()<<"\n";
 			std::cout<<"DEBUG MESSAGE - Check the call in the code, probably a misspelled argument or something..."<<std::endl;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			exit(EXIT_FAILURE);
 		}
 		else {
@@ -104,6 +108,7 @@ int main()
 			std::cout<<"The program will now close...\n";
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			exit(EXIT_FAILURE);
 		}
 	}

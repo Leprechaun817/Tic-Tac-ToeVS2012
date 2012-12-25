@@ -181,6 +181,7 @@ char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor
 	std::cout<<"\n";
 	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
+	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 	return piece;
 }
@@ -806,6 +807,8 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	ResetConsoleColor();
 	std::cout<<std::endl<<"Press any key to continue..."<<std::endl;
 	_getche();
+	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
+
 	system("cls");
 }
 

@@ -210,6 +210,7 @@ bool Game::EndGame()
 		//Play game over noise here
 		std::cout<<"Would you like to play for another round? y or n"<<std::endl;
 		std::cin>>answer;
+		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 		if(answer == 'Y' || answer == 'y') {
 			//Player wants to go for another round
@@ -255,6 +256,7 @@ void Game::ResetGame()
 		std::cout<<"DEBUG ERROR - If you see this something is wrong with the code!!!\n";
 		std::cout<<"Press any key to continue..."<<std::endl;
 		_getche();
+		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 	}
 
 	//Reset both players
@@ -300,6 +302,7 @@ bool Game::GetPlayerMove(int order)
 					std::cout<<"Please re-enter your choice.\n";
 					std::cout<<anyKey<<std::endl;
 					_getche();
+					SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 				}
 				else
 					throw;
@@ -336,6 +339,7 @@ bool Game::GetPlayerMove(int order)
 					std::cout<<"Please re-enter your choice.\n";
 					std::cout<<anyKey<<std::endl;
 					_getche();
+					SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 				}
 				else
 					throw;
@@ -365,6 +369,7 @@ bool Game::CheckGameState(WDPacketPtr packet)
 			std::cout<<gameDrawMessage;
 			std::cout<<anyKey;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			continueGame = false;
 			return continueGame;
 		}
@@ -382,6 +387,7 @@ bool Game::CheckGameState(WDPacketPtr packet)
 			playerOne_.DisplayScore();
 			std::cout<<"\n"<<anyKey;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 		else if(packet->GetPlayerPiece() == playerTwo_.GetPiece()) {
 			playerTwo_.UpdateScore();
@@ -391,6 +397,7 @@ bool Game::CheckGameState(WDPacketPtr packet)
 			playerTwo_.DisplayScore();
 			std::cout<<"\n"<<anyKey;
 			_getche();
+			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 		else
 			throw Exception(err.Bad_PlayerPiece_Variable_Fatal);
@@ -669,6 +676,7 @@ void Game::DisplayNoticeFile(char noticeType)
 
 	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
+	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 	//Remove any remaining junk from cin stream
 	std::cin.clear();
