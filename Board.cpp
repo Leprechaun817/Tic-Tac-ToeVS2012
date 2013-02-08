@@ -899,7 +899,7 @@ char Board::XorO(int num)
 	else if(num == t_oPlayerPiece)
 		return (GetConstantFromList(t_oPlayerPiece));
 	else if(num == t_xPlayerPiece)
-		return GetConstantFromList(t_xPlayerPiece);
+		return (GetConstantFromList(t_xPlayerPiece));
 	else {
 		std::string errorMsg = "DEBUG MESSAGE - If you're seeing this check the calls for the XorO function\n";
 		throw Exception(err.Fatal_Error, errorMsg);
