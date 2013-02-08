@@ -27,7 +27,6 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <string>
 #include <map>
 #include <sstream>
-#include "SoundEngine.h"
 #include "ScreenColors.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
@@ -75,9 +74,6 @@ protected:
 //Constants
 private:
 	static const std::string noPlayerPiece, oPlayerPiece, xPlayerPiece, varError;
-	
-	//Constants for the sounds
-	static const std::string badMoveErrorSound, fatalErrorSound, clickSound;
 
 //Container Variables
 private:

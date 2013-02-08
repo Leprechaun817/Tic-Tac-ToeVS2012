@@ -26,7 +26,6 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <iostream>
 #include <string>
 #include <map>
-#include "SoundEngine.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
@@ -60,9 +59,6 @@ private:
 	static const std::string rowOne, rowTwo, rowThree, rowFour, rowFive;
 	static const std::string nullConstant;
 	static const std::string fatalError;
-
-	//Constants for sound
-	static const std::string fatalErrorSound;
 
 //Local Class Constants
 private:

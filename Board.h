@@ -34,7 +34,6 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include <Windows.h>
 #include <stdlib.h>
 #include "Player.h"
-#include "SoundEngine.h"
 #include "WinDrawPacket.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
@@ -87,9 +86,6 @@ private:
 	static const int A = 9, B = 16, C = 25;
 	//Integers that represent how many spaces there are going across, down, or diagonally
 	static const int typeA = 3, typeB = 4, typeC = 5;
-
-	//Used with the SoundEngine
-	static const std::string fatalErrorSound, clickSound;
 
 //Container Variables
 private:

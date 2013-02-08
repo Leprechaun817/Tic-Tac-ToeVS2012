@@ -32,10 +32,6 @@ const std::string Player::oPlayerPiece = "oPlayerPiece";
 const std::string Player::xPlayerPiece = "xPlayerPiece";
 const std::string Player::varError = "Player has not been initialized yet,\nplease run initialization function before use.";
 
-const std::string Player::badMoveErrorSound = "badMoveErrorSound";
-const std::string Player::fatalErrorSound = "fatalErrorSound";
-const std::string Player::clickSound = "clickSound";
-
 Player::Player() throw()
 	: textColor(), score_(0), madeMove_(false), playerInitialized_(false), win_(false), resetPlayerFunctionCalled_(false)
 {
@@ -59,8 +55,6 @@ void Player::InitializePlayer(int boundsLimit)
 	std::string n;
 	std::cout<<"Player "<<id_<<": What is your name?"<<std::endl;
 	std::cin>>n;
-	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
-
 	//Assigning string value n to name
 	name_ = n;
 
@@ -163,7 +157,6 @@ bool Player::MakeMove()
 			}
 		}
 		catch(Exception &e) {
-			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 			std::cout<<e.what()<<"\n";
 			std::cout<<"Please re-enter your choice\n";
 			std::cin>>choice;
@@ -237,70 +230,56 @@ const int Player::GetID() const
 {
 	if(playerInitialized_)
 		return id_;
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access, varError);
-	}
 }
 
 const int Player::GetPiece() const
 {
 	if(playerInitialized_)
 		return playerPiece_;
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access, varError);
-	}
 }
 
 const std::string Player::GetName() const
 {
 	if(playerInitialized_)
 		return name_;
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access, varError);
-	}
 }
 
 const int Player::GetScore() const
 {
 	if(playerInitialized_)
 		return score_;
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access, varError);
-	}
 }
 
 const int Player::GetMove() const
 {
 	if(playerInitialized_)
 		return move_;
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access, varError);
-	}
 }
 
 const bool Player::DidPlayerWin() const
 {
 	if(playerInitialized_)
 		return win_;
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access, varError);
-	}
 }
 
 const int Player::GetPlayerTextColor() const
 {
 	if(playerInitialized_)
 		return (textColor.GetTextColor());
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access, varError);
-	}
 }
 
 void Player::SetPlayerWon()

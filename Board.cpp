@@ -50,9 +50,6 @@ const std::string Board::rowFive = "rowFive";
 const std::string Board::nullConstant = "nullConstant";
 const std::string Board::fatalError = "fatalError";
 
-const std::string Board::fatalErrorSound = "fatalErrorSound";
-const std::string Board::clickSound = "clickSound";
-
 Board::Board() throw ()
 	: hConsoleWindow_(GetStdHandle(STD_OUTPUT_HANDLE)), totalXsOnBoard_(0), totalOsOnBoard_(0)
 {
@@ -81,7 +78,6 @@ void Board::SetupBoard(const ConstList &cList)
 		std::cout<<" C)	25\n";
 		std::cout<<"Please enter the letter representing your choice below.\n";
 		std::cin>>input;
-		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 		if(input == 'a' || input == 'A') {
 			multiplier_ = typeA;
@@ -102,7 +98,6 @@ void Board::SetupBoard(const ConstList &cList)
 			std::cout<<"Please enter a choice as listed above."<<std::endl;
 			std::cout<<"Try again..."<<std::endl;
 			_getche();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 	}
 
@@ -181,7 +176,6 @@ char Board::DisplayWinMessage(int playerID, int playerPiece, int playerTextColor
 	std::cout<<"\n";
 	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
-	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 	return piece;
 }
@@ -807,7 +801,6 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 	ResetConsoleColor();
 	std::cout<<std::endl<<"Press any key to continue..."<<std::endl;
 	_getche();
-	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 	system("cls");
 }
@@ -1335,10 +1328,8 @@ int Board::GetConstantFromList(std::string request) const
 			break;
 		}
 
-	if(returnValue == -5) {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	if(returnValue == -5)
 		throw Exception(err.Unknown_Constant_Error);
-	}
 
 	return returnValue;
 }
@@ -1352,10 +1343,8 @@ char Board::GetConstantFromList(int request) const
 			break;
 		}
 
-	if(returnValue == -5) {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	if(returnValue == -5)
 		throw Exception(err.Unknown_Constant_Error);
-	}
 
 	return returnValue;
 }

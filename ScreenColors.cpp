@@ -24,10 +24,6 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 
 #include "ScreenColors.h"
 
-const std::string ScreenColors::fatalErrorSound = "fatalErrorSound";
-const std::string ScreenColors::badMoveErrorSound = "badMoveErrorSound";
-const std::string ScreenColors::clickSound = "clickSound";
-
 int ScreenColors::otherPlayerColor_ = 0;
 
 ScreenColors::ScreenColors() throw()
@@ -100,7 +96,6 @@ void ScreenColors::DecidePlayerScreenColor()
 					x++;
 
 			if(!selectionGood) {
-				SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 				ResetConsoleColor();
 				std::cout<<"\nThat wasn't one of your choices.\n";
 				std::cout<<"Please re-enter your choice.\n";
@@ -116,7 +111,6 @@ void ScreenColors::DecidePlayerScreenColor()
 				{
 					colorListIter = colorList.find(x++);
 					if(otherPlayerColor_ == (colorListIter->second)) {
-						SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 						ChangeErrorTextColor((colorListIter->second));
 						std::cout<<" has already been chosen by the other player.\n";
 						std::cout<<"Please make another choice.\n";
@@ -135,7 +129,6 @@ void ScreenColors::DecidePlayerScreenColor()
 					x++;
 
 			if(!selectionGood && !reCheck) {
-				SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 				ResetConsoleColor();
 				std::cout<<"\nThat wasn't one of your choices.\n";
 				std::cout<<"Please re-enter your choice.\n";
@@ -176,20 +169,16 @@ void ScreenColors::SetTextToPlayerColor() const
 {
 	if(screenColorInitialized_)
 		SetConsoleTextAttribute(hConsole_, colorAttribute_);
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access);
-	}
 }
 
 const int ScreenColors::GetTextColor() const
 {
 	if(screenColorInitialized_)
 		return colorAttribute_;
-	else {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	else
 		throw Exception(err.Invalid_Variable_Access);
-	}
 }
 
 void ScreenColors::OutputCharacterWithColor(char c, int color)
@@ -286,8 +275,6 @@ char ScreenColors::GetSelection()
 			}
 		}
 	}
-
-	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 
 	return output;
 }

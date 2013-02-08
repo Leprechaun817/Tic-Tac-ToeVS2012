@@ -58,17 +58,6 @@ const std::string Game::rowFive = "rowFive";
 const std::string Game::nullConstant = "nullConstant";
 const std::string Game::fatalError = "fatalError";
 
-//Constants for sounds
-const std::string Game::playerOneWinSound = "playerOneWinSound";
-const std::string Game::playerTwoWinSound = "playerTwoWinSound";
-const std::string Game::gameOverSound = "gameOverSound";
-const std::string Game::pieceClickSound = "pieceClickSound";
-const std::string Game::badMoveErrorSound = "badMoveErrorSound";
-const std::string Game::fatalErrorSound = "fatalErrorSound";
-const std::string Game::clickSound = "clickSound";
-const std::string Game::endOfGameSound = "endOfGameSound";
-const std::string Game::minorErrorSound = "minorErrorSound";
-
 Game::Game() throw()
 	: playerOne_(), playerTwo_(), board_(), roundsPlayed_(0), gameDraws_(0), turnCounter_(0), firstPlay_(true)
 {
@@ -81,9 +70,6 @@ Game::Game() throw()
 	for(unsigned int i = 0; i < constantsValues.size(); i++)
 		constantsList.insert(std::pair<const std::string, int>(constantsNames[i], constantsValues[i]));
 
-	//Initialize the sound engine ptr
-	SoundEngine::InitPtr();
-
 	//Set titile of window
 	SetConsoleTitle((TCHAR*)"Tic-Tac-Toe");
 
@@ -92,15 +78,9 @@ Game::Game() throw()
 	hWnd_ = FindWindow(NULL, (TCHAR*)"Tic-Tac-Toe");
 }
 
-//TODO:
-//Rewrite the introduction in this function to include a diagram of the board and coordinates to make
-//it a little easier to undertand for people...
 void Game::StartGame()
 {
 	if(firstPlay_) {
-		//Initialize the sound first before anything else is done
-		SoundEngine::GetInstance()->InitializeSoundEngine();
-		
 		SetGameFullscreen();
 
 		//Display all legal notices before anyone is allowed to play the game
@@ -199,9 +179,7 @@ bool Game::EndGame()
 
 	//Clear the screen
 	system("cls");
-
-	SoundEngine::GetInstance()->PlaySoundFromQueue(gameOverSound);
-
+	
 	DisplayLastRoundStats();
 	//Ask player/s whether they want to play another round
 	bool quitGame;
@@ -210,8 +188,7 @@ bool Game::EndGame()
 		//Play game over noise here
 		std::cout<<"Would you like to play for another round? y or n"<<std::endl;
 		std::cin>>answer;
-		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
-
+		
 		if(answer == 'Y' || answer == 'y') {
 			//Player wants to go for another round
 			loop = true;
@@ -223,11 +200,9 @@ bool Game::EndGame()
 			quitGame = true;
 		}				 
 		else {
-			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 			std::cout<<"Please enter y or n"<<std::endl;
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			system("cls");
 		}
 	}
@@ -256,7 +231,6 @@ void Game::ResetGame()
 		std::cout<<"DEBUG ERROR - If you see this something is wrong with the code!!!\n";
 		std::cout<<"Press any key to continue..."<<std::endl;
 		_getche();
-		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 	}
 
 	//Reset both players
@@ -280,7 +254,6 @@ bool Game::GetPlayerMove(int order)
 				system("cls");
 				board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
 				playerOneContinueGame = playerOne_.MakeMove();
-				SoundEngine::GetInstance()->PlaySoundFromQueue(pieceClickSound);
 				if(!playerOneContinueGame) {
 					continuePlay = false;
 					playerOneGood = true;
@@ -297,12 +270,10 @@ bool Game::GetPlayerMove(int order)
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
-					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 					std::cout<<e.what()<<"\n";
 					std::cout<<"Please re-enter your choice.\n";
 					std::cout<<anyKey<<std::endl;
 					_getche();
-					SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 				}
 				else
 					throw;
@@ -317,7 +288,6 @@ bool Game::GetPlayerMove(int order)
 				system("cls");
 				board_.DisplayBoard(roundsPlayed_, gameDraws_, playerOne_, playerTwo_);
 				playerTwoContinueGame = playerTwo_.MakeMove();
-				SoundEngine::GetInstance()->PlaySoundFromQueue(pieceClickSound);
 				if(!playerTwoContinueGame) {
 					continuePlay = false;
 					playerTwoGood = true;
@@ -334,12 +304,10 @@ bool Game::GetPlayerMove(int order)
 			}
 			catch(Exception &e) {
 				if(e.GetErrorType() == err.Move_Out_Of_Bounds || e.GetErrorType() == err.Piece_Exists_At_Location) {
-					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 					std::cout<<e.what()<<"\n";
 					std::cout<<"Please re-enter your choice.\n";
 					std::cout<<anyKey<<std::endl;
 					_getche();
-					SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 				}
 				else
 					throw;
@@ -369,7 +337,6 @@ bool Game::CheckGameState(WDPacketPtr packet)
 			std::cout<<gameDrawMessage;
 			std::cout<<anyKey;
 			_getche();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 			continueGame = false;
 			return continueGame;
 		}
@@ -382,22 +349,18 @@ bool Game::CheckGameState(WDPacketPtr packet)
 		if(packet->GetPlayerPiece() == playerOne_.GetPiece()) {
 			playerOne_.UpdateScore();
 			playerOne_.SetPlayerWon();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(playerOneWinSound);
 			std::cout<<"\n"<<playerOneWinMessage;
 			playerOne_.DisplayScore();
 			std::cout<<"\n"<<anyKey;
 			_getche();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 		else if(packet->GetPlayerPiece() == playerTwo_.GetPiece()) {
 			playerTwo_.UpdateScore();
 			playerTwo_.SetPlayerWon();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(playerTwoWinSound);
 			std::cout<<"\n"<<playerTwoWinMessage;
 			playerTwo_.DisplayScore();
 			std::cout<<"\n"<<anyKey;
 			_getche();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 		else
 			throw Exception(err.Bad_PlayerPiece_Variable_Fatal);
@@ -546,10 +509,9 @@ int Game::GetConstantFromList(std::string request) const
 			break;
 		}
 
-	if(returnValue == -5) {
-		SoundEngine::GetInstance()->PlaySoundFromQueue(fatalErrorSound);
+	if(returnValue == -5)
 		throw Exception(err.Unknown_Constant_Error);
-	}
+	
 	return returnValue;
 }
 
@@ -569,7 +531,6 @@ void Game::DisplayGameInstructions()
 	std::cout<<"Whenever you're ready we can start..."<<std::endl;
 	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
-	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 }
 
 void Game::DisplayNotices()
@@ -597,8 +558,7 @@ void Game::DisplayNotices()
 		std::cout<<"The program will then exit.\n";
 		std::cout<<"Please type your choice below."<<std::endl;
 		std::getline(std::cin, choice);
-		SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
-
+		
 		if(choice == acceptance)
 			loop = false;
 		else if(choice == nonacceptance)
@@ -608,12 +568,10 @@ void Game::DisplayNotices()
 		else if(choice == showCopyright)
 			DisplayNoticeFile(copyrightNotice);
 		else {
-			SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
 			std::cout<<"You choice didn't match any of the available choices.\n";
 			std::cout<<"Please try again.\n";
 			std::cout<<"Press any key to continue..."<<std::endl;
 			_getche();
-			SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
 		}
 	}
 }
@@ -650,8 +608,7 @@ void Game::DisplayNoticeFile(char noticeType)
 				std::cout<<"\n\n\nTo continue reading this notice, type c and press enter.\n";
 				std::cout<<"To stop reading this and go back, type q and press enter.\n";
 				std::cin>>choice;
-				SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
-
+				
 				if(choice == 'c' || choice == 'C') {
 					loop = false;
 					std::cout<<"\n\n";
@@ -660,10 +617,8 @@ void Game::DisplayNoticeFile(char noticeType)
 					loop = false;
 					quit = true;
 				}
-				else {
-					SoundEngine::GetInstance()->PlaySoundFromQueue(badMoveErrorSound);
+				else
 					std::cout<<"\n\nPlease enter in your choice again.\n";
-				}
 			}
 		}
 
@@ -676,8 +631,7 @@ void Game::DisplayNoticeFile(char noticeType)
 
 	std::cout<<"Press any key to continue..."<<std::endl;
 	_getche();
-	SoundEngine::GetInstance()->PlaySoundFromQueue(clickSound);
-
+	
 	//Remove any remaining junk from cin stream
 	std::cin.clear();
 	std::cin.ignore(1000, '\n');

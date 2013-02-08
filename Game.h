@@ -35,7 +35,6 @@ along with Aaron's Tic-Tac-Toe Clone.  If not, see <http://www.gnu.org/licenses/
 #include "Board.h"
 #include "Player.h"
 #include "WinDrawPacket.h"
-#include "SoundEngine.h"
 #include "ExceptionClass.h"
 #include "ErrorTypes.h"
 
@@ -70,9 +69,6 @@ private:
 	static const std::string rowOne, rowTwo, rowThree, rowFour, rowFive;
 	static const std::string nullConstant;
 	static const std::string fatalError;
-
-	//Used in accessing the sounds
-	static const std::string playerOneWinSound, playerTwoWinSound, gameOverSound, pieceClickSound, badMoveErrorSound, fatalErrorSound, clickSound, endOfGameSound, minorErrorSound;
 
 //Object Variables
 private:
