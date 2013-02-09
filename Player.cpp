@@ -115,7 +115,10 @@ void Player::PieceGen()
 
 void Player::DisplayName()
 {
-	std::cout<<"Player "<<id_<<": "<<name_;
+	std::cout<<"Player "<<id_<<": ";
+	textColor.SetTextToPlayerColor();
+	std::cout<<name_;
+	textColor.ResetConsoleColor();
 }
 
 void Player::DisplayScore()
