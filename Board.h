@@ -120,4 +120,5 @@ private:
 	void SetWinningPlayersTextColor(bool p, const Player &p1, const Player &p2);
 	int FindSpaceListLocation(int locationRequest);
 	void CheckForXsAndOs(int boardLocation, int &xCounter, int &oCounter);
+	bool CheckForPieceAtLocation(int location);
 };
