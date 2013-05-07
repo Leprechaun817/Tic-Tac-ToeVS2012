@@ -637,8 +637,12 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else if(j == temp2 && !diagonal && !across && !down)	//Add piece logic
-						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+					else if(j == temp2 && !diagonal && !across && !down) {	//Need some logic here to figure out whether a piece actually exists here, then diplay piece
+						if(!CheckForPieceAtLocation(squareCount))
+							DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+						else
+							std::cout<<t_space;
+					}	//This will work the same for every other block of logic like this...
 					else
 						std::cout<<t_space;
 					break;
@@ -695,8 +699,12 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else if(j == temp2 && !diagonal && !across && !down)
-						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+					else if(j == temp2 && !diagonal && !across && !down) {	//Need some logic here to figure out whether a piece actually exists here, then diplay piece
+						if(!CheckForPieceAtLocation(squareCount))
+							DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+						else
+							std::cout<<t_space;
+					}	//This will work the same for every other block of logic like this...
 					else
 						std::cout<<t_space;
 					break;
@@ -748,8 +756,12 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else if(j == temp2 && !diagonal && !across && !down)
-						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+					else if(j == temp2 && !diagonal && !across && !down) {	//Need some logic here to figure out whether a piece actually exists here, then diplay piece
+						if(!CheckForPieceAtLocation(squareCount))
+							DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+						else
+							std::cout<<t_space;
+					}	//This will work the same for every other block of logic like this...
 					else
 						std::cout<<t_space;
 					break;
@@ -796,8 +808,12 @@ void Board::DisplayWinningBoard(int type, int diagonalLocation, int acrossDownLo
 						DisplayPiece(squareCount, temp2, pieceSpacing, hasColor);
 						ResetConsoleColor();
 					}
-					else if(j == temp2 && !diagonal && !across && !down)
-						DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+					else if(j == temp2 && !diagonal && !across && !down) {	//Need some logic here to figure out whether a piece actually exists here, then diplay piece
+						if(!CheckForPieceAtLocation(squareCount))
+							DisplayPiece(squareCount, temp2, pieceSpacing, noColor);
+						else
+							std::cout<<t_space;
+					}	//This will work the same for every other block of logic like this...
 					else
 						std::cout<<t_space;
 					break;
